@@ -67,8 +67,7 @@ export default class DefautPage extends Vue{
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
            {name: 'News and Trends', link: '/news', icon: 'mdi-newspaper'},
-           {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'},
-           {name: 'Login', link: '/login', icon: 'mdi-login'}
+           {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'}
            ];
 }
 </script>
