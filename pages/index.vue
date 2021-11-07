@@ -7,7 +7,8 @@
 <script>
 import { Component, Vue } from 'nuxt-property-decorator'
 
-@Component
+@Component({})
+
 export default class DashboardPage extends Vue{
 
 }

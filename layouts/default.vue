@@ -34,7 +34,8 @@
 <script>
 import { Component, Vue } from 'nuxt-property-decorator'
 
-@Component
+@Component({})
+
 export default class DefautPage extends Vue{
   drawer = true;
   mini = true;
