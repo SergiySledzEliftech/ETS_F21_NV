@@ -1,10 +1,10 @@
 <template>
   <v-app light>
-    <v-navigation-drawer v-model="drawer" :mini-variant.sync="mini" app>
+    <v-navigation-drawer v-model="drawer" floating color="rgba(255,242,245, 0.5)" :mini-variant="mini" permanent app>
       <v-list>
 
-        <v-list-item class="px-2" @click.stop="mini = !mini">
-          <v-list-item-avatar class="rounded-0" >
+        <v-list-item class="px-2 cursor-point" @click.stop="mini = !mini">
+          <v-list-item-avatar class="rounded-0">
             <v-img src="mainLogo.png"></v-img>
           </v-list-item-avatar>
           <v-list-item-content class="mx-4">
@@ -23,10 +23,35 @@
 
       </v-list>
     </v-navigation-drawer>
+
+    <v-app-bar app flat color="rgba(0, 0, 0, 0)">
+        <v-toolbar-title class="grey--text">
+          Title
+        </v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+        >
+        <v-text-field hide-details prepend-icon="mdi-magnify" single-line>
+        </v-text-field>
+        </v-col>
+
+        <v-btn icon>
+          <v-icon>mdi-bell</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-account-outline</v-icon>
+        </v-btn>
+
+        <div>Nickname</div>
+      </v-app-bar>
     <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+      <Nuxt />
     </v-main>
   </v-app>
 </template>
@@ -47,3 +72,9 @@ export default class DefautPage extends Vue{
            ];
 }
 </script>
+
+<style scoped>
+.cursor-point {
+  cursor: pointer;
+}
+</style>
