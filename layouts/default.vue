@@ -1,55 +1,61 @@
 <template>
   <v-app light>
-    <v-navigation-drawer v-model="drawer" floating color="rgba(255,242,245, 0.5)" :mini-variant="mini" permanent app>
-      <v-list>
+    <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)"
+    :mini-variant="$vuetify.breakpoint.name !== 'xs' ? mini : setMiniFalse()"
+    mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name !== 'xs'">
+      <v-container>
+        <v-list flat>
 
-        <v-list-item class="px-2 cursor-point" @click.stop="mini = !mini">
-          <v-list-item-avatar class="rounded-0">
-            <v-img src="mainLogo.png"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content class="mx-4">
-            <v-list-item-title >Trainder</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+          <v-list-item class="px-2 cursor-point mb-15" @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : mini = !mini">
+            <v-list-item-avatar class="rounded-0">
+              <v-img src="mainLogo.png"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title class="font-weight-light">
+                <span class="font-weight-medium" style="display: inline">Train</span>der
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
 
-        <v-list-item v-for="link in links" :key="link.name" :to="link.link">
-          <v-icon>
-          {{ link.icon }}
-          </v-icon>
-          <v-list-item-content class="mx-4">
-            <v-list-item-title >{{ link.name }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-      </v-list>
+          <v-list-item v-for="link in links" :key="link.name" :to="link.link" color="blue lighten-1" >
+            <v-icon>
+            {{ link.icon }}
+            </v-icon>
+            <v-list-item-content class="mx-4 font-weight-light">
+              <v-list-item-title >{{ link.name }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-container>
     </v-navigation-drawer>
 
     <v-app-bar app flat color="rgba(0, 0, 0, 0)">
-        <v-toolbar-title class="grey--text">
-          Title
-        </v-toolbar-title>
+      <v-app-bar-nav-icon class="d-flex d-sm-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title class="font-weight-medium">
+        {{ this.title.split('|')[0] }}
+      </v-toolbar-title>
 
-        <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
 
-        <v-col
-          cols="12"
-          sm="6"
-          md="3"
-        >
-        <v-text-field hide-details prepend-icon="mdi-magnify" single-line>
-        </v-text-field>
-        </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
+      <v-text-field hide-details prepend-icon="mdi-magnify" single-line>
+      </v-text-field>
+      </v-col>
 
-        <v-btn icon>
-          <v-icon>mdi-bell</v-icon>
-        </v-btn>
+      <v-btn icon>
+        <v-icon>mdi-bell</v-icon>
+      </v-btn>
 
-        <v-btn icon>
-          <v-icon>mdi-account-outline</v-icon>
-        </v-btn>
+      <v-btn icon>
+        <v-icon>mdi-account-outline</v-icon>
+      </v-btn>
 
-        <div>Nickname</div>
-      </v-app-bar>
+      <div>Nickname</div>
+    </v-app-bar>
     <v-main>
       <Nuxt />
     </v-main>
@@ -69,6 +75,23 @@ export default class DefautPage extends Vue{
            {name: 'News and Trends', link: '/news', icon: 'mdi-newspaper'},
            {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'}
            ];
+  title = 'Trainder';
+
+  head () {
+    let sefl = this
+    if (process.browser) this.title = document.title;
+    return {
+      changed ({title}) {
+        sefl.title = title;
+      }
+    }
+  };
+
+  setMiniFalse() {
+    this.mini = false;
+    return this.mini;
+  }
+
 }
 </script>
 

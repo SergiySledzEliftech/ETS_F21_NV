@@ -10,6 +10,10 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component({})
 
 export default class TradePage extends Vue{
-
+  head() {
+    return {
+      title: 'Trade',
+    }
+  }
 }
 </script>
