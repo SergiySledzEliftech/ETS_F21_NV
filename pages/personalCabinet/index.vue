@@ -19,13 +19,64 @@
               <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
               <p class="account__info">Email: {{user.email}} </p>
               <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
-              <v-btn class="card__btn float-end">update</v-btn>
+              <v-btn 
+                class="card__btn float-end" 
+                type="button"
+                @click="handlerUpdate"
+              >
+                update
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>
       </v-col>
       <v-col>History</v-col>
       </v-row>
+    </v-container>
+    <v-container v-if="show" class="backdrop">
+      <div class="modal d-flex flex-column">
+        <label class="account__input">
+          Nickname
+          <input 
+            class="modal__input" 
+            type="text"
+            name="nickname"
+            :value="userSettings.nickname"
+            @input="handlerInput"
+          >
+        </label>
+        <label class="account__input">
+          Password
+          <input 
+            class="modal__input" 
+            type="text" 
+            name="password"
+            :value="userSettings.password"
+            @input="handlerInput"
+          >
+        </label>
+        <label class="account__input">
+          Email
+          <input 
+            class="modal__input" 
+            type="text" 
+            name="email"
+            :value="userSettings.email"
+            @input="handlerInput"
+          >
+        </label>
+        <label class="account__input">
+          Avatar
+          <input 
+            class="modal__input" 
+            type="text" 
+            name="avatar"
+            :value="userSettings.avatar"
+            @input="handlerInput"
+            >
+        </label>
+        <v-btn class="align-self-end card__btn" type="submit" @click.prevent="handlerSubmit">Submit</v-btn>
+      </div>
     </v-container>
   </div>
 </template>
@@ -37,10 +88,39 @@ import { Component, Vue } from 'nuxt-property-decorator'
 
 export default class AccountSettings extends Vue{
   userLabel = ''
+  show = false
   user = {}
+
+  userSettings = {
+    nickname: '',
+    email: '',
+    password: '',
+    avatar: ''
+  }
+  
+
   async mounted() {
+    this.refreshUser()
+  }
+
+  handlerUpdate(){
+    this.show = true
+  }
+
+  handlerInput(event){
+    this.userSettings[event.target.name] = event.target.value;
+  }
+
+  async refreshUser(){
     this.user = await this.$axios.$get('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea')
     this.userLabel = this.user.nickname[0] 
+  }
+
+  async handlerSubmit(event){
+    this.show = false
+    console.log(event);
+    await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
+    this.refreshUser()
   }
 }
 </script>
@@ -84,5 +164,33 @@ export default class AccountSettings extends Vue{
   .card__btn{
     margin-right: 5px;
     margin-left: auto;
+    margin-top: 15px;
+  }
+  .backdrop{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .modal{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px; 
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  .account__input{
+    display: flex;
+    margin-top: 15px;
+  }
+  .modal__input{
+    margin-right: 40px;
+    margin-left: auto;
+    border-bottom: 2px solid #000;
   }
 </style>
