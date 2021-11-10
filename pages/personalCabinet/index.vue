@@ -33,8 +33,8 @@
       <v-col>History</v-col>
       </v-row>
     </v-container>
-    <v-container v-if="isShow" class="backdrop">
-      <div class="modal d-flex flex-column" v-if="!isNote">
+    <v-container v-if="isShow" class="backdrop" @click="closeModal">
+      <div class="modal d-flex flex-column" v-if="!isNote"  @keydown.esc="closeModal" tabindex="0">
         <label class="account__input">
           Nickname
           <input 
@@ -49,7 +49,7 @@
           Password
           <input 
             class="modal__input" 
-            type="text" 
+            type="password" 
             name="password"
             :value="userSettings.password"
             @input="handlerInput"
@@ -143,6 +143,12 @@ export default class AccountSettings extends Vue{
     this.userSettings[event.target.name] = event.target.value;
   }
 
+  closeModal(e){
+    if(e.target === e.currentTarget){
+      this.isShow = false
+    }
+  }
+
   async refreshUser(){
     this.user = await this.$axios.$get('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea')
     this.userLabel = this.user.nickname[0] 
@@ -152,8 +158,12 @@ export default class AccountSettings extends Vue{
     this.isShow = false
     this.isNote = false
     this.snackbar = true
-    // await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
+    await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
     this.refreshUser()
+    this.userSettings.nickname = ''
+    this.userSettings.email = ''
+    this.userSettings.avatar = ''
+    this.userSettings.password = ''
   }
 }
 </script>
