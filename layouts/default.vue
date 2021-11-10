@@ -1,12 +1,12 @@
 <template>
   <v-app light>
     <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)"
-    :mini-variant="$vuetify.breakpoint.name !== 'xs' ? mini : setMiniFalse()"
-    mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name !== 'xs'">
+    :mini-variant="mini"
+    mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name != 'xs'">
       <v-container>
         <v-list flat>
 
-          <v-list-item class="px-2 cursor-point mb-15" @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : mini = !mini">
+          <v-list-item class="px-2 cursor-point mb-15" @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : miniScreen = !miniScreen">
             <v-list-item-avatar class="rounded-0">
               <v-img src="mainLogo.png"></v-img>
             </v-list-item-avatar>
@@ -63,19 +63,33 @@
 </template>
 
 <script>
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
 
 @Component({})
 
 export default class DefautPage extends Vue{
-  drawer = true;
-  mini = true;
+  drawer = false;
+  miniScreen = true;
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
            {name: 'News and Trends', link: '/news', icon: 'mdi-newspaper'},
            {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'}
            ];
   title = 'Trainder';
+
+  get mini() {
+    if (this.$vuetify.breakpoint.name == 'xs') return false;
+    else return this.miniScreen;
+  }
+
+  // mounted() {
+  //   console.log(this.$vuetify.breakpoint.name, this.mini, this.$vuetify.breakpoint.name == 'xs' ? this.mini = false : this.mini);
+  // }
+
+  // @Watch('mini')
+  // onMiniChange() {
+  //   console.log(this.$vuetify.breakpoint.name, this.mini, this.$vuetify.breakpoint.name == 'xs' ? this.mini = false : this.mini);
+  // }
 
   head () {
     let sefl = this
@@ -86,11 +100,6 @@ export default class DefautPage extends Vue{
       }
     }
   };
-
-  setMiniFalse() {
-    this.mini = false;
-    return this.mini;
-  }
 
 }
 </script>
