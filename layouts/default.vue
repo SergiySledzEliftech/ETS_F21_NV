@@ -17,10 +17,12 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item v-for="link in links" :key="link.name" :to="link.link" color="blue lighten-1" >
+          <v-list-item class="my-4" v-for="(link, key) in links" :key="key" 
+            :to="link.link" color="blue lighten-1" @click="() => onPathClick(key)">
             <v-icon>
             {{ link.icon }}
             </v-icon>
+            <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[key]}" x-small>mdi-circle-half</v-icon>
             <v-list-item-content class="mx-4 font-weight-light">
               <v-list-item-title >{{ link.name }}</v-list-item-title>
             </v-list-item-content>
@@ -65,11 +67,11 @@
 <script>
 import { Component, Vue } from 'nuxt-property-decorator'
 
-@Component({})
-
+@Component
 export default class DefautPage extends Vue{
   drawer = false;
   miniScreen = true;
+  halfCircleIconsDisplayNone = [];
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
            {name: 'News and Trends', link: '/news', icon: 'mdi-newspaper'},
@@ -77,10 +79,17 @@ export default class DefautPage extends Vue{
            ];
   title = 'Trainder';
 
+  created() {
+    for (let i = 0; i < this.links.length; i++) {
+      if (this.$route.path == this.links[i].link) this.halfCircleIconsDisplayNone.push(false);
+      else this.halfCircleIconsDisplayNone.push(true);
+    }
+  }
+
   get mini() {
     if (this.$vuetify.breakpoint.name == 'xs') return false;
     else return this.miniScreen;
-  }
+  };
 
   head () {
     let sefl = this
@@ -92,6 +101,13 @@ export default class DefautPage extends Vue{
     }
   };
 
+  onPathClick(key) {
+    for (let i in this.halfCircleIconsDisplayNone) {
+      this.halfCircleIconsDisplayNone[i] = true;
+    }
+    this.halfCircleIconsDisplayNone[key] = false;
+  }
+
 }
 </script>
 
@@ -99,4 +115,14 @@ export default class DefautPage extends Vue{
 .cursor-point {
   cursor: pointer;
 }
+
+.icon-circle-half {
+  transform: rotate(180deg);
+  position: absolute;
+  left: -18px;
+  box-shadow: inset 0 0 0px 10px #42A5F5,
+              0 0 3px 6px #bcdaf3;
+  border-radius: 50%;
+}
+
 </style>
