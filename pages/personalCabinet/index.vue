@@ -33,8 +33,8 @@
       <v-col>History</v-col>
       </v-row>
     </v-container>
-    <v-container v-if="show" class="backdrop">
-      <div class="modal d-flex flex-column">
+    <v-container v-if="isShow" class="backdrop">
+      <div class="modal d-flex flex-column" v-if="!isNote">
         <label class="account__input">
           Nickname
           <input 
@@ -75,9 +75,36 @@
             @input="handlerInput"
             >
         </label>
-        <v-btn class="align-self-end card__btn" type="submit" @click.prevent="handlerSubmit">Submit</v-btn>
+        <v-btn class="align-self-end card__btn" type="submit" @click="isNote = true">Submit</v-btn>
+      </div>
+      <div class="modal" v-else>
+        <p>Do you want save your changes?</p> 
+        <div class="d-flex justify-end">
+          <v-btn class="btn" type="submit" @click.prevent="handlerSubmit">Yes</v-btn>
+          <v-btn class="btn" @click="isNote = false">No</v-btn>
+        </div>
       </div>
     </v-container>
+
+    <v-snackbar
+      v-model="snackbar"
+      :multi-line="multiLine"
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+
   </div>
 </template>
 
@@ -87,9 +114,14 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component({})
 
 export default class AccountSettings extends Vue{
+  multiLine = true
+  snackbar = false
+  text = `Changes saved.`
+
   userLabel = ''
-  show = false
+  isShow = false
   user = {}
+  isNote = false
 
   userSettings = {
     nickname: '',
@@ -104,7 +136,7 @@ export default class AccountSettings extends Vue{
   }
 
   handlerUpdate(){
-    this.show = true
+    this.isShow = true
   }
 
   handlerInput(event){
@@ -116,10 +148,11 @@ export default class AccountSettings extends Vue{
     this.userLabel = this.user.nickname[0] 
   }
 
-  async handlerSubmit(event){
-    this.show = false
-    console.log(event);
-    await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
+  async handlerSubmit(){
+    this.isShow = false
+    this.isNote = false
+    this.snackbar = true
+    // await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
     this.refreshUser()
   }
 }
