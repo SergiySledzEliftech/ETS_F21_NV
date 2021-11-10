@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 
 @Component({})
 
@@ -81,15 +81,6 @@ export default class DefautPage extends Vue{
     if (this.$vuetify.breakpoint.name == 'xs') return false;
     else return this.miniScreen;
   }
-
-  // mounted() {
-  //   console.log(this.$vuetify.breakpoint.name, this.mini, this.$vuetify.breakpoint.name == 'xs' ? this.mini = false : this.mini);
-  // }
-
-  // @Watch('mini')
-  // onMiniChange() {
-  //   console.log(this.$vuetify.breakpoint.name, this.mini, this.$vuetify.breakpoint.name == 'xs' ? this.mini = false : this.mini);
-  // }
 
   head () {
     let sefl = this
