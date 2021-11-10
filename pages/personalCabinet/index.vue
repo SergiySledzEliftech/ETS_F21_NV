@@ -34,10 +34,10 @@
       </v-row>
     </v-container>
     <v-container v-if="isShow" class="backdrop" @click="closeModal">
-      <div class="modal d-flex flex-column" v-if="!isNote"  @keydown.esc="closeModal" tabindex="0">
+      <v-form class="modal d-flex flex-column" v-if="!isNote" @submit="submit"   @keydown.esc="closeModal" tabindex="0">
         <label class="account__input">
           Nickname
-          <input 
+          <input
             class="modal__input" 
             type="text"
             name="nickname"
@@ -57,7 +57,7 @@
         </label>
         <label class="account__input">
           Email
-          <input 
+          <input
             class="modal__input" 
             type="text" 
             name="email"
@@ -67,21 +67,21 @@
         </label>
         <label class="account__input">
           Avatar
-          <input 
+          <input
             class="modal__input" 
             type="text" 
             name="avatar"
             :value="userSettings.avatar"
             @input="handlerInput"
-            >
+          >
         </label>
-        <v-btn class="align-self-end card__btn" type="submit" @click="isNote = true">Submit</v-btn>
-      </div>
+        <v-btn class="align-self-end card__btn" type="submit">Submit</v-btn>
+      </v-form>
       <div class="modal" v-else>
         <p>Do you want save your changes?</p> 
         <div class="d-flex justify-end">
           <v-btn class="btn" type="submit" @click.prevent="handlerSubmit">Yes</v-btn>
-          <v-btn class="btn" @click="isNote = false">No</v-btn>
+          <v-btn class="btn" @click="toggleIsNote">No</v-btn>
         </div>
       </div>
     </v-container>
@@ -103,8 +103,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-
   </div>
 </template>
 
@@ -114,25 +112,44 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component({})
 
 export default class AccountSettings extends Vue{
-  multiLine = true
-  snackbar = false
-  text = `Changes saved.`
 
-  userLabel = ''
-  isShow = false
-  user = {}
-  isNote = false
+  data () {
+    return {
+      multiLine: true,
+      snackbar: false,
+      text: `Changes saved.`,
 
-  userSettings = {
-    nickname: '',
-    email: '',
-    password: '',
-    avatar: ''
+      userLabel: '',
+      isShow: false,
+      user: {},
+      isNote: false,
+
+      userSettings: {
+        nickname: '',
+        email: '',
+        password: '',
+        avatar: ''
+      }
+    }
   }
   
-
   async mounted() {
     this.refreshUser()
+  }
+
+  isRequired(value) {
+    if (value && value.trim()) {
+      return true;
+    }
+    return 'This is required';
+  }
+
+  toggleIsNote(){
+    this.isNote = !this.isNote
+  }
+
+  submit(){
+    this.toggleIsNote()
   }
 
   handlerUpdate(){
@@ -166,6 +183,8 @@ export default class AccountSettings extends Vue{
     this.userSettings.password = ''
   }
 }
+
+
 </script>
 
 <style>
@@ -174,8 +193,10 @@ export default class AccountSettings extends Vue{
     margin-right: 0;
     margin-left: 0;
   }
+
   .content{
     display: flex;}
+
   .ava{
     display: flex;
     align-items: center;
@@ -187,28 +208,34 @@ export default class AccountSettings extends Vue{
     font-size: 90px;
     font-weight: bold;
   }
+
   .btn__group{
     display: flex;
     justify-content: center;
     margin: 15px auto;
   }
+
   .btn{
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
   }
+
   .ava,
   .account__info{
     margin-top: 10px;
   }
+
   .title__page{
     margin-left: 50px;
   }
+
   .card__btn{
     margin-right: 5px;
     margin-left: auto;
     margin-top: 15px;
   }
+
   .backdrop{
     position: fixed;
     left: 0;
@@ -217,6 +244,7 @@ export default class AccountSettings extends Vue{
     right: 0;
     background-color: rgba(0, 0, 0, 0.5);
   }
+
   .modal{
     position: absolute;
     left: 50%;
@@ -227,13 +255,19 @@ export default class AccountSettings extends Vue{
     background-color: #fff;
     border-radius: 8px;
   }
+
   .account__input{
     display: flex;
     margin-top: 15px;
   }
+
   .modal__input{
     margin-right: 40px;
     margin-left: auto;
     border-bottom: 2px solid #000;
+  }
+
+  .invalid{
+    border-color: red;
   }
 </style>
