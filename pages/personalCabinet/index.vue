@@ -33,48 +33,40 @@
       <v-col>History</v-col>
       </v-row>
     </v-container>
-    <v-container v-if="isShow" class="backdrop" @click="closeModal">
-      <v-form class="modal d-flex flex-column" v-if="!isNote" @submit="submit"   @keydown.esc="closeModal" tabindex="0">
-        <label class="account__input">
-          Nickname
-          <input
-            class="modal__input" 
-            type="text"
-            name="nickname"
-            :value="userSettings.nickname"
-            @input="handlerInput"
-          >
-        </label>
-        <label class="account__input">
-          Password
-          <input 
-            class="modal__input" 
-            type="password" 
-            name="password"
-            :value="userSettings.password"
-            @input="handlerInput"
-          >
-        </label>
-        <label class="account__input">
-          Email
-          <input
-            class="modal__input" 
-            type="text" 
-            name="email"
-            :value="userSettings.email"
-            @input="handlerInput"
-          >
-        </label>
-        <label class="account__input">
-          Avatar
-          <input
-            class="modal__input" 
-            type="text" 
-            name="avatar"
-            :value="userSettings.avatar"
-            @input="handlerInput"
-          >
-        </label>
+    <v-container v-if="isShow" class="backdrop" @click="closeModal"> <!--@click="toggleIsNote"-->
+      <v-form 
+      class="modal d-flex flex-column" 
+      v-if="!isNote"
+      @submit.prevent="toggleIsNote"  
+      @keydown.esc="closeModal" 
+      tabindex="0">
+        <v-text-field 
+          class="modal__input" 
+          type="text"
+          v-model="userSettings.nickname"
+          :rules="[maxLength, minLength]"
+          label="Nickname"
+        ></v-text-field>
+        <v-text-field 
+          class="modal__input" 
+          type="password" 
+          :rules="[password]"
+          v-model="userSettings.password"
+          label="Password"
+        ></v-text-field>
+        <v-text-field
+          class="modal__input" 
+          type="text"
+          :rules="[email]" 
+          v-model="userSettings.email"
+          label="Email"
+        ></v-text-field>
+        <v-text-field
+          class="modal__input" 
+          type="text" 
+          v-model="userSettings.avatar"
+          label="Avatar"
+        ></v-text-field>
         <v-btn class="align-self-end card__btn" type="submit">Submit</v-btn>
       </v-form>
       <div class="modal" v-else>
@@ -108,56 +100,54 @@
 
 <script>
 import { Component, Vue } from 'nuxt-property-decorator'
+import rules from '../../utils/form-validation-rules.js'
 
 @Component({})
 
 export default class AccountSettings extends Vue{
+  multiLine = true
+  snackbar = false
+  text = `Changes saved.`
+
+  userLabel = ''
+  isShow = false
+  user = {}
+  isNote = false
+
+  userSettings = {
+    nickname: '',
+    email: '',
+    password: '',
+    avatar: ''
+  }
 
   data () {
     return {
-      multiLine: true,
-      snackbar: false,
-      text: `Changes saved.`,
-
-      userLabel: '',
-      isShow: false,
-      user: {},
-      isNote: false,
-
-      userSettings: {
-        nickname: '',
-        email: '',
-        password: '',
-        avatar: ''
-      }
+      required: rules.required,
+      minLength: rules.minLength,
+      maxLength: rules.maxLength,
+      password: rules.password,
+      email: rules.email
     }
   }
-  
-  async mounted() {
+
+  mounted() {
     this.refreshUser()
   }
 
-  isRequired(value) {
-    if (value && value.trim()) {
-      return true;
-    }
-    return 'This is required';
-  }
+  // isRequired(value) {
+  //   if (value && value.trim()) {
+  //     return true;
+  //   }
+  //   return 'This is required';
+  // }
 
   toggleIsNote(){
     this.isNote = !this.isNote
   }
 
-  submit(){
-    this.toggleIsNote()
-  }
-
   handlerUpdate(){
     this.isShow = true
-  }
-
-  handlerInput(event){
-    this.userSettings[event.target.name] = event.target.value;
   }
 
   closeModal(e){
@@ -251,21 +241,23 @@ export default class AccountSettings extends Vue{
     top: 50%;
     transform: translate(-50%, -50%);
     width: 360px; 
-    padding: 15px;
+    padding-right: 40px;
+    padding-left: 40px;
+    padding-bottom: 15px;
+    padding-top: 30px;
     background-color: #fff;
     border-radius: 8px;
   }
 
   .account__input{
-    display: flex;
-    margin-top: 15px;
+    /* display: flex; */
+    /* margin-top: 15px; */
   }
 
-  .modal__input{
+  /* .modal__input{
     margin-right: 40px;
     margin-left: auto;
-    border-bottom: 2px solid #000;
-  }
+  } */
 
   .invalid{
     border-color: red;
