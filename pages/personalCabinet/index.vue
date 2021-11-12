@@ -37,12 +37,13 @@
       <v-form 
       class="modal d-flex flex-column" 
       v-if="!isNote"
-      @submit.prevent="toggleIsNote"  
+      @submit.prevent="submit"  
       @keydown.esc="closeModal" 
       tabindex="0">
         <v-text-field 
           class="modal__input" 
           type="text"
+          ref="nickname"
           v-model="userSettings.nickname"
           :rules="[maxLength, minLength]"
           label="Nickname"
@@ -50,6 +51,7 @@
         <v-text-field 
           class="modal__input" 
           type="password" 
+          ref="password"
           :rules="[password]"
           v-model="userSettings.password"
           label="Password"
@@ -57,6 +59,7 @@
         <v-text-field
           class="modal__input" 
           type="text"
+          ref="email"
           :rules="[email]" 
           v-model="userSettings.email"
           label="Email"
@@ -64,6 +67,7 @@
         <v-text-field
           class="modal__input" 
           type="text" 
+          ref="avatar"
           v-model="userSettings.avatar"
           label="Avatar"
         ></v-text-field>
@@ -121,6 +125,8 @@ export default class AccountSettings extends Vue{
     avatar: ''
   }
 
+  formHasErrors = false
+
   data () {
     return {
       required: rules.required,
@@ -135,12 +141,21 @@ export default class AccountSettings extends Vue{
     this.refreshUser()
   }
 
-  // isRequired(value) {
-  //   if (value && value.trim()) {
-  //     return true;
-  //   }
-  //   return 'This is required';
-  // }
+  submit () {
+    this.formHasErrors = false
+    Object.keys(this.userSettings).forEach(f => {
+      if (!this.userSettings[f]) this.formHasErrors = true
+      this.$refs[f].validate(true)
+    })
+
+    if(this.checkForm()){
+       this.toggleIsNote()
+       }
+  }
+
+  checkForm() {
+    return !Object.keys(this.userSettings).filter(f => !this.$refs[f].validate()).length
+  }
 
   toggleIsNote(){
     this.isNote = !this.isNote
