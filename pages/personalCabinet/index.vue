@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="btn__group">
+    <!-- <div class="btn__group">
       <v-btn class="btn" :to="'/personalCabinet'">account settings</v-btn>
       <v-btn class="btn" :to="'/personalCabinet/History'">history</v-btn>
       <v-btn class="btn" :to="'/personalCabinet/Portfolio'">portfolio</v-btn>
-    </div> 
+    </div>  -->
     <v-container>
       <v-row>
         <v-col>
@@ -30,10 +30,51 @@
           </v-row>
         </v-container>
       </v-col>
-      <v-col>History</v-col>
+      <v-col>
+        
+  <v-card>
+    <v-toolbar
+      color="grey"
+      dark
+      flat
+    >
+    
+      <!-- <template v-slot:extension> -->
+        <v-tabs
+          v-model="tabs.tab"
+          align-with-title
+        >
+          <v-tabs-slider color="yellow"></v-tabs-slider>
+
+          <v-tab
+            v-for="{name} in tabs.items"
+            :key="name"
+          >
+            {{ name }}
+          </v-tab>
+        </v-tabs>
+      <!-- </template> -->
+    </v-toolbar>
+
+    <v-tabs-items v-model="tabs.tab">
+      <v-tab-item
+        v-for="item in tabs.items"
+        :key="item.name"
+      >
+        <v-card flat>
+          <!-- <v-card-text v-text="tabs.text"></v-card-text> -->
+          <ul>
+            <li v-for="listItem in item.list" :key="listItem">{{listItem}}</li>
+          </ul>
+        </v-card>
+      </v-tab-item>
+    </v-tabs-items>
+  </v-card>
+
+        </v-col>
       </v-row>
     </v-container>
-    <v-container v-if="isShow" class="backdrop" @click="closeModal"> <!--@click="toggleIsNote"-->
+    <v-container v-if="isShow" class="backdrop" @click="closeModal">
       <v-form 
       class="modal d-flex flex-column" 
       v-if="!isNote"
@@ -126,6 +167,19 @@ export default class AccountSettings extends Vue{
   }
 
   formHasErrors = false
+
+  tabs = {
+    tab: null,
+    items: [
+      {
+        name: "history", 
+        list: ["BTC", "EFR"]},
+     {
+       name: "portfolio", 
+      list: ["USD", "EUR"]}
+      ],
+    text: "lorem"
+  }
 
   data () {
     return {
