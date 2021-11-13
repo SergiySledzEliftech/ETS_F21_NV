@@ -5,10 +5,10 @@
     </div>
     <div
       class="currencies d-flex"
-      v-if="currencies.length"
+      v-if="$store.state.userCurrencies.currencies.length"
     >
       <v-card
-        v-for="currency in currencies"
+        v-for="currency in $store.state.userCurrencies.currencies"
         v-bind:key="currency.name"
         class="card"
       >
@@ -28,7 +28,7 @@
       </v-card>
     </div>
     <div
-      v-else-if="currencies && !currencies.length"
+      v-else
       class="buy-suggestion d-flex"
     >
       <h2>You don't have any currencies yet</h2>
@@ -44,28 +44,8 @@ import { Component, Vue } from 'nuxt-property-decorator';
 @Component({})
 
 export default class TradePage extends Vue {
-  data() {
-    return {
-      userId: '1',
-      currencies: [],
-    }
-  }
-
-  async fetchCurrencies (userId) {
-    try {
-      const response = await this.$axios
-        .$get('http://localhost:4000/userCurrencies', {
-          params: {
-            userId: this.userId,
-          }
-        });
-      this.currencies = response;
-    } catch(error) {
-      console.log(error);
-    }
-  }
   mounted() {
-    this.fetchCurrencies(this.userId);
+    this.$store.dispatch('userCurrencies/fetchCurrencies')
   }
 }
 </script>
