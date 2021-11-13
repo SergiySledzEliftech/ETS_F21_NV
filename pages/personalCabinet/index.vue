@@ -63,9 +63,9 @@
       >
         <v-card flat>
           <!-- <v-card-text v-text="tabs.text"></v-card-text> -->
-          <ul>
-            <li v-for="listItem in item.list" :key="listItem">{{listItem}}</li>
-          </ul>
+          <v-list>
+            <v-list-item v-for="listItem in item.list" :key="listItem">{{listItem}}</v-list-item>
+          </v-list>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
