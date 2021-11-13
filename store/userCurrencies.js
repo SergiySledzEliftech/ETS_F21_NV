@@ -3,12 +3,12 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchCurrencies (ctx) {
+  async fetchCurrencies (ctx, { userId }) {
     try {
       const response = await this.$axios
         .$get('http://localhost:4000/userCurrencies', {
           params: {
-            userId: '1'
+            userId
           }
         })
       ctx.commit('updateCurrencies', response)

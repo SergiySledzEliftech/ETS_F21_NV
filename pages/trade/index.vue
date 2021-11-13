@@ -44,8 +44,16 @@ import { Component, Vue } from 'nuxt-property-decorator';
 @Component({})
 
 export default class TradePage extends Vue {
+  data () {
+    return {
+      userId: '1'
+    }
+  }
+
   mounted() {
-    this.$store.dispatch('userCurrencies/fetchCurrencies')
+    this.$store.dispatch('userCurrencies/fetchCurrencies', {
+      userId: this.userId
+    })
   }
 }
 </script>
