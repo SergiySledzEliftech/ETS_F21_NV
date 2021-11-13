@@ -1,10 +1,5 @@
 <template>
   <div class="container">
-    <!-- <div class="btn__group">
-      <v-btn class="btn" :to="'/personalCabinet'">account settings</v-btn>
-      <v-btn class="btn" :to="'/personalCabinet/History'">history</v-btn>
-      <v-btn class="btn" :to="'/personalCabinet/Portfolio'">portfolio</v-btn>
-    </div>  -->
     <v-container>
       <v-row>
         <v-col>
@@ -31,46 +26,38 @@
         </v-container>
       </v-col>
       <v-col>
-        
-  <v-card>
-    <v-toolbar
-      color="grey"
-      dark
-      flat
-    >
-    
-      <!-- <template v-slot:extension> -->
-        <v-tabs
-          v-model="tabs.tab"
-          align-with-title
-        >
-          <v-tabs-slider color="yellow"></v-tabs-slider>
-
-          <v-tab
-            v-for="{name} in tabs.items"
-            :key="name"
-          >
-            {{ name }}
-          </v-tab>
-        </v-tabs>
-      <!-- </template> -->
-    </v-toolbar>
-
-    <v-tabs-items v-model="tabs.tab">
-      <v-tab-item
-        v-for="item in tabs.items"
-        :key="item.name"
-      >
-        <v-card flat>
-          <!-- <v-card-text v-text="tabs.text"></v-card-text> -->
-          <v-list>
-            <v-list-item v-for="listItem in item.list" :key="listItem">{{listItem}}</v-list-item>
-          </v-list>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
-  </v-card>
-
+          <v-card>
+            <v-toolbar
+              color="grey"
+              dark
+              flat
+            >
+              <v-tabs
+                v-model="tabs.tab"
+                align-with-title
+              >
+                <v-tabs-slider color="yellow"></v-tabs-slider>
+                <v-tab
+                  v-for="{name} in tabs.items"
+                  :key="name"
+                >
+                  {{ name }}
+                </v-tab>
+              </v-tabs>
+            </v-toolbar>
+            <v-tabs-items v-model="tabs.tab">
+              <v-tab-item
+                v-for="item in tabs.items"
+                :key="item.name"
+              >
+                <v-card flat>
+                  <v-list>
+                    <v-list-item v-for="listItem in item.list" :key="listItem">{{listItem}}</v-list-item>
+                  </v-list>
+                </v-card>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -173,10 +160,10 @@ export default class AccountSettings extends Vue{
     items: [
       {
         name: "history", 
-        list: ["BTC", "EFR"]},
+        list: ["BTC", "EFR", "TCP", "DER"]},
      {
        name: "portfolio", 
-      list: ["USD", "EUR"]}
+      list: ["USD", "EUR", "PLD", "BFS"]}
       ],
     text: "lorem"
   }
