@@ -1,12 +1,12 @@
 <template>
   <v-app light>
     <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)"
-    :mini-variant="$vuetify.breakpoint.name !== 'xs' ? mini : setMiniFalse()"
-    mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name !== 'xs'">
+    :mini-variant="mini"
+    mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name != 'xs'">
       <v-container>
         <v-list flat>
 
-          <v-list-item class="px-2 cursor-point mb-15" @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : mini = !mini">
+          <v-list-item class="px-2 cursor-point mb-15" @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : miniScreen = !miniScreen">
             <v-list-item-avatar class="rounded-0">
               <v-img src="mainLogo.png"></v-img>
             </v-list-item-avatar>
@@ -17,10 +17,12 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item v-for="link in links" :key="link.name" :to="link.link" color="blue lighten-1" >
+          <v-list-item class="my-4" v-for="(link, key) in links" :key="key" 
+            :to="link.link" color="blue lighten-1" @click="() => onPathClick(key)">
             <v-icon>
             {{ link.icon }}
             </v-icon>
+            <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[key]}" x-small>mdi-circle-half</v-icon>
             <v-list-item-content class="mx-4 font-weight-light">
               <v-list-item-title >{{ link.name }}</v-list-item-title>
             </v-list-item-content>
@@ -69,11 +71,11 @@
 <script>
 import { Component, Vue } from 'nuxt-property-decorator'
 
-@Component({})
-
+@Component
 export default class DefautPage extends Vue{
-  drawer = true;
-  mini = true;
+  drawer = false;
+  miniScreen = true;
+  halfCircleIconsDisplayNone = [];
   inputSeen = false;
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
@@ -82,6 +84,18 @@ export default class DefautPage extends Vue{
            ];
   title = 'Trainder';
 
+  created() {
+    for (let i = 0; i < this.links.length; i++) {
+      if (this.$route.path == this.links[i].link) this.halfCircleIconsDisplayNone.push(false);
+      else this.halfCircleIconsDisplayNone.push(true);
+    }
+  }
+
+  get mini() {
+    if (this.$vuetify.breakpoint.name == 'xs') return false;
+    else return this.miniScreen;
+  };
+  
   head () {
     let sefl = this
     if (process.browser) this.title = document.title;
@@ -92,9 +106,11 @@ export default class DefautPage extends Vue{
     }
   };
 
-  setMiniFalse() {
-    this.mini = false;
-    return this.mini;
+  onPathClick(key) {
+    for (let i in this.halfCircleIconsDisplayNone) {
+      this.halfCircleIconsDisplayNone[i] = true;
+    }
+    this.halfCircleIconsDisplayNone[key] = false;
   }
 
 }
@@ -105,6 +121,15 @@ export default class DefautPage extends Vue{
   cursor: pointer;
 }
 
+.icon-circle-half {
+  transform: rotate(180deg);
+  position: absolute;
+  left: -18px;
+  box-shadow: inset 0 0 0px 10px #42A5F5,
+              0 0 3px 6px #bcdaf3;
+  border-radius: 50%;
+}
+
 .avatar {
   border-radius: 5px;
 }
@@ -113,4 +138,5 @@ export default class DefautPage extends Vue{
   box-shadow: 0px 4.54988px 30.9392px rgba(186, 19, 88, 0.42);
   background: linear-gradient(136.67deg, #FF409A 8.34%, #F93FA3 17.39%, #F53EA8 22.37%, #EF3EB1 31.88%, #DC3BCC 59.5%, #C438EF 95.26%);
 }
+
 </style>

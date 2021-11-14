@@ -50,7 +50,7 @@ export default class TradePage extends Vue{
       title: 'Trade',
     }
   }
-  
+
   data () {
     return {
       userId: '1'
