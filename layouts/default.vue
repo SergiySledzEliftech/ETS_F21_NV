@@ -1,10 +1,9 @@
 <template>
   <v-app light>
-    <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)"
-    :mini-variant="mini"
+    <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)" :mini-variant="mini"
     mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name != 'xs'">
-      <v-container style="height: 100%">
-        <v-list flat style="height: 100%; display: flex; flex-direction: column; justify-content: flex-start;">
+      <v-container>
+        <v-list flat>
 
           <v-list-item class="px-2 cursor-point mb-15" 
           @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : miniScreen = !miniScreen">
@@ -13,7 +12,7 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title class="font-weight-light">
-                <span class="font-weight-medium" style="display: inline">Train</span>der
+                <span class="header-span font-weight-medium">Train</span>der
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -29,13 +28,13 @@
             </v-list-item>
           </div>
           
-          <div style="position: relative; flex-grow: 1">
-          <v-list-item class="my-4" to="/login" color="blue lighten-1" style="position: absolute; bottom: 0">
-            <v-icon>mdi-logout</v-icon>
-            <v-list-item-content class="mx-4 font-weight-light">
-              <v-list-item-title >Logout</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+          <div class="logout-item-container">
+            <v-list-item class="my-4 logout-item" to="/login" color="blue lighten-1">
+              <v-icon>mdi-logout</v-icon>
+              <v-list-item-content class="mx-4 font-weight-light">
+                <v-list-item-title >Logout</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </div>
         </v-list>
       </v-container>
@@ -154,8 +153,34 @@ export default class DefautPage extends Vue{
   background: linear-gradient(136.67deg, #FF409A 8.34%, #F93FA3 17.39%, #F53EA8 22.37%, #EF3EB1 31.88%, #DC3BCC 59.5%, #C438EF 95.26%);
 }
 
+.header-span {
+  display: inline
+}
+
 .v-list-item {
   flex: none;
+}
+
+.container {
+  height: 100%;
+}
+
+.v-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.logout-item-container {
+  position: relative;
+  height: auto;
+  flex-grow: 1;
+}
+
+.logout-item {
+  position: absolute;
+  bottom: 0;
 }
 
 </style>
