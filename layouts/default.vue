@@ -18,11 +18,11 @@
           </v-list-item>
 
           <v-list-item class="my-4" v-for="(link, key) in links" :key="key" 
-            :to="link.link" color="blue lighten-1" @click="() => onPathClick(key)">
+            :to="link.link" color="blue lighten-1">
             <v-icon>
             {{ link.icon }}
             </v-icon>
-            <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[key]}" x-small>mdi-circle-half</v-icon>
+            <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[link.link]}" x-small>mdi-circle-half</v-icon>
             <v-list-item-content class="mx-4 font-weight-light">
               <v-list-item-title >{{ link.name }}</v-list-item-title>
             </v-list-item-content>
@@ -69,13 +69,13 @@
 </template>
 
 <script>
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
 
 @Component
 export default class DefautPage extends Vue{
   drawer = false;
   miniScreen = true;
-  halfCircleIconsDisplayNone = [];
+  halfCircleIconsDisplayNone = {};
   inputSeen = false;
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
@@ -86,8 +86,9 @@ export default class DefautPage extends Vue{
 
   created() {
     for (let i = 0; i < this.links.length; i++) {
-      if (this.$route.path == this.links[i].link) this.halfCircleIconsDisplayNone.push(false);
-      else this.halfCircleIconsDisplayNone.push(true);
+      const link = this.links[i].link;
+      if (this.$route.path == link) this.halfCircleIconsDisplayNone[link] = false;
+      else this.halfCircleIconsDisplayNone[link] = true;
     }
   }
 
@@ -106,11 +107,15 @@ export default class DefautPage extends Vue{
     }
   };
 
-  onPathClick(key) {
+  @Watch('$route')
+  onRouteChange() {
+    console.log(this.$route);
+    const link = '/' + this.$route.path.split('/')[1];
+    if (!Object.keys(this.halfCircleIconsDisplayNone).includes(link)) return;
     for (let i in this.halfCircleIconsDisplayNone) {
       this.halfCircleIconsDisplayNone[i] = true;
     }
-    this.halfCircleIconsDisplayNone[key] = false;
+    this.halfCircleIconsDisplayNone[link] = false;
   }
 
 }
