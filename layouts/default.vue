@@ -3,10 +3,11 @@
     <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)"
     :mini-variant="mini"
     mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name != 'xs'">
-      <v-container>
-        <v-list flat>
+      <v-container style="height: 100%">
+        <v-list flat style="height: 100%; display: flex; flex-direction: column; justify-content: flex-start;">
 
-          <v-list-item class="px-2 cursor-point mb-15" @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : miniScreen = !miniScreen">
+          <v-list-item class="px-2 cursor-point mb-15" 
+          @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : miniScreen = !miniScreen">
             <v-list-item-avatar class="rounded-0">
               <v-img src="mainLogo.png"></v-img>
             </v-list-item-avatar>
@@ -17,16 +18,25 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item class="my-4" v-for="(link, key) in links" :key="key" 
+          <div>
+            <v-list-item class="mb-4" v-for="(link, key) in links" :key="key" 
             :to="link.link" color="blue lighten-1">
-            <v-icon>
-            {{ link.icon }}
-            </v-icon>
-            <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[link.link]}" x-small>mdi-circle-half</v-icon>
+              <v-icon>{{ link.icon }}</v-icon>
+              <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[link.link]}" x-small>mdi-circle-half</v-icon>
+              <v-list-item-content class="mx-4 font-weight-light">
+                <v-list-item-title >{{ link.name }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+          
+          <div style="position: relative; flex-grow: 1">
+          <v-list-item class="my-4" to="/login" color="blue lighten-1" style="position: absolute; bottom: 0">
+            <v-icon>mdi-logout</v-icon>
             <v-list-item-content class="mx-4 font-weight-light">
-              <v-list-item-title >{{ link.name }}</v-list-item-title>
+              <v-list-item-title >Logout</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          </div>
         </v-list>
       </v-container>
     </v-navigation-drawer>
@@ -142,6 +152,10 @@ export default class DefautPage extends Vue{
 .notification-btn {
   box-shadow: 0px 4.54988px 30.9392px rgba(186, 19, 88, 0.42);
   background: linear-gradient(136.67deg, #FF409A 8.34%, #F93FA3 17.39%, #F53EA8 22.37%, #EF3EB1 31.88%, #DC3BCC 59.5%, #C438EF 95.26%);
+}
+
+.v-list-item {
+  flex: none;
 }
 
 </style>
