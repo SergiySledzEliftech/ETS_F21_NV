@@ -10,6 +10,10 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component({})
 
 export default class PersonalCabinetPage extends Vue{
-
+  head() {
+    return {
+      title: 'Personal Cabinet',
+    }
+  }
 }
 </script>
