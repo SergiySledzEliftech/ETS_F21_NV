@@ -10,12 +10,14 @@
               <img v-if="user.avatar" :src="user.avatar" alt="avatar">
               <div class="ava" v-else> <span class="label">{{ userLabel }}</span></div>
             </v-col>
-            <v-col>
+            <v-col class="p__relative">
               <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
               <p class="account__info">Email: {{user.email}} </p>
               <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
+              <p class="accont__info" v-if="!bonusButton">Top up your balance: {{bonusTime}} </p>
+              <v-btn class="accont__info last" v-else @click="takeBonus">Take bonus</v-btn>
               <v-btn 
-                class="card__btn float-end" 
+                class="btn__update" 
                 type="button"
                 @click="handlerUpdate"
               >
@@ -153,6 +155,10 @@ export default class AccountSettings extends Vue{
     avatar: ''
   }
 
+  bonusTime = null
+  bonusButton = false
+  idInterval = ''
+
   formHasErrors = false
 
   tabs = {
@@ -180,6 +186,10 @@ export default class AccountSettings extends Vue{
 
   mounted() {
     this.refreshUser()
+    this.timer()
+  }
+  unmounted() {
+    clearInterval(this.idInterval)
   }
 
   submit () {
@@ -212,16 +222,50 @@ export default class AccountSettings extends Vue{
     }
   }
 
+  timer(){
+    this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
+  }
+
+  async takeBonus(){
+    this.user = await this.$axios.$put('http://localhost:4000/users/balance/61925a32af2b0cbcd9330f3f',{lastBonusTime: Date.now(), dollarBalance: 50})
+  }
+
+  chekBonusTime(){
+    const time = Date.now() - new Date(this.user.lastBonusTime)
+    if(time < 21600000){
+      this.bonusButton = false
+      this.msToTime(21600000 - time)
+    } else {
+    this.bonusButton = true
+    }
+  }
+
+  msToTime(duration) {
+  var milliseconds = parseInt((duration % 1000) / 100),
+    seconds = parseInt((duration / 1000) % 60),
+    minutes = parseInt((duration / (1000 * 60)) % 60),
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  this.bonusTime = hours + ":" + minutes + ":" + seconds;
+}
+
+
   async refreshUser(){
-    this.user = await this.$axios.$get('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea')
+    this.user = await this.$axios.$get('http://localhost:4000/users/61925a32af2b0cbcd9330f3f')
     this.userLabel = this.user.nickname[0] 
+    this.chekBonusTime()
+    
   }
 
   async handlerSubmit(){
     this.isShow = false
     this.isNote = false
     this.snackbar = true
-    await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
+    await this.$axios.$put('http://localhost:4000/users/61925a32af2b0cbcd9330f3f', this.userSettings)
     this.refreshUser()
     this.userSettings.nickname = ''
     this.userSettings.email = ''
@@ -248,8 +292,8 @@ export default class AccountSettings extends Vue{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
     font-size: 90px;
@@ -273,6 +317,11 @@ export default class AccountSettings extends Vue{
     margin-top: 10px;
   }
 
+  .account__info .last{
+    display: inline-block;
+    margin-bottom: 60px;
+  }
+
   .title__page{
     margin-left: 50px;
   }
@@ -281,6 +330,16 @@ export default class AccountSettings extends Vue{
     margin-right: 5px;
     margin-left: auto;
     margin-top: 15px;
+  }
+
+  .p__relative{
+    position: relative;
+  }
+
+  .btn__update{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
   }
 
   .backdrop{
