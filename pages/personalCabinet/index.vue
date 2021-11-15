@@ -228,6 +228,7 @@ export default class AccountSettings extends Vue{
     this.userSettings.avatar = ''
     this.userSettings.password = ''
   }
+
 }
 
 

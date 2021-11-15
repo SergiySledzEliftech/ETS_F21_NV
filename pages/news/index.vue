@@ -11,6 +11,10 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component({})
 
 export default class NewsPage extends Vue{
-
+  head() {
+    return {
+      title: 'News',
+    }
+  }
 }
 </script>
