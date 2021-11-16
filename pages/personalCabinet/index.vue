@@ -8,7 +8,7 @@
             <v-row>
               <v-col class="col-sm-5 col-lg-5 d-flex justify-center">
                 <img v-if="user.avatar" :src="user.avatar" alt="avatar">
-                <div class="ava" v-else> <span class="label">{{ userLabel }}</span></div>
+                <div class="ava d-flex align-center justify-center rounded-circle" v-else> <span class="label">{{ userLabel }}</span></div>
               </v-col>
               <v-col class="col-sm-7 col-lg-7 p__relative">
                 <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
@@ -287,26 +287,12 @@ export default class AccountSettings extends Vue{
     margin-left: 0;
   }
 
-  .content {
-    display: flex;
-    }
-
   .ava {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 200px;
     height: 200px;
-    border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
     font-size: 90px;
     font-weight: bold;
-  }
-
-  .btn__group {
-    display: flex;
-    justify-content: center;
-    margin: 15px auto;
   }
 
   .btn {
@@ -374,17 +360,4 @@ export default class AccountSettings extends Vue{
     border-radius: 8px;
   }
 
-  .account__input {
-    /* display: flex; */
-    /* margin-top: 15px; */
-  }
-
-  /* .modal__input{
-    margin-right: 40px;
-    margin-left: auto;
-  } */
-
-  /* .invalid {
-    border-color: red;
-  } */
 </style>
