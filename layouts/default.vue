@@ -176,6 +176,7 @@ export default class DefautPage extends Vue{
   position: relative;
   height: auto;
   flex-grow: 1;
+  min-height: 64px;
 }
 
 .logout-item {
