@@ -1,33 +1,33 @@
 <template>
   <div class="container">
     <v-container>
-      <v-row>
-        <v-col>
-        <h1 class="d-flex justify-center">Account settings</h1>
-        <v-container>
-          <v-row>
-            <v-col>
-              <img v-if="user.avatar" :src="user.avatar" alt="avatar">
-              <div class="ava" v-else> <span class="label">{{ userLabel }}</span></div>
-            </v-col>
-            <v-col class="p__relative">
-              <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
-              <p class="account__info">Email: {{user.email}} </p>
-              <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
-              <p class="accont__info" v-if="!bonusButton">Top up your balance: {{bonusTime}} </p>
-              <v-btn class="accont__info last" v-else @click="takeBonus">Take bonus</v-btn>
-              <v-btn 
-                class="btn__update" 
-                type="button"
-                @click="handlerUpdate"
-              >
-                update
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-col>
-      <v-col>
+      <v-row class="flex-wrap">
+        <v-col class="col-sm-12 col-lg-6">
+          <h1 class="d-flex justify-center">Account settings</h1>
+          <v-container>
+            <v-row>
+              <v-col class="col-sm-5 col-lg-5 d-flex justify-center">
+                <img v-if="user.avatar" :src="user.avatar" alt="avatar">
+                <div class="ava" v-else> <span class="label">{{ userLabel }}</span></div>
+              </v-col>
+              <v-col class="col-sm-7 col-lg-7 p__relative">
+                <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
+                <p class="account__info">Email: {{user.email}} </p>
+                <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
+                <p class="accont__info" v-if="!bonusButton">Top up your balance: {{bonusTime}} </p>
+                <v-btn class="accont__info last" v-else @click="takeBonus">Take bonus</v-btn>
+                <v-btn 
+                  class="btn__update" 
+                  type="button"
+                  @click="handlerUpdate"
+                >
+                  update
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+        <v-col class="col-sm-12 col-lg-6">
           <v-card>
             <v-toolbar
               color="grey"
@@ -82,18 +82,20 @@
           class="modal__input" 
           type="password" 
           ref="password"
-          :rules="[password]"
+          disabled
+          
           v-model="userSettings.password"
           label="Password"
-        ></v-text-field>
+        ></v-text-field><!-- :rules="[password]" -->
         <v-text-field
           class="modal__input" 
           type="text"
           ref="email"
-          :rules="[email]" 
+          disabled
+          
           v-model="userSettings.email"
           label="Email"
-        ></v-text-field>
+        ></v-text-field><!-- :rules="[email]"  -->
         <v-text-field
           class="modal__input" 
           type="text" 
@@ -150,8 +152,8 @@ export default class AccountSettings extends Vue{
 
   userSettings = {
     nickname: '',
-    email: '',
-    password: '',
+    // email: '',
+    // password: '',
     avatar: ''
   }
 
@@ -278,71 +280,78 @@ export default class AccountSettings extends Vue{
 
 </script>
 
-<style>
-  .container{
+<style scoped>
+  .container {
     padding: 15px;
     margin-right: 0;
     margin-left: 0;
   }
 
-  .content{
-    display: flex;}
+  .content {
+    display: flex;
+    }
 
-  .ava{
+  .ava {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
     font-size: 90px;
     font-weight: bold;
   }
 
-  .btn__group{
+  .btn__group {
     display: flex;
     justify-content: center;
     margin: 15px auto;
   }
 
-  .btn{
+  .btn {
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
   }
 
   .ava,
-  .account__info{
+  .account__info {
     margin-top: 10px;
   }
 
-  .account__info .last{
+  .account__info .last {
     display: inline-block;
     margin-bottom: 60px;
   }
 
-  .title__page{
+  .title__page {
     margin-left: 50px;
   }
 
-  .card__btn{
+  .card__btn {
     margin-right: 5px;
     margin-left: auto;
     margin-top: 15px;
   }
 
-  .p__relative{
+  .p__relative {
     position: relative;
+    max-width: 300px;
+    padding-bottom: 70px;
+    margin-right: auto;
+    margin-left: auto;
   }
 
-  .btn__update{
+  .btn__update {
+    display: inline-block;
     position: absolute;
-    right: 5px;
-    bottom: 5px;
+    right: 25px;
+    bottom: 12px;
+    margin-top: 15px;
   }
 
-  .backdrop{
+  .backdrop {
     position: fixed;
     left: 0;
     top: 0;
@@ -351,7 +360,7 @@ export default class AccountSettings extends Vue{
     background-color: rgba(0, 0, 0, 0.5);
   }
 
-  .modal{
+  .modal {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -365,7 +374,7 @@ export default class AccountSettings extends Vue{
     border-radius: 8px;
   }
 
-  .account__input{
+  .account__input {
     /* display: flex; */
     /* margin-top: 15px; */
   }
@@ -375,7 +384,7 @@ export default class AccountSettings extends Vue{
     margin-left: auto;
   } */
 
-  .invalid{
+  /* .invalid {
     border-color: red;
-  }
+  } */
 </style>
