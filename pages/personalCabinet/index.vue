@@ -1,16 +1,24 @@
 <template>
   <div class="container">
+    <div class="loader__box" v-if="isLoading">
+      <v-progress-circular 
+        :size="150" 
+        :width="10"
+        indeterminate 
+        color="purple">
+      </v-progress-circular>
+    </div>
     <v-container>
       <v-row class="flex-wrap">
         <v-col class="col-sm-12 col-lg-6">
           <h1 class="d-flex justify-center">Account settings</h1>
           <v-container>
             <v-row>
-              <v-col class="col-sm-5 col-lg-5 d-flex justify-center">
+              <v-col class="col-xs-12 col-md-5 col-lg-5 d-flex justify-center">
                 <img v-if="user.avatar" :src="user.avatar" alt="avatar">
                 <div class="ava d-flex align-center justify-center rounded-circle" v-else> <span class="label">{{ userLabel }}</span></div>
               </v-col>
-              <v-col class="col-sm-7 col-lg-7 p__relative">
+              <v-col class="col-xs-12 col-md-7 col-lg-7 p__relative">
                 <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
                 <p class="account__info">Email: {{user.email}} </p>
                 <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
@@ -66,7 +74,7 @@
     <v-container v-if="isShow" class="backdrop" @click="closeModal">
       <v-form 
       class="modal d-flex flex-column" 
-      v-if="!isNote"
+      v-if="!isNote "
       @submit.prevent="submit"  
       @keydown.esc="closeModal" 
       tabindex="0">
@@ -145,6 +153,8 @@ export default class AccountSettings extends Vue{
   snackbar = false
   text = `Changes saved.`
 
+  isLoading = true
+
   userLabel = ''
   isShow = false
   user = {}
@@ -187,6 +197,7 @@ export default class AccountSettings extends Vue{
   }
 
   mounted() {
+    this.isLoading = true
     this.refreshUser()
     this.timer()
   }
@@ -229,7 +240,13 @@ export default class AccountSettings extends Vue{
   }
 
   async takeBonus(){
-    this.user = await this.$axios.$put('http://localhost:4000/users/balance/61925a32af2b0cbcd9330f3f',{lastBonusTime: Date.now(), dollarBalance: 50})
+    try {
+      this.isLoading = true
+      this.user = await this.$axios.$put('http://localhost:4000/users/balance/61925a32af2b0cbcd9330f3f',{lastBonusTime: Date.now(), dollarBalance: 50})
+    } catch (error) {
+      console.log(error);
+    }
+      this.isLoading = false
   }
 
   chekBonusTime(){
@@ -257,22 +274,39 @@ export default class AccountSettings extends Vue{
 
 
   async refreshUser(){
-    this.user = await this.$axios.$get('http://localhost:4000/users/61925a32af2b0cbcd9330f3f')
-    this.userLabel = this.user.nickname[0] 
-    this.chekBonusTime()
+    try {
+      this.isLoading = true
+      this.user = await this.$axios.$get('http://localhost:4000/users/61925a32af2b0cbcd9330f3f')     
+      this.userLabel = this.user.nickname[0] 
+      this.chekBonusTime()
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.isLoading = false
+    }
+    
     
   }
 
   async handlerSubmit(){
-    this.isShow = false
-    this.isNote = false
-    this.snackbar = true
-    await this.$axios.$put('http://localhost:4000/users/61925a32af2b0cbcd9330f3f', this.userSettings)
-    this.refreshUser()
-    this.userSettings.nickname = ''
-    this.userSettings.email = ''
-    this.userSettings.avatar = ''
-    this.userSettings.password = ''
+    try {
+      this.isLoading = true
+      this.isShow = false
+      this.isNote = false
+      this.snackbar = true
+      await this.$axios.$put('http://localhost:4000/users/61925a32af2b0cbcd9330f3f', this.userSettings)
+      this.refreshUser()
+    } catch (error) {
+      console.log(error);
+    } finally{
+      this.isLoading = false
+        this.userSettings.nickname = ''
+        // this.userSettings.email = ''
+        this.userSettings.avatar = ''
+        // this.userSettings.password = ''
+    }
+    
+
   }
 
 }
@@ -281,7 +315,16 @@ export default class AccountSettings extends Vue{
 </script>
 
 <style scoped>
+  .loader__box {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50% -50%);
+    z-index: 2;
+  }
+
   .container {
+    position: relative;
     padding: 15px;
     margin-right: 0;
     margin-left: 0;
