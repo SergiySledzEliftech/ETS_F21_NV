@@ -25,9 +25,16 @@
                 <p class="account__info">Email: {{user.email}} </p>
                 <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
                 <p class="accont__info" v-if="!bonusButton">Top up your balance: {{bonusTime}} </p>
-                <v-btn class="accont__info last" v-else @click="takeBonus">Take bonus</v-btn>
                 <v-btn 
-                  class="btn__update" 
+                  class="accont__info white--text last" 
+                  color="blue" 
+                  v-else
+                  @click="takeBonus">
+                    Take bonus
+                </v-btn>
+                <v-btn 
+                  class="btn__update white--text" 
+                  color="purple lighten-2"
                   type="button"
                   @click="handlerUpdate"
                 >
@@ -40,7 +47,7 @@
         <v-col class="col-sm-12 col-lg-6">
           <v-card>
             <v-toolbar
-              color="grey"
+              color="blue"
               dark
               flat
             >
@@ -48,7 +55,7 @@
                 v-model="tabs.tab"
                 align-with-title
               >
-                <v-tabs-slider color="yellow"></v-tabs-slider>
+                <v-tabs-slider color="purple"></v-tabs-slider>
                 <v-tab
                   v-for="{name} in tabs.items"
                   :key="name"
@@ -91,21 +98,21 @@
         <v-text-field 
           class="modal__input" 
           type="password" 
-          ref="password"
+          
           disabled
           
           v-model="userSettings.password"
           label="Password"
-        ></v-text-field><!-- :rules="[password]" -->
+        ></v-text-field><!-- :rules="[password]" ref="password" -->
         <v-text-field
           class="modal__input" 
           type="text"
-          ref="email"
+          
           disabled
           
           v-model="userSettings.email"
           label="Email"
-        ></v-text-field><!-- :rules="[email]"  -->
+        ></v-text-field><!-- :rules="[email]" ref="email" -->
         <v-file-input
           class="modal__input" 
           :rules="[avatar]"
@@ -116,13 +123,30 @@
           label="Avatar"
           v-model="userSettings.avatar"
         ></v-file-input>
-        <v-btn class="align-self-end card__btn" type="submit">Submit</v-btn>
+        <v-btn 
+          class="align-self-end card__btn  white--text" 
+          type="submit"
+          color="purple lighten-2"
+          >
+            Submit
+        </v-btn>
       </v-form>
       <div class="modal" v-else>
         <p>Do you want save your changes?</p> 
         <div class="d-flex justify-end">
-          <v-btn class="btn" type="submit" @click.prevent="handlerSubmit">Yes</v-btn>
-          <v-btn class="btn" @click="toggleIsNote">No</v-btn>
+          <v-btn 
+          class="btn white--text" 
+          color="red"
+          type="submit" 
+          @click.prevent="handlerSubmit">
+            Yes
+        </v-btn>
+        <v-btn 
+          class="btn white--text" 
+          color="green"
+          @click="toggleIsNote">
+            No
+        </v-btn>
         </div>
       </div>
     </v-container>
@@ -171,7 +195,7 @@ export default class AccountSettings extends Vue{
     nickname: '',
     // email: '',
     // password: '',
-    avatar: ''
+    avatar: null
   }
 
   bonusTime = null
@@ -198,8 +222,8 @@ export default class AccountSettings extends Vue{
       required: rules.required,
       minLength: rules.minLength,
       maxLength: rules.maxLength,
-      password: rules.password,
-      email: rules.email,
+      // password: rules.password,
+      // email: rules.email,
       avatar: rules.avatar
     }
   }
@@ -215,7 +239,9 @@ export default class AccountSettings extends Vue{
   
 // #########
   compress(e) {
-    
+    if(!e){
+      return
+    }
     const width = 180;
     const height = 180;
     const fileName = e.name;
@@ -283,7 +309,6 @@ export default class AccountSettings extends Vue{
 
   handlerUpdate(){
     this.isShow = true
-    console.log(this.userSettings.avatar, 'lol');
   }
 
   closeModal(e){
@@ -351,6 +376,9 @@ export default class AccountSettings extends Vue{
       this.isShow = false
       this.isNote = false
       this.snackbar = true
+
+      this.checkProp()
+
       await this.$axios.$put('http://localhost:4000/users/61925a32af2b0cbcd9330f3f', this.userSettings)
       this.refreshUser()
     } catch (error) {
@@ -364,6 +392,14 @@ export default class AccountSettings extends Vue{
     }
     
 
+  }
+
+  checkProp(){
+          for(const prop in this.userSettings){
+        if(!this.userSettings[prop]){
+          this.userSettings[prop] = this.user[prop]
+        }
+      }
   }
 
 }
