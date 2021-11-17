@@ -178,11 +178,22 @@ import rules from '../../utils/form-validation-rules.js'
 @Component({})
 
 export default class AccountSettings extends Vue{
+  data () {
+    return {
+      required: rules.required,
+      minLength: rules.minLength,
+      maxLength: rules.maxLength,
+      // password: rules.password,
+      // email: rules.email,
+      avatar: rules.avatar
+    }
+  }
+
   multiLine = true
   snackbar = false
   text = `Changes saved.`
 
-  compressFile = null
+  // compressFile = null
 
   isLoading = true
 
@@ -217,27 +228,17 @@ export default class AccountSettings extends Vue{
     text: "lorem"
   }
 
-  data () {
-    return {
-      required: rules.required,
-      minLength: rules.minLength,
-      maxLength: rules.maxLength,
-      // password: rules.password,
-      // email: rules.email,
-      avatar: rules.avatar
-    }
-  }
-
   mounted() {
     this.isLoading = true
     this.refreshUser()
     this.timer()
   }
+
   unmounted() {
     clearInterval(this.idInterval)
   }
   
-// #########
+// ######### base64
   compress(e) {
     if(!e){
       return
@@ -320,6 +321,8 @@ export default class AccountSettings extends Vue{
   timer(){
     this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
   }
+
+// ! TODO плюсовать баланс на сервере. убрать возможность пользователю подставлять свою цифру на клиенте.
 
   async takeBonus(){
     try {
