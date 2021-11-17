@@ -14,8 +14,10 @@
           <h1 class="d-flex justify-center">Account settings</h1>
           <v-container>
             <v-row>
-              <v-col class="col-xs-12 col-md-5 col-lg-5 d-flex justify-center">
-                <img v-if="user.avatar" :src="user.avatar" alt="avatar">
+              <v-col class="col-xs-12 col-md-5 col-lg-5 d-flex justify-center ">
+                <img class="rounded-circle" v-if="user.avatar" 
+                :src="user.avatar" 
+                alt="avatar">
                 <div class="ava d-flex align-center justify-center rounded-circle" v-else> <span class="label">{{ userLabel }}</span></div>
               </v-col>
               <v-col class="col-xs-12 col-md-7 col-lg-7 p__relative">
@@ -104,13 +106,16 @@
           v-model="userSettings.email"
           label="Email"
         ></v-text-field><!-- :rules="[email]"  -->
-        <v-text-field
+        <v-file-input
           class="modal__input" 
-          type="text" 
+          :rules="[avatar]"
           ref="avatar"
-          v-model="userSettings.avatar"
+          accept="image/png, image/jpeg, image/bmp"
+          placeholder="Pick an avatar"
+          prepend-icon="mdi-camera"
           label="Avatar"
-        ></v-text-field>
+          v-model="userSettings.avatar"
+        ></v-file-input>
         <v-btn class="align-self-end card__btn" type="submit">Submit</v-btn>
       </v-form>
       <div class="modal" v-else>
@@ -153,6 +158,8 @@ export default class AccountSettings extends Vue{
   snackbar = false
   text = `Changes saved.`
 
+  compressFile = null
+
   isLoading = true
 
   userLabel = ''
@@ -192,7 +199,8 @@ export default class AccountSettings extends Vue{
       minLength: rules.minLength,
       maxLength: rules.maxLength,
       password: rules.password,
-      email: rules.email
+      email: rules.email,
+      avatar: rules.avatar
     }
   }
 
@@ -204,9 +212,57 @@ export default class AccountSettings extends Vue{
   unmounted() {
     clearInterval(this.idInterval)
   }
+  
+// #########
+  compress(e) {
+    
+    const width = 180;
+    const height = 180;
+    const fileName = e.name;
+    const reader = new FileReader();
+
+    reader.readAsDataURL(e);
+    reader.onload = event => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const elem = document.createElement('canvas');
+        elem.width = width;
+        elem.height = height;
+        const ctx = elem.getContext('2d');
+        // img.width и img.height будет содержать оригинальные размеры
+        ctx.drawImage(img, 0, 0, width, height);
+        ctx.canvas.toBlob((blob) => {
+          const file = new File([blob], fileName, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          });
+            encodeImageFileAsURL(this.saveFile)
+            function encodeImageFileAsURL(saveFile) {
+            
+            const reader = new FileReader();
+            reader.onloadend = function() {
+              saveFile(reader.result, 'result');
+            }
+            reader.readAsDataURL(file);
+          }
+        }, 'image/jpeg', 1);
+      };
+      
+      reader.onerror = error => console.log(error, 'error');
+    };
+  }
+
+  saveFile(el){
+    this.userSettings.avatar = el
+  }
+// ############
 
   submit () {
     this.formHasErrors = false
+    
+    this.compress(this.userSettings.avatar)
+    
     Object.keys(this.userSettings).forEach(f => {
       if (!this.userSettings[f]) this.formHasErrors = true
       this.$refs[f].validate(true)
@@ -227,6 +283,7 @@ export default class AccountSettings extends Vue{
 
   handlerUpdate(){
     this.isShow = true
+    console.log(this.userSettings.avatar, 'lol');
   }
 
   closeModal(e){
@@ -315,6 +372,10 @@ export default class AccountSettings extends Vue{
 </script>
 
 <style scoped>
+  img{
+    overflow: hidden;
+  }
+
   .loader__box {
     position: absolute;
     top: 40%;
