@@ -10,17 +10,17 @@
     </div>
     <v-container>
       <v-row class="flex-wrap">
-        <v-col class="col-sm-12 col-lg-6">
+        <v-col class="col-xs-12 col-sm-12 col-lg-6">
           <h1 class="d-flex justify-center">Account settings</h1>
           <v-container>
             <v-row>
-              <v-col class="col-xs-12 col-md-5 col-lg-5 d-flex justify-center ">
+              <v-col class="col-xs-12 col-sm-7 col-md-5 col-lg-6 d-flex justify-center ">
                 <img class="rounded-circle" v-if="user.avatar" 
                 :src="user.avatar" 
                 alt="avatar">
                 <div class="ava d-flex align-center justify-center rounded-circle" v-else> <span class="label">{{ userLabel }}</span></div>
               </v-col>
-              <v-col class="col-xs-12 col-md-7 col-lg-7 p__relative">
+              <v-col class="col-xs-12 col-sm-5 col-md-7 col-lg-6 p__relative">
                 <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
                 <p class="account__info">Email: {{user.email}} </p>
                 <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
@@ -412,7 +412,8 @@ export default class AccountSettings extends Vue{
 
 <style scoped>
   img{
-    overflow: hidden;
+    /* width: 100%;
+    height: auto; */
   }
 
   .loader__box {
