@@ -1,34 +1,53 @@
 <template>
   <div class="container">
+    <div class="loader__box" v-if="isLoading">
+      <v-progress-circular 
+        :size="150" 
+        :width="10"
+        indeterminate 
+        color="purple">
+      </v-progress-circular>
+    </div>
     <v-container>
-      <v-row>
-        <v-col>
-        <h1 class="d-flex justify-center">Account settings</h1>
-        <v-container>
-          <v-row>
-            <v-col>
-              <img v-if="user.avatar" :src="user.avatar" alt="avatar">
-              <div class="ava" v-else> <span class="label">{{ userLabel }}</span></div>
-            </v-col>
-            <v-col>
-              <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
-              <p class="account__info">Email: {{user.email}} </p>
-              <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
-              <v-btn 
-                class="card__btn float-end" 
-                type="button"
-                @click="handlerUpdate"
-              >
-                update
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-col>
-      <v-col>
+      <v-row class="flex-wrap">
+        <v-col class="col-xs-12 col-sm-12 col-lg-6">
+          <h1 class="d-flex justify-center">Account settings</h1>
+          <v-container>
+            <v-row>
+              <v-col class="col-xs-12 col-sm-7 col-md-5 col-lg-6 d-flex justify-center ">
+                <img class="rounded-circle" v-if="user.avatar" 
+                :src="user.avatar" 
+                alt="avatar">
+                <div class="ava d-flex align-center justify-center rounded-circle" v-else> <span class="label">{{ userLabel }}</span></div>
+              </v-col>
+              <v-col class="col-xs-12 col-sm-5 col-md-7 col-lg-6 p__relative">
+                <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
+                <p class="account__info">Email: {{user.email}} </p>
+                <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
+                <p class="accont__info" v-if="!bonusButton">Top up your balance: {{bonusTime}} </p>
+                <v-btn 
+                  class="accont__info white--text last" 
+                  color="blue" 
+                  v-else
+                  @click="takeBonus">
+                    Take bonus
+                </v-btn>
+                <v-btn 
+                  class="btn__update white--text" 
+                  color="purple lighten-2"
+                  type="button"
+                  @click="handlerUpdate"
+                >
+                  update
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+        <v-col class="col-sm-12 col-lg-6">
           <v-card>
             <v-toolbar
-              color="grey"
+              color="blue"
               dark
               flat
             >
@@ -36,7 +55,7 @@
                 v-model="tabs.tab"
                 align-with-title
               >
-                <v-tabs-slider color="yellow"></v-tabs-slider>
+                <v-tabs-slider color="purple"></v-tabs-slider>
                 <v-tab
                   v-for="{name} in tabs.items"
                   :key="name"
@@ -64,7 +83,7 @@
     <v-container v-if="isShow" class="backdrop" @click="closeModal">
       <v-form 
       class="modal d-flex flex-column" 
-      v-if="!isNote"
+      v-if="!isNote "
       @submit.prevent="submit"  
       @keydown.esc="closeModal" 
       tabindex="0">
@@ -79,33 +98,55 @@
         <v-text-field 
           class="modal__input" 
           type="password" 
-          ref="password"
-          :rules="[password]"
+          
+          disabled
+          
           v-model="userSettings.password"
           label="Password"
-        ></v-text-field>
+        ></v-text-field><!-- :rules="[password]" ref="password" -->
         <v-text-field
           class="modal__input" 
           type="text"
-          ref="email"
-          :rules="[email]" 
+          
+          disabled
+          
           v-model="userSettings.email"
           label="Email"
-        ></v-text-field>
-        <v-text-field
+        ></v-text-field><!-- :rules="[email]" ref="email" -->
+        <v-file-input
           class="modal__input" 
-          type="text" 
+          :rules="[avatar]"
           ref="avatar"
-          v-model="userSettings.avatar"
+          accept="image/png, image/jpeg, image/bmp"
+          placeholder="Pick an avatar"
+          prepend-icon="mdi-camera"
           label="Avatar"
-        ></v-text-field>
-        <v-btn class="align-self-end card__btn" type="submit">Submit</v-btn>
+          v-model="userSettings.avatar"
+        ></v-file-input>
+        <v-btn 
+          class="align-self-end card__btn  white--text" 
+          type="submit"
+          color="purple lighten-2"
+          >
+            Submit
+        </v-btn>
       </v-form>
       <div class="modal" v-else>
         <p>Do you want save your changes?</p> 
         <div class="d-flex justify-end">
-          <v-btn class="btn" type="submit" @click.prevent="handlerSubmit">Yes</v-btn>
-          <v-btn class="btn" @click="toggleIsNote">No</v-btn>
+          <v-btn 
+          class="btn white--text" 
+          color="red"
+          type="submit" 
+          @click.prevent="handlerSubmit">
+            Yes
+        </v-btn>
+        <v-btn 
+          class="btn white--text" 
+          color="green"
+          @click="toggleIsNote">
+            No
+        </v-btn>
         </div>
       </div>
     </v-container>
@@ -137,9 +178,24 @@ import rules from '../../utils/form-validation-rules.js'
 @Component({})
 
 export default class AccountSettings extends Vue{
+  data () {
+    return {
+      required: rules.required,
+      minLength: rules.minLength,
+      maxLength: rules.maxLength,
+      // password: rules.password,
+      // email: rules.email,
+      avatar: rules.avatar
+    }
+  }
+
   multiLine = true
   snackbar = false
   text = `Changes saved.`
+
+  // compressFile = null
+
+  isLoading = true
 
   userLabel = ''
   isShow = false
@@ -148,10 +204,14 @@ export default class AccountSettings extends Vue{
 
   userSettings = {
     nickname: '',
-    email: '',
-    password: '',
-    avatar: ''
+    // email: '',
+    // password: '',
+    avatar: null
   }
+
+  bonusTime = null
+  bonusButton = false
+  idInterval = ''
 
   formHasErrors = false
 
@@ -168,22 +228,68 @@ export default class AccountSettings extends Vue{
     text: "lorem"
   }
 
-  data () {
-    return {
-      required: rules.required,
-      minLength: rules.minLength,
-      maxLength: rules.maxLength,
-      password: rules.password,
-      email: rules.email
-    }
+  mounted() {
+    this.isLoading = true
+    this.refreshUser()
+    this.timer()
   }
 
-  mounted() {
-    this.refreshUser()
+  unmounted() {
+    clearInterval(this.idInterval)
   }
+  
+// ######### base64
+  compress(e) {
+    if(!e){
+      return
+    }
+    const width = 180;
+    const height = 180;
+    const fileName = e.name;
+    const reader = new FileReader();
+
+    reader.readAsDataURL(e);
+    reader.onload = event => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const elem = document.createElement('canvas');
+        elem.width = width;
+        elem.height = height;
+        const ctx = elem.getContext('2d');
+        // img.width и img.height будет содержать оригинальные размеры
+        ctx.drawImage(img, 0, 0, width, height);
+        ctx.canvas.toBlob((blob) => {
+          const file = new File([blob], fileName, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          });
+            encodeImageFileAsURL(this.saveFile)
+            function encodeImageFileAsURL(saveFile) {
+            
+            const reader = new FileReader();
+            reader.onloadend = function() {
+              saveFile(reader.result, 'result');
+            }
+            reader.readAsDataURL(file);
+          }
+        }, 'image/jpeg', 1);
+      };
+      
+      reader.onerror = error => console.log(error, 'error');
+    };
+  }
+
+  saveFile(el){
+    this.userSettings.avatar = el
+  }
+// ############
 
   submit () {
     this.formHasErrors = false
+    
+    this.compress(this.userSettings.avatar)
+    
     Object.keys(this.userSettings).forEach(f => {
       if (!this.userSettings[f]) this.formHasErrors = true
       this.$refs[f].validate(true)
@@ -212,21 +318,91 @@ export default class AccountSettings extends Vue{
     }
   }
 
+  timer(){
+    this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
+  }
+
+// ! TODO плюсовать баланс на сервере. убрать возможность пользователю подставлять свою цифру на клиенте.
+
+  async takeBonus(){
+    try {
+      this.isLoading = true
+      this.user = await this.$axios.$put('http://localhost:4000/users/balance/61925a32af2b0cbcd9330f3f',{lastBonusTime: Date.now(), dollarBalance: 50})
+    } catch (error) {
+      console.log(error);
+    }
+      this.isLoading = false
+  }
+
+  chekBonusTime(){
+    const time = Date.now() - new Date(this.user.lastBonusTime)
+    if(time < 21600000){
+      this.bonusButton = false
+      this.msToTime(21600000 - time)
+    } else {
+    this.bonusButton = true
+    }
+  }
+
+  msToTime(duration) {
+  var milliseconds = parseInt((duration % 1000) / 100),
+    seconds = parseInt((duration / 1000) % 60),
+    minutes = parseInt((duration / (1000 * 60)) % 60),
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  this.bonusTime = hours + ":" + minutes + ":" + seconds;
+}
+
+
   async refreshUser(){
-    this.user = await this.$axios.$get('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea')
-    this.userLabel = this.user.nickname[0] 
+    try {
+      this.isLoading = true
+      this.user = await this.$axios.$get('http://localhost:4000/users/61925a32af2b0cbcd9330f3f')     
+      this.userLabel = this.user.nickname[0] 
+      this.chekBonusTime()
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.isLoading = false
+    }
+    
+    
   }
 
   async handlerSubmit(){
-    this.isShow = false
-    this.isNote = false
-    this.snackbar = true
-    await this.$axios.$put('http://localhost:4000/users/618a71de0348ae7fd4d0d6ea', this.userSettings)
-    this.refreshUser()
-    this.userSettings.nickname = ''
-    this.userSettings.email = ''
-    this.userSettings.avatar = ''
-    this.userSettings.password = ''
+    try {
+      this.isLoading = true
+      this.isShow = false
+      this.isNote = false
+      this.snackbar = true
+
+      this.checkProp()
+
+      await this.$axios.$put('http://localhost:4000/users/61925a32af2b0cbcd9330f3f', this.userSettings)
+      this.refreshUser()
+    } catch (error) {
+      console.log(error);
+    } finally{
+      this.isLoading = false
+        this.userSettings.nickname = ''
+        // this.userSettings.email = ''
+        this.userSettings.avatar = ''
+        // this.userSettings.password = ''
+    }
+    
+
+  }
+
+  checkProp(){
+          for(const prop in this.userSettings){
+        if(!this.userSettings[prop]){
+          this.userSettings[prop] = this.user[prop]
+        }
+      }
   }
 
 }
@@ -234,56 +410,78 @@ export default class AccountSettings extends Vue{
 
 </script>
 
-<style>
-  .container{
+<style scoped>
+  img{
+    /* width: 100%;
+    height: auto; */
+  }
+
+  .loader__box {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50% -50%);
+    z-index: 2;
+  }
+
+  .container {
+    position: relative;
     padding: 15px;
     margin-right: 0;
     margin-left: 0;
   }
 
-  .content{
-    display: flex;}
-
-  .ava{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .ava {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
     font-size: 90px;
     font-weight: bold;
   }
 
-  .btn__group{
-    display: flex;
-    justify-content: center;
-    margin: 15px auto;
-  }
-
-  .btn{
+  .btn {
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
   }
 
   .ava,
-  .account__info{
+  .account__info {
     margin-top: 10px;
   }
 
-  .title__page{
+  .account__info .last {
+    display: inline-block;
+    margin-bottom: 60px;
+  }
+
+  .title__page {
     margin-left: 50px;
   }
 
-  .card__btn{
+  .card__btn {
     margin-right: 5px;
     margin-left: auto;
     margin-top: 15px;
   }
 
-  .backdrop{
+  .p__relative {
+    position: relative;
+    max-width: 300px;
+    padding-bottom: 70px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .btn__update {
+    display: inline-block;
+    position: absolute;
+    right: 25px;
+    bottom: 12px;
+    margin-top: 15px;
+  }
+
+  .backdrop {
     position: fixed;
     left: 0;
     top: 0;
@@ -292,7 +490,7 @@ export default class AccountSettings extends Vue{
     background-color: rgba(0, 0, 0, 0.5);
   }
 
-  .modal{
+  .modal {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -306,17 +504,4 @@ export default class AccountSettings extends Vue{
     border-radius: 8px;
   }
 
-  .account__input{
-    /* display: flex; */
-    /* margin-top: 15px; */
-  }
-
-  /* .modal__input{
-    margin-right: 40px;
-    margin-left: auto;
-  } */
-
-  .invalid{
-    border-color: red;
-  }
 </style>
