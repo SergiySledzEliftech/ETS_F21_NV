@@ -10,6 +10,10 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component({})
 
 export default class DashboardPage extends Vue{
-
+  head() {
+    return {
+      title: 'Dashboard',
+    }
+  }
 }
 </script>

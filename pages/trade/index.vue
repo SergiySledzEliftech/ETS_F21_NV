@@ -49,7 +49,14 @@ import CurrencyPurchaseModal from '../../components/CurrencyPurchaseModal.vue';
 @Component({
   components: { CurrencyPurchaseModal },})
 
-export default class TradePage extends Vue {
+
+export default class TradePage extends Vue{
+  head() {
+    return {
+      title: 'Trade',
+    }
+  }
+
   data () {
     return {
       dialog: true,
