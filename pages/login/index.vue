@@ -1,6 +1,8 @@
 <template>
   <div>
     <v-btn to="login/register">Don't have an account? Create one!</v-btn>
+    <!--Example of login-->
+    <!--<v-btn @click="$auth.loginWith('local', { data: 'my-login' })" to="/">Login</v-btn>-->
   </div>
 </template>
 
