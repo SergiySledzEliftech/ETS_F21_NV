@@ -3,6 +3,8 @@
     <div class="finder">
 
     </div>
+    
+
     <div
       class="currencies d-flex"
       v-if="$store.state.userCurrencies.currencies.length"
@@ -19,7 +21,7 @@
           Amount: {{ currency.amount }}
         </v-card-text>
         <v-card-text>
-          Purchase date: {{ currency.purchaseDate }}
+          Purchase date: {{ parseDate(new Date(currency.purchaseDate)) }}
         </v-card-text>
         <v-card-actions class="actions d-flex">
           <v-btn>Buy more</v-btn>
@@ -27,21 +29,25 @@
         </v-card-actions>
       </v-card>
     </div>
+
     <div
       v-else
       class="buy-suggestion d-flex"
     >
       <h2>You don't have any currencies yet</h2>
-      <br>
       <v-btn>Buy some</v-btn>
     </div>
+    <CurrencyPurchaseModal />
+
   </div>
 </template>
 
 <script>
 import { Component, Vue } from 'nuxt-property-decorator';
+import CurrencyPurchaseModal from '../../components/CurrencyPurchaseModal.vue';
 
-@Component({})
+@Component({
+  components: { CurrencyPurchaseModal },})
 
 
 export default class TradePage extends Vue{
@@ -53,14 +59,22 @@ export default class TradePage extends Vue{
 
   data () {
     return {
+      dialog: true,
       userId: '1'
     }
   }
 
-  mounted() {
+  mounted () {
     this.$store.dispatch('userCurrencies/fetchCurrencies', {
       userId: this.userId
     })
+  }
+
+  parseDate (date) {
+    const day = date.getDate()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    return `${day}.${month}.${year}`
   }
 }
 </script>

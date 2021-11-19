@@ -89,7 +89,8 @@ export default class DefautPage extends Vue{
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
            {name: 'News and Trends', link: '/news', icon: 'mdi-newspaper'},
-           {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'}
+           {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'},
+           {name: 'Transaction history', link: '/transactionHistory', icon: 'mdi-chart-timeline-variant'}
            ];
   title = 'Trainder';
 
@@ -176,6 +177,7 @@ export default class DefautPage extends Vue{
   position: relative;
   height: auto;
   flex-grow: 1;
+  min-height: 64px;
 }
 
 .logout-item {

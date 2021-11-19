@@ -33,12 +33,16 @@
                 >Log in</v-btn
               >
             </v-row>
+
+            <!--Example of login-->
+            <!--<v-btn @click="$auth.loginWith('local', { data: 'my-login' })" to="/">Login</v-btn>-->
           </v-form>
         </v-container>
       </v-column>
     </v-container>
   </div>
 </template>
+
 
 <script>
 import { Component, Vue } from "nuxt-property-decorator";
@@ -53,7 +57,10 @@ export default class LoginPage extends Vue {
   };
 
   async logIn() {
-    await this.$axios.$post("http://localhost:4000/users/login", this.userSettings);
+    await this.$axios.$post(
+      "http://localhost:4000/users/login",
+      this.userSettings
+    );
 
     console.log(this.logInData);
     this.logInData.email = "";
