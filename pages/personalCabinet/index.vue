@@ -14,22 +14,56 @@
           <h1 class="d-flex justify-center">Account settings</h1>
           <v-container>
             <v-row>
-              <v-col class="col-xs-12 col-sm-7 col-md-5 col-lg-6 d-flex justify-center ">
-                <img class="rounded-circle" v-if="user.avatar" 
-                :src="user.avatar" 
-                alt="avatar">
-                <div class="ava d-flex align-center justify-center rounded-circle" v-else> <span class="label">{{ userLabel }}</span></div>
+              <v-col 
+              class="col-xs-12 
+              col-sm-7 
+              col-md-5 
+              col-lg-6 
+              d-flex 
+              justify-center "
+              >
+                <img 
+                v-if="details.avatar" 
+                class="rounded-circle" 
+                :src="details.avatar"  
+                alt="avatar"
+                >
+                <div 
+                v-else 
+                class="ava 
+                d-flex 
+                align-center 
+                justify-center
+                rounded-circle" 
+                > 
+                  <span 
+                    class="label"
+                  >
+                    {{ userLabel }}
+                  </span>
+                </div>
               </v-col>
-              <v-col class="col-xs-12 col-sm-5 col-md-7 col-lg-6 p__relative">
-                <h2 class="account__info" >Nick: {{ user.nickname }}</h2>
-                <p class="account__info">Email: {{user.email}} </p>
-                <p class="account__info" >Balance: ${{ user.dollarBalance }}</p>
-                <p class="accont__info" v-if="!bonusButton">Top up your balance: {{bonusTime}} </p>
+              <v-col 
+                class="col-xs-12 
+                col-sm-5 
+                col-md-7 
+                col-lg-6 
+                p__relative"
+              >
+                <h2 class="account__info" >Nick: {{details.nickname}}</h2>
+                <p class="account__info">Email: {{details.email}} </p>
+                <p class="account__info" >Balance: ${{details.dollarBalance}}</p>
+                <p
+                  v-if="!bonusButton" 
+                  class="accont__info" 
+                >
+                  Top up your balance: {{bonusTime}} 
+                </p>
                 <v-btn 
+                  v-else
                   class="accont__info white--text last" 
                   color="blue" 
-                  v-else
-                  @click="takeBonus">
+                  @click="handlerTakeBonus">
                     Take bonus
                 </v-btn>
                 <v-btn 
@@ -172,12 +206,19 @@
 </template>
 
 <script>
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Vue } from 'nuxt-property-decorator'
+import Component, {namespace} from 'nuxt-class-component'
 import rules from '../../utils/form-validation-rules.js'
+const {State, Action} = namespace('user')
 
-@Component({})
+export default @Component({})
 
-export default class AccountSettings extends Vue{
+class AccountSettings extends Vue{
+  @State details
+  @Action getUser 
+  @Action updateUser
+  @Action takeBonus
+  
   data () {
     return {
       required: rules.required,
@@ -322,20 +363,19 @@ export default class AccountSettings extends Vue{
     this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
   }
 
-// ! TODO плюсовать баланс на сервере. убрать возможность пользователю подставлять свою цифру на клиенте.
-
-  async takeBonus(){
+  async handlerTakeBonus(){
     try {
       this.isLoading = true
-      this.user = await this.$axios.$put('http://localhost:4000/users/balance/61925a32af2b0cbcd9330f3f',{lastBonusTime: Date.now(), dollarBalance: 50})
+      await this.takeBonus(this.details._id)
     } catch (error) {
       console.log(error);
-    }
-      this.isLoading = false
+    } finally {
+        this.isLoading = false
+    } 
   }
 
   chekBonusTime(){
-    const time = Date.now() - new Date(this.user.lastBonusTime)
+    const time = Date.now() - new Date(this.details.lastBonusTime)
     if(time < 21600000){
       this.bonusButton = false
       this.msToTime(21600000 - time)
@@ -361,8 +401,8 @@ export default class AccountSettings extends Vue{
   async refreshUser(){
     try {
       this.isLoading = true
-      this.user = await this.$axios.$get('http://localhost:4000/users/61925a32af2b0cbcd9330f3f')     
-      this.userLabel = this.user.nickname[0] 
+      await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
+
       this.chekBonusTime()
     } catch (error) {
       console.log(error);
@@ -379,11 +419,10 @@ export default class AccountSettings extends Vue{
       this.isShow = false
       this.isNote = false
       this.snackbar = true
-
       this.checkProp()
 
-      await this.$axios.$put('http://localhost:4000/users/61925a32af2b0cbcd9330f3f', this.userSettings)
-      this.refreshUser()
+      await this.updateUser({id: this.details._id, body: {...this.userSettings}})
+      
     } catch (error) {
       console.log(error);
     } finally{
