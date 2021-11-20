@@ -39,7 +39,7 @@
       </v-container>
     </v-navigation-drawer>
 
-    <v-app-bar app flat color="rgba(0, 0, 0, 0)">
+    <v-app-bar app flat color="rgb(255, 255, 255)">
       <v-app-bar-nav-icon class="d-flex d-sm-none" @click.stop="drawer = !drawer"/>
       <v-toolbar-title class="font-weight-medium text-h4" v-if="this.$vuetify.breakpoint.mdAndUp">
         {{ this.title.split('|')[0] }}
@@ -123,7 +123,6 @@ class DefautPage extends Vue {
 
   @Watch('$route')
   onRouteChange() {
-    // console.log(this.$route);
     const link = '/' + this.$route.path.split('/')[1];
     if (!Object.keys(this.halfCircleIconsDisplayNone).includes(link)) return;
     for (let i in this.halfCircleIconsDisplayNone) {

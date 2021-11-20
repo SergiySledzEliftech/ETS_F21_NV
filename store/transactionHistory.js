@@ -1,12 +1,27 @@
 import { serverUrl } from '../utils/config'
 
 export const state = () => ({
-  transactions: []
+  transactions: [],
+  pageCount: 1,
+  transactionDates: [],
+  transactionAmounts: []
 })
 
 export const mutations = {
   updateTransactionHistory (state, transactions) {
     state.transactions = transactions
+  },
+
+  updatePageCount (state, pageCount) {
+    state.pageCount = pageCount
+  },
+
+  updateTransactionDates (state, transactions) {
+    state.transactionDates = transactions.map(transaction => transaction.date)
+  },
+
+  updateTransactionAmounts (state, transactions) {
+    state.transactionAmounts = transactions.map(transaction => transaction.amount)
   }
 }
 
@@ -25,8 +40,11 @@ export const actions = {
         page: params.page,
         limit: params.limit
       }
-      const response = await this.$axios.$get(url, { params: parameters })
-      ctx.commit('updateTransactionHistory', response)
+      const [transactions, pageCount] = await this.$axios.$get(url, { params: parameters })
+      ctx.commit('updateTransactionHistory', transactions)
+      ctx.commit('updatePageCount', pageCount)
+      ctx.commit('updateTransactionDates', transactions)
+      ctx.commit('updateTransactionAmounts', transactions)
     } catch (error) {
       // console.error(error)
     }

@@ -1,5 +1,5 @@
 <script>
-import { Prop, Vue } from 'vue-property-decorator'
+import { Prop, Vue, Watch } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import { Line } from 'vue-chartjs'
 
@@ -38,6 +38,13 @@ export default class Chart extends Vue {
   }
 
   mounted () {
+    this.updateChart()
+  }
+
+  @Watch('dataLabels', {deep: true})
+  @Watch('dataArray', {deep: true})
+  @Watch('lineLabels', {deep: true})
+  updateChart() {
     const data = this.composeData()
     
     if (this.chartTitle) {

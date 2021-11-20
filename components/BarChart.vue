@@ -1,5 +1,5 @@
 <script>
-import { Prop, Vue } from 'vue-property-decorator'
+import { Prop, Vue, Watch } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import { Bar } from 'vue-chartjs'
 
@@ -55,6 +55,13 @@ export default class Chart extends Vue {
       }
 
   mounted () {
+    this.updateChart();
+  }
+
+  @Watch('dataLabels', {deep: true})
+  @Watch('dataArray', {deep: true})
+  @Watch('datalabel', {deep: true})
+  updateChart() {
     const colors = getRandomColors(this.dataLabels.length, 0.25); // ставим рандомные цвета каждому бару
     
     if (this.chartTitle) {
@@ -70,6 +77,7 @@ export default class Chart extends Vue {
         backgroundColor: colors
       }]},
       this.options
-    )}
+    )
+  }
 }
 </script>
