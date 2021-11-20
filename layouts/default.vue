@@ -123,7 +123,7 @@ class DefautPage extends Vue {
 
   @Watch('$route')
   onRouteChange() {
-    console.log(this.$route);
+    // console.log(this.$route);
     const link = '/' + this.$route.path.split('/')[1];
     if (!Object.keys(this.halfCircleIconsDisplayNone).includes(link)) return;
     for (let i in this.halfCircleIconsDisplayNone) {
@@ -181,6 +181,7 @@ class DefautPage extends Vue {
   position: relative;
   height: auto;
   flex-grow: 1;
+  min-height: 64px;
 }
 
 .logout-item {
