@@ -5,6 +5,7 @@
   color="blue lighten-1">
     <v-icon>{{ icon }}</v-icon>
     <v-icon 
+    color="blue"
     :class="{'icon-circle-half': true, 'd-none': halfCircleDisplayNoneBool}" 
     x-small>mdi-circle-half</v-icon>
     <v-list-item-content class="mx-4 font-weight-light">
@@ -14,7 +15,7 @@
 </template>
 
 <script>
-import { Prop, Vue, Watch } from 'nuxt-property-decorator'
+import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 
 export default @Component({})

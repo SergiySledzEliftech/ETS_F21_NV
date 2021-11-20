@@ -37,9 +37,9 @@
         <div class="logout-item-container">
           <menu-link 
           class="my-4 logout-item" 
-          :icon="'mdi-logout'"
-          :link="'/login'"
-          :name="'Logout'"
+          :icon="logoutLink.icon"
+          :link="logoutLink.link"
+          :name="logoutLink.name"
           :halfCircleDisplayNone="true" />
         </div>
       </v-list>
@@ -62,6 +62,7 @@ class NavbarDrawer extends Vue {
   @Prop({type: Array}) links
   @Prop({type: String}) logo 
   @Prop({type: Boolean}) drawer
+  @Prop({type: Object}) logoutLink
 
   miniScreen = true;
   halfCircleIconsDisplayNone = {};

@@ -1,6 +1,6 @@
 <template>
   <v-app light>
-    <navbar-drawer :links="links" :logo="logo" :drawer="drawer"/>
+    <navbar-drawer :links="links" :logout-link="logoutLink" :logo="logo" :drawer="drawer"/>
 
     <v-app-bar app flat color="rgb(255, 255, 255)">
       <v-app-bar-nav-icon class="d-flex d-sm-none" @click.stop="drawer = !drawer"/>
@@ -60,6 +60,7 @@ class DefautPage extends Vue {
            {name: 'Trading page', link: '/trade', icon: 'mdi-swap-horizontal'},
            {name: 'Transaction history', link: '/transactionHistory', icon: 'mdi-chart-timeline-variant'}
            ];
+  logoutLink = {name: 'Logout', link: '/login', icon: 'mdi-logout'}
   title = 'Trainder';
 
   head () {
