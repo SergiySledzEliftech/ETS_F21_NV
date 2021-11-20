@@ -1,28 +1,24 @@
 <script>
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Prop, Vue } from 'vue-property-decorator'
+import Component from 'nuxt-class-component'
 import { Line } from 'vue-chartjs'
 
 import getRandomColors from '../utils/getRandomColors'
 
-@Component({
-  extends: Line,
-  props: {
-      dataLabels: {
-          type: Array // Массив данных для оси координат Х, вида ['точка1', 'точка2', ...]. Сюда закидывать массив дат.
-      },
-      dataArray: {
-          type: Array // Массив с массивами данных для построение графика, вида [[8,10,15, *остальные точки по оси Y*], [14,9,25, *остальные точки по оси Y*], ...]. Сюда закидывать массив значений для графика.
-      }, 
-      lineLabels: {
-          type: Array // Массив данных для подписей линий графика, вида ['подпись1', 'подпись2', ...]. Сюда закидывать названия валют.
-      }
-  },
-})
+@Component({extends: Line})
 export default class Chart extends Vue {
-    // Объект настроек для графика. В данном случае график будет менять размер при изменении размеров окна с сохранением пропорций
+  @Prop({type: Array, required: true}) dataLabels // Массив данных для оси координат Х, вида ['точка1', 'точка2', ...]. Сюда закидывать массив дат.
+  @Prop({type: Array, required: true}) dataArray // Массив с данными для построение графика, вида [8,10,15, *остальные точки по оси Y*. Сюда закидывать массив значений для графика.
+  @Prop({type: Array, required: true}) lineLabels // Массив данных для подписей линий графика, вида ['подпись1', 'подпись2', ...]. Сюда закидывать названия валют.
+  @Prop({type: String}) chartTitle // Название графика.
+
+  // Объект настроек для графика. В данном случае график будет менять размер при изменении размеров окна с сохранением пропорций
   options = {
     responsive: true,
     maintainAspectRatio: false,
+    title: {
+          display: false,
+      },
   }
 
   composeData() {
@@ -43,6 +39,11 @@ export default class Chart extends Vue {
 
   mounted () {
     const data = this.composeData()
+    
+    if (this.chartTitle) {
+      this.options.title.display = true
+      this.options.title.text = this.chartTitle
+    }
 
     this.renderChart(data, this.options)
   }

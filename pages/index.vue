@@ -2,10 +2,12 @@
   <div>
     Welcome to dashboard!
 
-    <chart 
-      :dataLabels="labels" 
+    <chart
+      v-if="data.length"
+      :dataLabels="getLabels" 
       :dataArray="getData"
       datalabel="Change, %"
+      chartTitle="Daily price change in %"
       class="pa-10">
     </chart>  
 
@@ -16,7 +18,7 @@
           :key="currencyArr[0]"
           :title="currencyArr[0]"
           :rate="1 / currencyArr[1].end_rate"
-          :change="(1 / currencyArr[1].end_rate) - (1 / currencyArr[1].start_rate)"
+          :change="currencyArr[1].change_pct"
           :favorite="false"
         ></list-item>
       </v-list>
@@ -44,8 +46,8 @@ import Chart from '../components/BarChart.vue'
 
 export default class DashboardPage extends Vue{
   dates = ['2021-11-05', '2021-11-16']
-  data = [1, 0.999999, 0.999995, 0.99999, 0.999989, 0.999987, 0.999958, 0.999939, 0.999897, 0.999816, 0.999803, 0.999625, 0.999232, 0.999188, 0.999169, 0.999024, 0.998462, 0.998153, 0.998109, 0.997156]
-  labels = ['KITTY', 'FDAO', 'GREED', 'APE', 'ION', 'BIRD', 'BIFI', 'FUD', 'DMS', 'ECASH', 'AQUA', 'ADX', 'DIMI', 'COW', 'CHIPS', 'BDP', 'EARN', 'COT', 'CTB', 'MASK']
+  data = []
+  labels = []
   lineLab = []
   rawData = []
   loading = true
@@ -72,6 +74,7 @@ export default class DashboardPage extends Vue{
     return result
   }
   get getData() {
+    console.log(this.data.map(num => Math.round(num * 10000) / 100))
     return this.data.map(num => Math.round(num * 10000) / 100)
   }
 
@@ -87,13 +90,11 @@ export default class DashboardPage extends Vue{
       this.rawData = data.data.rates
       this.pagination.length = Math.ceil((Object.values(this.rawData).length) / 10) - 1
 
-      // const dataSorted = Object.entries(data.data.rates).filter(rate => rate[1].end_rate > 0).sort((a,b) => b[1].change_pct - a[1].change_pct).slice(0,20)
+      const dataSorted = Object.entries(data.data.rates).filter(rate => rate[1].end_rate > 0).sort((a,b) => b[1].change_pct - a[1].change_pct).slice(0,20)
 
-      // this.labels = dataSorted.map(arr => arr[0])
-      // this.data = dataSorted.map(arr => arr[1].change_pct)
-
-      // console.log(this.getData)
-      // console.log(this.getLabels)
+      this.labels = dataSorted.map(arr => arr[0])
+      this.data = dataSorted.map(arr => arr[1].change_pct)
+      this.loading = false
   }
 }
 </script>
