@@ -1,43 +1,6 @@
 <template>
   <v-app light>
-    <v-navigation-drawer v-model="drawer" floating color="rgb(255,242,245)" :mini-variant="mini"
-    mini-variant-width="70" width="300" app :permanent="$vuetify.breakpoint.name != 'xs'">
-      <v-container>
-        <v-list flat>
-
-          <v-list-item class="px-2 cursor-point mb-15" @click.stop="changeDrawerPosition">
-            <v-list-item-avatar class="rounded-0">
-              <v-img src="mainLogo.png"/>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title class="font-weight-light">
-                <span class="header-span font-weight-medium">Train</span>der
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <div>
-            <v-list-item class="mb-4" v-for="(link, key) in links" :key="key" 
-            :to="link.link" color="blue lighten-1">
-              <v-icon>{{ link.icon }}</v-icon>
-              <v-icon :class="{'icon-circle-half': true, 'd-none': halfCircleIconsDisplayNone[link.link]}" x-small>mdi-circle-half</v-icon>
-              <v-list-item-content class="mx-4 font-weight-light">
-                <v-list-item-title >{{ link.name }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </div>
-          
-          <div class="logout-item-container">
-            <v-list-item class="my-4 logout-item" to="/login" color="blue lighten-1">
-              <v-icon>mdi-logout</v-icon>
-              <v-list-item-content class="mx-4 font-weight-light">
-                <v-list-item-title >Logout</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </div>
-        </v-list>
-      </v-container>
-    </v-navigation-drawer>
+    <navbar-drawer :links="links" :logo="logo" :drawer="drawer"/>
 
     <v-app-bar app flat color="rgb(255, 255, 255)">
       <v-app-bar-nav-icon class="d-flex d-sm-none" @click.stop="drawer = !drawer"/>
@@ -79,13 +42,17 @@
 <script>
 import { Vue, Watch } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
+import NavbarDrawer from '../components/NavbarDrawer.vue'
 
-export default @Component({})
+export default @Component({
+  components: {
+    NavbarDrawer
+  }
+})
 
 class DefautPage extends Vue {
   drawer = false;
-  miniScreen = true;
-  halfCircleIconsDisplayNone = {};
+  logo = 'mainLogo.png';
   inputSeen = false;
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
@@ -95,22 +62,6 @@ class DefautPage extends Vue {
            ];
   title = 'Trainder';
 
-  created() {
-    for (let i = 0; i < this.links.length; i++) {
-      const link = this.links[i].link;
-      this.halfCircleIconsDisplayNone[link] = this.$route.path !== link;
-    }
-  }
-
-  changeDrawerPosition() {
-    if ($vuetify.breakpoint.name == 'xs') drawer = !drawer;
-    else miniScreen = !miniScreen;
-  }
-
-  get mini() {
-    return (this.$vuetify.breakpoint.name == 'xs')? false : this.miniScreen;
-  };
-  
   head () {
     let sefl = this
     if (process.browser) this.title = document.title;
@@ -120,33 +71,11 @@ class DefautPage extends Vue {
       }
     }
   };
-
-  @Watch('$route')
-  onRouteChange() {
-    const link = '/' + this.$route.path.split('/')[1];
-    if (!Object.keys(this.halfCircleIconsDisplayNone).includes(link)) return;
-    for (let i in this.halfCircleIconsDisplayNone) {
-      this.halfCircleIconsDisplayNone[i] = true;
-    }
-    this.halfCircleIconsDisplayNone[link] = false;
-  }
-
 }
 </script>
 
 <style scoped>
-.cursor-point {
-  cursor: pointer;
-}
 
-.icon-circle-half {
-  transform: rotate(180deg);
-  position: absolute;
-  left: -18px;
-  box-shadow: inset 0 0 0px 10px #42A5F5,
-              0 0 3px 6px #bcdaf3;
-  border-radius: 50%;
-}
 
 .avatar {
   border-radius: 5px;
@@ -159,33 +88,6 @@ class DefautPage extends Vue {
 
 .header-span {
   display: inline
-}
-
-.v-list-item {
-  flex: none;
-}
-
-.container {
-  height: 100%;
-}
-
-.v-list {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-.logout-item-container {
-  position: relative;
-  height: auto;
-  flex-grow: 1;
-  min-height: 64px;
-}
-
-.logout-item {
-  position: absolute;
-  bottom: 0;
 }
 
 </style>
