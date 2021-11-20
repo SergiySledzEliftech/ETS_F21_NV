@@ -1,6 +1,14 @@
+import { serverUrl } from '../utils/config'
+
 export const state = () => ({
   transactions: []
 })
+
+export const mutations = {
+  updateTransactionHistory (state, transactions) {
+    state.transactions = transactions
+  }
+}
 
 export const actions = {
   async fetchTransactions (ctx, params = {}) {
@@ -11,18 +19,16 @@ export const actions = {
       }
     }
     try {
-      const url = `http://localhost:4000/transaction-history?currency=${params.currency}&page=${params.page}&limit=${params.limit}`
-      console.log(url)
-      const response = await this.$axios.$get(url)
+      const url = `${serverUrl}/transaction-history`
+      const parameters = {
+        currency: params.currency,
+        page: params.page,
+        limit: params.limit
+      }
+      const response = await this.$axios.$get(url, { params: parameters })
       ctx.commit('updateTransactionHistory', response)
     } catch (error) {
-      console.error(error)
+      // console.error(error)
     }
-  }
-}
-
-export const mutations = {
-  updateTransactionHistory (state, transactions) {
-    state.transactions = transactions
   }
 }

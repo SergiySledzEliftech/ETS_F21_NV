@@ -5,10 +5,9 @@
       <v-container>
         <v-list flat>
 
-          <v-list-item class="px-2 cursor-point mb-15" 
-          @click.stop="$vuetify.breakpoint.name == 'xs' ? drawer = !drawer : miniScreen = !miniScreen">
+          <v-list-item class="px-2 cursor-point mb-15" @click.stop="changeDrawerPosition">
             <v-list-item-avatar class="rounded-0">
-              <v-img src="mainLogo.png"></v-img>
+              <v-img src="mainLogo.png"/>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title class="font-weight-light">
@@ -41,15 +40,15 @@
     </v-navigation-drawer>
 
     <v-app-bar app flat color="rgba(0, 0, 0, 0)">
-      <v-app-bar-nav-icon class="d-flex d-sm-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon class="d-flex d-sm-none" @click.stop="drawer = !drawer"/>
       <v-toolbar-title class="font-weight-medium text-h4" v-if="this.$vuetify.breakpoint.mdAndUp">
         {{ this.title.split('|')[0] }}
       </v-toolbar-title>
 
-      <v-spacer v-if="!inputSeen || this.$vuetify.breakpoint.mdAndUp"></v-spacer>
+      <v-spacer v-if="!inputSeen || this.$vuetify.breakpoint.mdAndUp"/>
 
       <v-col cols="8" sm="5" md="3" v-if="inputSeen">
-        <v-text-field @blur="inputSeen = !inputSeen" autofocus hide-details single-line></v-text-field>
+        <v-text-field @blur="inputSeen = !inputSeen" autofocus hide-details single-line/>
       </v-col>
 
       <v-btn @click="inputSeen = !inputSeen" icon>
@@ -65,7 +64,7 @@
       
       <div :style="[this.$vuetify.breakpoint.xsOnly ? {'margin': '0'} : {'margin': '0 10px'}]">
         <v-btn to="/" v-if="!inputSeen || this.$vuetify.breakpoint.mdAndUp" min-width="0" max-width="35" text>
-          <v-img max-width="35" class="avatar" max-height="35" src="https://thispersondoesnotexist.com/image"></v-img>
+          <v-img max-width="35" class="avatar" max-height="35" src="https://thispersondoesnotexist.com/image"/>
         </v-btn>
       </div>
 
@@ -78,10 +77,12 @@
 </template>
 
 <script>
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { Vue, Watch } from 'nuxt-property-decorator'
+import Component from 'nuxt-class-component'
 
-@Component
-export default class DefautPage extends Vue{
+export default @Component({})
+
+class DefautPage extends Vue {
   drawer = false;
   miniScreen = true;
   halfCircleIconsDisplayNone = {};
@@ -97,14 +98,17 @@ export default class DefautPage extends Vue{
   created() {
     for (let i = 0; i < this.links.length; i++) {
       const link = this.links[i].link;
-      if (this.$route.path == link) this.halfCircleIconsDisplayNone[link] = false;
-      else this.halfCircleIconsDisplayNone[link] = true;
+      this.halfCircleIconsDisplayNone[link] = this.$route.path !== link;
     }
   }
 
+  changeDrawerPosition() {
+    if ($vuetify.breakpoint.name == 'xs') drawer = !drawer;
+    else miniScreen = !miniScreen;
+  }
+
   get mini() {
-    if (this.$vuetify.breakpoint.name == 'xs') return false;
-    else return this.miniScreen;
+    return (this.$vuetify.breakpoint.name == 'xs')? false : this.miniScreen;
   };
   
   head () {

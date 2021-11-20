@@ -1,5 +1,9 @@
 <template>
   <div>
+    <chart :dataLabels="['kk', 'h', 'hhh', 'll']" 
+      :dataArray="[10, 11, 0.1, 0.6]"
+      :lineLabels="['smth', 'lll']"
+      class="pa-10"/>
     <div>Here will lay chart component </div>
     <v-row align="center">
       <v-col class="d-flex" cols="6" sm="6">
@@ -13,12 +17,17 @@
 
 <script>
 import { Component, namespace, Vue, Watch } from 'nuxt-property-decorator'
+import Chart from '../components/LineChart.vue'
 
 const { State, Action } = namespace('transactionHistory');
 
-@Component({})
+export default @Component({
+  components: {
+      Chart,
+  },
+})
 
-export default class DashboardPage extends Vue{
+class DashboardPage extends Vue{
   @State transactions
   @Action fetchTransactions
 
@@ -53,7 +62,5 @@ export default class DashboardPage extends Vue{
   async mounted() {
     await this.fetchTransactions();
   }
-
-
 }
 </script>
