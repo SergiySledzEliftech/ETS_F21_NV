@@ -1,13 +1,13 @@
 <template>
   <div>
     Welcome to dashboard!
-
+    <DatePicker />
     <chart
       v-if="data.length"
       :dataLabels="getLabels" 
       :dataArray="getData"
       datalabel="Change, %"
-      chartTitle="Daily price change in %"
+      :chartTitle="`Daily price change in % for period ${formatDates[0]} - ${formatDates[1]}`"
       class="pa-10">
     </chart>  
 
@@ -33,34 +33,39 @@
 </template>
 
 <script>
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Vue } from 'vue-property-decorator'
+import Component, {namespace} from 'nuxt-class-component'
 
 import Chart from '../components/BarChart.vue'
 import DataTable from '../components/DataTable.vue'
 import BuyBtn from '../components/BuyBtn.vue'
+import DatePicker from '../components/Datepicker.vue'
+
+const {State, Mutation, Getter} = namespace('dashboardStore')
 
 
 @Component({
   components: {
       Chart,
       DataTable,
-      BuyBtn
+      BuyBtn,
+      DatePicker
   },
 })
 
 export default class DashboardPage extends Vue{
-  dates = ['2021-11-05', '2021-11-16']
+  @State dateRange
+  @State isLoading
+  @Getter formatDates
+  @Mutation updateDateRange
+  @Mutation changeLoading
+
   data = []
   labels = []
   lineLab = []
   rawData = []
   dataSorted = []
   loading = true
-  pagination = {
-    page: 1,
-    elements: 10,
-    length: 0
-  }
 
   head() {
     return {
@@ -69,8 +74,15 @@ export default class DashboardPage extends Vue{
   }
 
   async mounted() {
-    await this.callAPI(this.dates)
-    this.loading = false
+    await this.callAPI(this.dateRange)
+    this.changeLoading()
+    this.unsubscribe = this.$store.subscribe((updateDateRange, _) => {
+      return this.callAPI(updateDateRange.payload)
+    })
+  }
+
+  unmounted() {
+    this.unsubscribe()
   }
 
   get getLabels() {
@@ -80,13 +92,6 @@ export default class DashboardPage extends Vue{
   }
   get getData() {
     return this.data.map(num => Math.round(num * 10000) / 100)
-  }
-
-  get listToDisplay() {
-    const dataEntries = Object.entries(this.rawData)
-    const startEl = this.pagination.page * this.pagination.elements
-    const endEl = startEl + this.pagination.elements
-    return dataEntries.slice(startEl, endEl)
   }
 
   get dataArray () {
@@ -105,7 +110,6 @@ export default class DashboardPage extends Vue{
   async callAPI([start, end]) {
       const data = await this.$axios(`https://api.exchangerate.host/fluctuation?start_date=${start}&end_date=${end}&source=crypto`)
       this.rawData = data.data.rates
-      this.pagination.length = Math.ceil((Object.values(this.rawData).length) / 10) - 1
 
       const dataSorted = Object.entries(data.data.rates).filter(([_, values]) => values.end_rate > 0.01 && values.change > 0.01).sort((a,b) => b[1].change_pct - a[1].change_pct).slice(0,20)
 
