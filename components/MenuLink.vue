@@ -2,7 +2,8 @@
   <v-list-item 
   class="mb-4"  
   :to="link" 
-  color="blue lighten-1">
+  color="blue lighten-1"
+  @click="onMenuLinkClick">
     <v-icon>{{ icon }}</v-icon>
     <v-icon 
     color="blue"
@@ -17,14 +18,15 @@
 <script>
 import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
+import { Emit } from 'vue-property-decorator'
 
 export default @Component({})
 
 class MenuLink extends Vue {
-  @Prop({type: String}) icon
-  @Prop({type: String}) name
-  @Prop({type: String}) link 
-  @Prop({type: Boolean}) halfCircleDisplayNone
+  @Prop({type: String, required: true}) icon
+  @Prop({type: String, required: true}) name
+  @Prop({type: String, required: true}) link 
+  @Prop({type: Boolean, required: true}) halfCircleDisplayNone
 
   halfCircleDisplayNoneBool = true;
 
@@ -34,6 +36,11 @@ class MenuLink extends Vue {
 
   changeHalfCircleDisplay(val) {
     this.halfCircleDisplayNoneBool = val;
+  }
+
+  @Emit('onMenuLinkClick')
+  onMenuLinkClick() {
+    return this.link;
   }
 }
 </script>

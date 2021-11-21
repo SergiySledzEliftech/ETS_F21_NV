@@ -10,18 +10,7 @@
     <v-container>
       <v-list flat>
 
-        <v-list-item 
-        class="px-2 cursor-point mb-15" 
-        @click.stop="changeDrawerPosition">
-          <v-list-item-avatar class="rounded-0">
-            <v-img :src="logo"/>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title class="font-weight-light">
-              <span class="header-span font-weight-medium">Train</span>der
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <logo-title :logo="logo" :title-parts="titleParts" @changeDrawerPosition="changeDrawerPosition"/>
 
         <div>
           <menu-link 
@@ -31,7 +20,8 @@
           :name="link.name" 
           :link="link.link" 
           :ref="link.link"
-          :halfCircleDisplayNone="halfCircleIconsDisplayNone[link.link]"/>
+          :halfCircleDisplayNone="halfCircleIconsDisplayNone[link.link]"
+          @onMenuLinkClick="onMenuLinkClick"/>
         </div>
         
         <div class="logout-item-container">
@@ -51,18 +41,21 @@
 import { Prop, Vue, Watch } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 import MenuLink from './MenuLink.vue'
+import LogoTitle from './LogoTitle.vue'
 
 export default @Component({
   components: {
-    MenuLink
+    MenuLink,
+    LogoTitle
   }
 })
 
 class NavbarDrawer extends Vue {
-  @Prop({type: Array}) links
-  @Prop({type: String}) logo 
-  @Prop({type: Boolean}) drawer
-  @Prop({type: Object}) logoutLink
+  @Prop({type: Array, required: true}) links
+  @Prop({type: String, required: true}) logo 
+  @Prop({type: Boolean, required: true}) drawer
+  @Prop({type: Object, required: true}) logoutLink
+  @Prop({type: Array, required: true}) titleParts
 
   miniScreen = true;
   halfCircleIconsDisplayNone = {};
@@ -94,10 +87,7 @@ class NavbarDrawer extends Vue {
     }
   }
 
-  @Watch('$route')
-  onRouteChange() {
-    const link = '/' + this.$route.path.split('/')[1];
-    console.log(link)
+  onMenuLinkClick(link) {
     if (!Object.keys(this.halfCircleIconsDisplayNone).includes(link)) return;
     for (let i in this.halfCircleIconsDisplayNone) {
       this.changeHalfCircleDisplay(i, true);
