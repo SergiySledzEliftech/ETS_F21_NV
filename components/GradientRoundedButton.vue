@@ -20,7 +20,7 @@ class GradientRoundedButton extends Vue {
   @Prop({type: String}) icon
   @Prop({type: Function}) onClick
   @Prop({type: String, required: true}) text
-  @Prop({type: String}) link
+  @Prop({type: [String, Boolean]}) link
 
 }
 </script>
