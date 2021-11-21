@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <div class="loader__box" v-if="isLoading">
+    <!-- <div class="loader__box" v-if="isLoading">
       <v-progress-circular 
         :size="150" 
         :width="10"
         indeterminate 
         color="purple">
       </v-progress-circular>
-    </div>
+    </div> -->
     <v-container>
       <v-row class="flex-wrap">
         <v-col class="col-xs-12 col-sm-12 col-lg-6">
@@ -66,14 +66,22 @@
                   @click="handlerTakeBonus">
                     Take bonus
                 </v-btn>
-                <v-btn 
+                <!-- <v-btn 
                   class="btn__update white--text" 
                   color="purple lighten-2"
                   type="button"
                   @click="handlerUpdate"
                 >
                   update
-                </v-btn>
+                </v-btn> -->
+                <Dialog
+                  textOpenButton="Update"
+                  textCloseButton="Close"
+                  width="500"
+                  class="btn__update white--text" 
+                >
+                  <update-user-form />
+                </Dialog>
               </v-col>
             </v-row>
           </v-container>
@@ -115,74 +123,8 @@
       </v-row>
     </v-container>
     <v-container v-if="isShow" class="backdrop" @click="closeModal">
-      <v-form 
-      class="modal d-flex flex-column" 
-      v-if="!isNote "
-      @submit.prevent="submit"  
-      @keydown.esc="closeModal" 
-      tabindex="0">
-        <v-text-field 
-          class="modal__input" 
-          type="text"
-          ref="nickname"
-          v-model="userSettings.nickname"
-          :rules="[maxLength, minLength]"
-          label="Nickname"
-        ></v-text-field>
-        <v-text-field 
-          class="modal__input" 
-          type="password" 
-          
-          disabled
-          
-          v-model="userSettings.password"
-          label="Password"
-        ></v-text-field><!-- :rules="[password]" ref="password" -->
-        <v-text-field
-          class="modal__input" 
-          type="text"
-          
-          disabled
-          
-          v-model="userSettings.email"
-          label="Email"
-        ></v-text-field><!-- :rules="[email]" ref="email" -->
-        <v-file-input
-          class="modal__input" 
-          :rules="[avatar]"
-          ref="avatar"
-          accept="image/png, image/jpeg, image/bmp"
-          placeholder="Pick an avatar"
-          prepend-icon="mdi-camera"
-          label="Avatar"
-          v-model="userSettings.avatar"
-        ></v-file-input>
-        <v-btn 
-          class="align-self-end card__btn  white--text" 
-          type="submit"
-          color="purple lighten-2"
-          >
-            Submit
-        </v-btn>
-      </v-form>
-      <div class="modal" v-else>
-        <p>Do you want save your changes?</p> 
-        <div class="d-flex justify-end">
-          <v-btn 
-          class="btn white--text" 
-          color="red"
-          type="submit" 
-          @click.prevent="handlerSubmit">
-            Yes
-        </v-btn>
-        <v-btn 
-          class="btn white--text" 
-          color="green"
-          @click="toggleIsNote">
-            No
-        </v-btn>
-        </div>
-      </div>
+      
+      
     </v-container>
 
     <v-snackbar
@@ -208,53 +150,37 @@
 <script>
 import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
-import rules from '../../utils/form-validation-rules.js'
+
+import Dialog from '../components/Dialog.vue'
+import UpdateUserForm from '../components/UpdateUserForm.vue'
+
 const {State, Action} = namespace('user')
 
-export default @Component({})
+export default @Component({
+  components: {
+    Dialog,
+    UpdateUserForm
+  }
+})
 
 class AccountSettings extends Vue{
   @State details
   @Action getUser 
-  @Action updateUser
   @Action takeBonus
   
-  data () {
-    return {
-      required: rules.required,
-      minLength: rules.minLength,
-      maxLength: rules.maxLength,
-      // password: rules.password,
-      // email: rules.email,
-      avatar: rules.avatar
-    }
-  }
+
 
   multiLine = true
   snackbar = false
   text = `Changes saved.`
 
-  // compressFile = null
-
-  isLoading = true
+  // isLoading = true
 
   userLabel = ''
-  isShow = false
-  user = {}
-  isNote = false
-
-  userSettings = {
-    nickname: '',
-    // email: '',
-    // password: '',
-    avatar: null
-  }
 
   bonusTime = null
   bonusButton = false
   idInterval = ''
-
-  formHasErrors = false
 
   tabs = {
     tab: null,
@@ -270,93 +196,13 @@ class AccountSettings extends Vue{
   }
 
   mounted() {
-    this.isLoading = true
+    // this.isLoading = true
     this.refreshUser()
     this.timer()
   }
 
   unmounted() {
     clearInterval(this.idInterval)
-  }
-  
-// ######### base64
-  compress(e) {
-    if(!e){
-      return
-    }
-    const width = 180;
-    const height = 180;
-    const fileName = e.name;
-    const reader = new FileReader();
-
-    reader.readAsDataURL(e);
-    reader.onload = event => {
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = () => {
-        const elem = document.createElement('canvas');
-        elem.width = width;
-        elem.height = height;
-        const ctx = elem.getContext('2d');
-        // img.width и img.height будет содержать оригинальные размеры
-        ctx.drawImage(img, 0, 0, width, height);
-        ctx.canvas.toBlob((blob) => {
-          const file = new File([blob], fileName, {
-            type: 'image/jpeg',
-            lastModified: Date.now()
-          });
-            encodeImageFileAsURL(this.saveFile)
-            function encodeImageFileAsURL(saveFile) {
-            
-            const reader = new FileReader();
-            reader.onloadend = function() {
-              saveFile(reader.result, 'result');
-            }
-            reader.readAsDataURL(file);
-          }
-        }, 'image/jpeg', 1);
-      };
-      
-      reader.onerror = error => console.log(error, 'error');
-    };
-  }
-
-  saveFile(el){
-    this.userSettings.avatar = el
-  }
-// ############
-
-  submit () {
-    this.formHasErrors = false
-    
-    this.compress(this.userSettings.avatar)
-    
-    Object.keys(this.userSettings).forEach(f => {
-      if (!this.userSettings[f]) this.formHasErrors = true
-      this.$refs[f].validate(true)
-    })
-
-    if(this.checkForm()){
-       this.toggleIsNote()
-       }
-  }
-
-  checkForm() {
-    return !Object.keys(this.userSettings).filter(f => !this.$refs[f].validate()).length
-  }
-
-  toggleIsNote(){
-    this.isNote = !this.isNote
-  }
-
-  handlerUpdate(){
-    this.isShow = true
-  }
-
-  closeModal(e){
-    if(e.target === e.currentTarget){
-      this.isShow = false
-    }
   }
 
   timer(){
@@ -413,36 +259,8 @@ class AccountSettings extends Vue{
     
   }
 
-  async handlerSubmit(){
-    try {
-      this.isLoading = true
-      this.isShow = false
-      this.isNote = false
-      this.snackbar = true
-      this.checkProp()
 
-      await this.updateUser({id: this.details._id, body: {...this.userSettings}})
-      
-    } catch (error) {
-      console.log(error);
-    } finally{
-      this.isLoading = false
-        this.userSettings.nickname = ''
-        // this.userSettings.email = ''
-        this.userSettings.avatar = ''
-        // this.userSettings.password = ''
-    }
-    
 
-  }
-
-  checkProp(){
-          for(const prop in this.userSettings){
-        if(!this.userSettings[prop]){
-          this.userSettings[prop] = this.user[prop]
-        }
-      }
-  }
 
 }
 
@@ -450,10 +268,6 @@ class AccountSettings extends Vue{
 </script>
 
 <style scoped>
-  img{
-    /* width: 100%;
-    height: auto; */
-  }
 
   .loader__box {
     position: absolute;
