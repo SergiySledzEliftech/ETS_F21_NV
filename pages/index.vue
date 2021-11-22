@@ -1,11 +1,15 @@
 <template>
   <div>
     Welcome to dashboard!
-    <DatePicker />
+    <DatePicker 
+      :stateDates="dateRange"
+      :formattedStateDates="formatDates"
+      :updateDates="updateDateRange"
+    />
     <chart
-      v-if="data.length"
-      :dataLabels="getLabels" 
-      :dataArray="getData"
+      v-if="fluctData.length"
+      :dataLabels="fluctLabels" 
+      :dataArray="changesForChart"
       datalabel="Change, %"
       :chartTitle="`Daily price change in % for period ${formatDates[0]} - ${formatDates[1]}`"
       class="pa-10">
@@ -20,7 +24,7 @@
         {text: 'Favorite', sortable: true, value: 'favorite', align: 'center'}, 
         {text: 'Buy currency', sortable: false, value: 'actions', align: 'center'}, 
       ]"
-      :data="dataArray"
+      :data="dataForTable"
       :needSearch="true"
       >
       <BuyBtn
@@ -56,15 +60,17 @@ const {State, Mutation, Getter} = namespace('dashboardStore')
 export default class DashboardPage extends Vue{
   @State dateRange
   @State isLoading
+  @State fluctData
+
   @Getter formatDates
+  @Getter fluctLabels
+  @Getter changesForChart
+  @Getter dataForTable
+
   @Mutation updateDateRange
   @Mutation changeLoading
+  @Mutation updateFluctData
 
-  data = []
-  labels = []
-  lineLab = []
-  rawData = []
-  dataSorted = []
   loading = true
 
   head() {
@@ -79,28 +85,11 @@ export default class DashboardPage extends Vue{
     this.unsubscribe = this.$store.subscribe((updateDateRange, _) => {
       return this.callAPI(updateDateRange.payload)
     })
+    console.log("dataForTable: ", this.dataForTable)
   }
 
   unmounted() {
     this.unsubscribe()
-  }
-
-  get getLabels() {
-    const result = []
-    this.labels.forEach(lab => typeof lab === 'string' && result.push(lab))
-    return result
-  }
-  get getData() {
-    return this.data.map(num => Math.round(num * 10000) / 100)
-  }
-
-  get dataArray () {
-    return Object.entries(this.rawData).filter(([_, values]) => values.end_rate > 0.01 && values.change > 0.01).map(([name, values]) => ({
-      currency: name,
-      rate: Math.round(values.end_rate * 10000) / 100,
-      change: Math.round(values.change_pct * 10000) / 100,
-      favorite: false,
-    }))
   }
 
   goTrade () {
@@ -108,16 +97,17 @@ export default class DashboardPage extends Vue{
   }
 
   async callAPI([start, end]) {
-      const data = await this.$axios(`https://api.exchangerate.host/fluctuation?start_date=${start}&end_date=${end}&source=crypto`)
-      this.rawData = data.data.rates
+      const dataCrypto = await this.$axios(`https://api.exchangerate.host/fluctuation?start_date=${start}&end_date=${end}&source=crypto`)
+      const dataBank = await this.$axios(`https://api.exchangerate.host/fluctuation?start_date=${start}&end_date=${end}&source=ecb`)
+      const data = {...dataCrypto.data.rates, ...dataBank.data.rates}
+      
+      const dataSorted = Object.entries(data)
+        .map(([name, values]) => [name, {...values, start_rate: 1 / values.start_rate, end_rate: 1 / values.end_rate}])
+        .filter(([_, values]) => values.end_rate > 0.01 && values.end_rate < 100000)
 
-      const dataSorted = Object.entries(data.data.rates).filter(([_, values]) => values.end_rate > 0.01 && values.change > 0.01).sort((a,b) => b[1].change_pct - a[1].change_pct).slice(0,20)
+      this.updateFluctData(dataSorted)
 
-      this.dataSorted = dataSorted
-      this.labels = dataSorted.map(arr => arr[0])
-      this.data = dataSorted.map(arr => arr[1].change_pct)
       this.loading = false
-      console.log(dataSorted)
   }
 }
 </script>

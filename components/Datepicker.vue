@@ -12,7 +12,7 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
-            v-model="formattedDates"
+            v-model="formattedStateDates"
             label="Picker in menu"
             prepend-icon="mdi-calendar"
             readonly
@@ -37,7 +37,7 @@
             color="primary"
             @click="() => {
                 $refs.menu.save(dates.sort((a,b) => new Date(a)-new Date(b)))
-                updateDateRange(dates.sort((a,b) => new Date(a)-new Date(b)))
+                updateDates(dates.sort((a,b) => new Date(a)-new Date(b)))
             }"
           >
             OK
@@ -50,37 +50,20 @@
 </template>
 
 <script>
-import { Vue } from 'vue-property-decorator'
+import { Vue, Prop } from 'vue-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
-
-import { DateTime } from 'luxon'
-
-
-const {State, Mutation, Getter} = namespace('dashboardStore')
 
 @Component({})
 export default class DatePicker extends Vue {
-  @State dateRange
-  @Getter formatDates
-  @Mutation updateDateRange
+  @Prop({type: Array}) stateDates // Массив дат из стейта в формате yyyy-M-dd, то есть 2021-11-16 (такой формат принимает API), например. [начальная дата, конечная дата]
+  @Prop({type: Array}) formattedStateDates // Массив отформатированных дат, для визуализации на странице
+  @Prop({type: Function}) updateDates // Mutation / Action из стейта для изменения массива дат
   
   dates = []
   menu = false
 
   mounted() {
-      this.dates = this.dateRange
-  }
-
-  get formattedDates() {
-      const [start, end] = this.dateRange
-      const startDate = DateTime.fromFormat(start, 'yyyy-M-dd').toFormat('LLL dd yyyy')
-      const endDate = DateTime.fromFormat(end, 'yyyy-M-dd').toFormat('LLL dd yyyy')
-      return `${startDate} - ${endDate}`
+      this.dates = this.stateDates
   }
 }
 </script>
-
-<style>
-
-
-</style>
