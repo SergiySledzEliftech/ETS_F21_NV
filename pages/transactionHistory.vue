@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { Component, namespace, Vue, Watch } from 'nuxt-property-decorator'
+import { Component, namespace, Vue, Watch, Inject } from 'nuxt-property-decorator'
 import Chart from '../components/LineChart.vue'
 
 const { State, Action } = namespace('transactionHistory');
@@ -27,14 +27,16 @@ export default @Component({
   },
 })
 
-class DashboardPage extends Vue{
-  @State transactions
-  @State pageCount
-  @State transactionDates
-  @State transactionAmounts
-  @Action fetchTransactions
+class TransactionHistory extends Vue{
+  @Inject({default: null}) notificationsBar;
 
-  page = 1
+  @State transactions;
+  @State pageCount;
+  @State transactionDates;
+  @State transactionAmounts;
+  @Action fetchTransactions;
+
+  page = 1;
   currency = 'USD';
   currencies = ['UAH', 'EUR', 'USD'];
 
@@ -50,20 +52,25 @@ class DashboardPage extends Vue{
 
   next(page) {}
 
-  onSelectCurrency(e) {
-    console.log(e);
-  }
-
   @Watch('page')
   @Watch('currency') 
   async getTransactionHistory() {
     const page = this.page;
     const currency = this.currency;
-    await this.fetchTransactions({ currency, page, limit: 2 });
+    try {
+      await this.fetchTransactions({ currency, page, limit: 2 });
+    } catch (error) {
+      this.notificationsBar.consoleError(error.message);
+    }
   }
 
   async mounted() {
-    await this.fetchTransactions();
+    try {
+      await this.fetchTransactions();
+    } catch (error) {
+      this.notificationsBar.consoleError(error.message);
+    }
+    
   }
 }
 </script>

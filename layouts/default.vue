@@ -1,21 +1,24 @@
 <template>
   <v-app light>
-    <navbar-drawer 
-    :links="links" 
-    :logout-link="logoutLink" 
-    :logo="logo" 
-    :drawer="drawer"
-    :title-parts="['Train', 'der']"/>
+    <notifications-bar>
+      <navbar-drawer 
+      :links="links" 
+      :logout-link="logoutLink" 
+      :logo="logo" 
+      :drawer="drawer"
+      :title-parts="titleParts"/>
 
-    <toolbar
-    :title="title"
-    @changeDrawer="drawer = !drawer"
-    :avatar-click-link="avatarClickLink"
-    :avatar-src="avatarSrc"
-    :name="name"/>
-    <v-main>
-      <Nuxt />
-    </v-main>
+      <toolbar
+      :title="title"
+      @changeDrawer="drawer = !drawer"
+      :avatar-click-link="avatarClickLink"
+      :avatar-src="avatarSrc"
+      :name="name"/>
+      
+      <v-main>
+        <Nuxt />
+      </v-main>
+    </notifications-bar>
   </v-app>
 </template>
 
@@ -24,11 +27,13 @@ import { Vue, Watch } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 import NavbarDrawer from '../components/NavbarDrawer.vue'
 import Toolbar from '../components/Toolbar.vue'
+import NotificationsBar from '../components/NotificationBar.vue'
 
 export default @Component({
   components: {
     NavbarDrawer,
-    Toolbar
+    Toolbar,
+    NotificationsBar
   }
 })
 
@@ -36,7 +41,8 @@ class DefautPage extends Vue {
   drawer = false;
   logo = 'mainLogo.png';
   avatarClickLink = '/';
-  name='Miracle Volkman';
+  name = 'Miracle Volkman';
+  titleParts = ['Train', 'der'];
   avatarSrc = 'https://thispersondoesnotexist.com/image';
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
@@ -46,6 +52,9 @@ class DefautPage extends Vue {
            ];
   logoutLink = {name: 'Logout', link: '/login', icon: 'mdi-logout'}
   title = 'Trainder';
+
+  
+
 
   head () {
     let sefl = this

@@ -33,20 +33,16 @@ export const actions = {
         params[param] = defaultParams[param]
       }
     }
-    try {
-      const url = `${serverUrl}/transaction-history`
-      const parameters = {
-        currency: params.currency,
-        page: params.page,
-        limit: params.limit
-      }
-      const [transactions, pageCount] = await this.$axios.$get(url, { params: parameters })
-      ctx.commit('updateTransactionHistory', transactions)
-      ctx.commit('updatePageCount', pageCount)
-      ctx.commit('updateTransactionDates', transactions)
-      ctx.commit('updateTransactionAmounts', transactions)
-    } catch (error) {
-      // console.error(error)
+    const url = `${serverUrl}/transaction-history`
+    const parameters = {
+      currency: params.currency,
+      page: params.page,
+      limit: params.limit
     }
+    const [transactions, pageCount] = await this.$axios.$get(url, { params: parameters })
+    ctx.commit('updateTransactionHistory', transactions)
+    ctx.commit('updatePageCount', pageCount)
+    ctx.commit('updateTransactionDates', transactions)
+    ctx.commit('updateTransactionAmounts', transactions)
   }
 }
