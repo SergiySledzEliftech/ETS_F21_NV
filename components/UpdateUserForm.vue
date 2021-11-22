@@ -167,8 +167,7 @@ class UpdateUserForm extends Vue {
     if(!e){
       return
     }
-    const width = 180;
-    const height = 180;
+
     const fileName = e.name;
     const reader = new FileReader();
 
@@ -178,11 +177,15 @@ class UpdateUserForm extends Vue {
       img.src = event.target.result;
       img.onload = () => {
         const elem = document.createElement('canvas');
-        elem.width = width;
-        elem.height = height;
+        
         const ctx = elem.getContext('2d');
         // img.width и img.height будет содержать оригинальные размеры
-        ctx.drawImage(img, 0, 0, width, height);
+            const width = 180;
+            const scaleFactor = width / img.width;
+            console.log(img.height * scaleFactor, width)
+            elem.width = width;
+            elem.height = img.height * scaleFactor;
+        ctx.drawImage(img, 0, 0, width, img.height * scaleFactor);
         ctx.canvas.toBlob((blob) => {
           const file = new File([blob], fileName, {
             type: 'image/jpeg',

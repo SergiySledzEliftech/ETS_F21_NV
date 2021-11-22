@@ -4,7 +4,7 @@
       v-if="details.avatar"
       :src="details.avatar"
       :class="size" 
-      class="rounded-circle"
+      class="rounded-xl"
       alt="avatar"
     >
     <div 
@@ -43,19 +43,19 @@ export default class Avatar extends Vue{
   .ava {
     display: block;
     background-color: rgba(0, 0, 0, 0.3);
-    
+    width: 100%; 
+    height: auto;
     font-weight: bold;
   }
 
   .big-size{
-    width: 200px; 
-    height: 200px;
+
     font-size: 90px;
   }
 
   .small-size{
-    width: 35px; 
-    height: 35px;
+    width: auto;
+    height: 35px; 
     font-size: 24px;
   }
 </style>
