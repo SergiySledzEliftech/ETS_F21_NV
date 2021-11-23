@@ -163,42 +163,45 @@ class UpdateUserForm extends Vue {
   }
 
   // ######### base64
-  compress(e) {
-    if(!e){
+  compress(file) {
+    if(!file){
       return
     }
 
-    const fileName = e.name;
+    const fileName = file.name;
     const reader = new FileReader();
 
-    reader.readAsDataURL(e);
+    reader.readAsDataURL(file);
     reader.onload = event => {
       const img = new Image();
+
       img.src = event.target.result;
+
       img.onload = () => {
         const elem = document.createElement('canvas');
-        
         const ctx = elem.getContext('2d');
         // img.width и img.height будет содержать оригинальные размеры
-            const width = 180;
-            const scaleFactor = width / img.width;
-            console.log(img.height * scaleFactor, width)
-            elem.width = width;
-            elem.height = img.height * scaleFactor;
+        const width = 180;
+        const scaleFactor = width / img.width;
+
+        elem.width = width;
+        elem.height = img.height * scaleFactor;
+
         ctx.drawImage(img, 0, 0, width, img.height * scaleFactor);
         ctx.canvas.toBlob((blob) => {
-          const file = new File([blob], fileName, {
+          const compressFile = new File([blob], fileName, {
             type: 'image/jpeg',
             lastModified: Date.now()
           });
             encodeImageFileAsURL(this.saveFile)
+
             function encodeImageFileAsURL(saveFile) {
             
-            const reader = new FileReader();
+            // const reader = new FileReader();
             reader.onloadend = function() {
-              saveFile(reader.result, 'result');
+              saveFile(reader.result);
             }
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(compressFile);
           }
         }, 'image/jpeg', 1);
       };
