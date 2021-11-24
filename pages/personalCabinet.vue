@@ -65,7 +65,7 @@
       </v-row>
     </v-container>
 
-    <v-snackbar
+    <!-- <v-snackbar
       v-model="snackbar"
       :multi-line="multiLine"
     >
@@ -81,7 +81,7 @@
           Close
         </v-btn>
       </template>
-    </v-snackbar>
+    </v-snackbar> -->
   </div>
 </template>
 

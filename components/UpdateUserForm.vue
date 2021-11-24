@@ -85,7 +85,7 @@ export default @Component({
 })
 
 class UpdateUserForm extends Vue {
-@Inject({default: null}) notificationsBar;
+// @Inject({default: null}) notificationsBar;
 @State details
 @Action updateUser
 @dialogAction toggleIsOpen
@@ -135,8 +135,8 @@ class UpdateUserForm extends Vue {
       this.toggleIsNote()
       // this.snackbar = true
       this.checkProp()
-      // await this.updateUser({id: this.details._id, body: {...this.userSettings}})
-      this.notificationsBar.consoleSuccess(successMessage);
+      await this.updateUser({id: this.details._id, body: {...this.userSettings}})
+      // this.notificationsBar.consoleSuccess('user update');
     } catch (error) {
       console.log(error.message);
     } finally{
