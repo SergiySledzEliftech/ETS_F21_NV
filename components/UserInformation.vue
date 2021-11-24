@@ -33,7 +33,7 @@
 
 <script>
 import Component, { namespace } from 'nuxt-class-component'
-import { Vue } from 'nuxt-property-decorator'
+import { Inject, Vue } from 'nuxt-property-decorator'
 
 const { State, Action } = namespace('user')
 
@@ -58,7 +58,7 @@ export default class UserInformation extends Vue{
   }
 
     timer(){
-    this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
+    this.idInterval = setInterval(() => {this.checkBonusTime()}, 1000)
   }
 
   async handlerTakeBonus(){

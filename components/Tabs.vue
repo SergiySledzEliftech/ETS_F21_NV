@@ -32,15 +32,40 @@
             <v-list-item 
               v-for="listItem of value" 
               :key="listItem.name"
+              class="d-flex justify-between"
             >
               <span 
+                v-if="listItem.date"
+                class="mr-auto">
+                Date: {{parseDate(listItem.date)}}
+              </span> 
+              <span 
+                v-if="listItem.name"
                 class="mr-auto">
                 {{listItem.name}}
+              </span> 
+              <span 
+                v-else
+                class="mr-auto">
+                {{listItem.currencyName}}
               </span> 
               <span>
                 {{roundCurrency(listItem.amount)}}
               </span> 
+              <span
+                v-if="listItem.spent"
+                class="spent"
+              >
+                spent
+              </span>
+              <span
+                v-if="listItem.bought"
+                class="spent"
+              >
+                bought
+              </span>
               <v-btn 
+                v-if="key !== 'history'"
                 class="
                 d-none
                 d-sm-flex
@@ -65,7 +90,7 @@ class Tabs extends Vue{
   tabs = {
     tab: null,
     items: {
-        history: ["BTC", "EFR", "TCP"],
+        history: [],
         currencies: []
     },
     text: "lorem"
@@ -73,10 +98,17 @@ class Tabs extends Vue{
 
   async mounted() {
     this.tabs.items.currencies = await this.$axios.$get('http://localhost:4000/userCurrencies/currencies/all?userId=61926bc6418dbb9a949cdeb1')
+    const data = await this.$axios.$get('http://localhost:4000/transaction-history?currency=ALL&page=1&limit=5&userId=61926bc6418dbb9a949cdeb1')
+    const result = JSON.stringify(data)
+    this.tabs.items.history = JSON.parse(result).data
   }
 
   roundCurrency(num) {
-    return Math.round(+num * 100) / 100
+    return num.toFixed(2)
+  }
+
+  parseDate (date) {
+    return date.split('T')[0].split('-').reverse().join('.')
   }
 
 }
@@ -86,5 +118,9 @@ class Tabs extends Vue{
   .btn {
     margin-right: 0;
     margin-left: auto;
+  }
+
+  .spent {
+    margin-left: 10px;
   }
 </style>
