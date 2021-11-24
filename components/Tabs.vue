@@ -38,7 +38,7 @@
                 {{listItem.name}}
               </span> 
               <span>
-                {{listItem.amount}}
+                {{roundCurrency(listItem.amount)}}
               </span> 
               <v-btn 
                 class="
@@ -62,7 +62,7 @@ import Component, {namespace} from 'nuxt-class-component'
 export default @Component({})
 
 class Tabs extends Vue{
-    tabs = {
+  tabs = {
     tab: null,
     items: {
         history: ["BTC", "EFR", "TCP"],
@@ -73,6 +73,10 @@ class Tabs extends Vue{
 
   async mounted() {
     this.tabs.items.currencies = await this.$axios.$get('http://localhost:4000/userCurrencies/currencies/all?userId=61926bc6418dbb9a949cdeb1')
+  }
+
+  roundCurrency(num) {
+    return Math.round(+num * 100) / 100
   }
 
 }

@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { Prop, Vue} from 'nuxt-property-decorator'
+import { Inject, Prop, Vue} from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import rules from '../utils/form-validation-rules.js'
@@ -85,6 +85,7 @@ export default @Component({
 })
 
 class UpdateUserForm extends Vue {
+@Inject({default: null}) notificationsBar;
 @State details
 @Action updateUser
 @dialogAction toggleIsOpen
@@ -134,8 +135,8 @@ class UpdateUserForm extends Vue {
       this.toggleIsNote()
       // this.snackbar = true
       this.checkProp()
-      await this.updateUser({id: this.details._id, body: {...this.userSettings}})
-      
+      // await this.updateUser({id: this.details._id, body: {...this.userSettings}})
+      this.notificationsBar.consoleSuccess(successMessage);
     } catch (error) {
       console.log(error.message);
     } finally{
