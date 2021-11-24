@@ -40,15 +40,16 @@ const { State, Action } = namespace('user')
 @Component({})
 
 export default class UserInformation extends Vue{
-@State details
-@Action takeBonus
+  @Inject({default: null}) notificationsBar;
+  @State details
+  @Action takeBonus
 
   bonusTime = null
   bonusButton = false
   idInterval = ''
 
   mounted(){
-    this.chekBonusTime()
+    this.checkBonusTime()
     this.timer()
   }
 
@@ -62,16 +63,16 @@ export default class UserInformation extends Vue{
 
   async handlerTakeBonus(){
     try {
-      this.isLoading = true
+      // this.isLoading = true
       await this.takeBonus(this.details._id)
     } catch (error) {
-      console.log(error);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally {
-        this.isLoading = false
+        // this.isLoading = false
     } 
   }
 
-  chekBonusTime(){
+  checkBonusTime(){
     const time = Date.now() - new Date(this.details.lastBonusTime)
     if(time < 21600000){
       this.bonusButton = false

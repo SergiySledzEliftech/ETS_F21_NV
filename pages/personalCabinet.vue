@@ -121,19 +121,16 @@ class AccountSettings extends Vue{
   mounted() {
     // this.isLoading = true
     this.refreshUser()
-    
   }
 
   async refreshUser(){
     try {
-      this.isLoading = true
+      // this.isLoading = true
       await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
-
-
     } catch (error) {
-      console.log(error);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally {
-      this.isLoading = false
+      // this.isLoading = false
     }  
   }
 }

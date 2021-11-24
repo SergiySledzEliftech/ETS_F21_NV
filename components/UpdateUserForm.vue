@@ -85,10 +85,10 @@ export default @Component({
 })
 
 class UpdateUserForm extends Vue {
-// @Inject({default: null}) notificationsBar;
-@State details
-@Action updateUser
-@dialogAction toggleIsOpen
+  @Inject({default: null}) notificationsBar;
+  @State details
+  @Action updateUser
+  @dialogAction toggleIsOpen
 
   data () {
     return {
@@ -136,9 +136,9 @@ class UpdateUserForm extends Vue {
       // this.snackbar = true
       this.checkProp()
       await this.updateUser({id: this.details._id, body: {...this.userSettings}})
-      // this.notificationsBar.consoleSuccess('user update');
+      this.notificationsBar.consoleSuccess('user update');
     } catch (error) {
-      console.log(error.message);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally{
       // this.isLoading = false
         this.userSettings.nickname = ''
