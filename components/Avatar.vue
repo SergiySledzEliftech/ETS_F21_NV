@@ -16,7 +16,7 @@
       align-center 
       rounded-circle" 
       > 
-        <span>
+        <span :class="size"  class="box d-flex align-center justify-center">
           {{ details.nickname && details.nickname[0] }}
         </span>
     </div>
@@ -35,10 +35,24 @@ const {State, Action} = namespace('user')
 export default class Avatar extends Vue{
   @State details
   @Prop({ type: String, required: true}) size
+
+  box = 'box'
 }
 </script>
 
 <style scoped>
+
+  .small-size.box{
+    width: 35px;
+    height: 35px;
+    font-size: 24px;
+  }
+
+  .big-size.box{
+    width: 180px;
+    height: 180px;
+    font-size: 90px;
+  }
 
   .ava {
     display: block;

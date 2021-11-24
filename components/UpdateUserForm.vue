@@ -1,73 +1,73 @@
 <template>
   <div>
-      <v-form 
-    class="form"
-    ref="form"
-    v-model="valid"
-    lazy-validation
-    v-if="!isNote"
-    @submit.prevent="submit"
-  >
-    <v-text-field 
-      class="modal__input" 
-      type="text"
-      v-model="userSettings.nickname"
-      :rules="[maxLength, minLength]"
-      label="Nickname"
-    />
-    <v-text-field 
-      class="modal__input" 
-      type="password" 
-      disabled
-      v-model="userSettings.password"
-      label="Password"
-    /><!-- :rules="[password]" ref="password" -->
-    <v-text-field
-      class="modal__input" 
-      type="text"
-      disabled
-      v-model="userSettings.email"
-      label="Email"
-    /><!-- :rules="[email]" ref="email" -->
-    <v-file-input
-      class="modal__input" 
-      :rules="[avatarRules]"
-      accept="image/png, image/jpeg, image/bmp"
-      placeholder="Pick an avatar"
-      prepend-icon="mdi-camera"
-      label="Avatar"
-      v-model="fileAvatar"
-    />
-    <v-btn 
-      class="align-self-end card__btn  white--text" 
-      type="submit"
-      color="purple lighten-2"
-      >
-        Submit
-    </v-btn>
-  </v-form>
-  <div 
-    v-else 
-    class="d-flex 
-    justify-space-around 
-    content"
-  >
-    <p>Do you want save your changes?</p> 
-    <div class="d-flex justify-end">
+    <v-form 
+      class="form"
+      ref="form"
+      v-model="valid"
+      lazy-validation
+      v-if="!isNote"
+      @submit.prevent="submit"
+    >
+      <v-text-field 
+        class="modal__input" 
+        type="text"
+        v-model="userSettings.nickname"
+        :rules="[maxLength, minLength]"
+        label="Nickname"
+      />
+      <v-text-field 
+        class="modal__input" 
+        type="password" 
+        disabled
+        v-model="userSettings.password"
+        label="Password"
+      /><!-- :rules="[password]" ref="password" -->
+      <v-text-field
+        class="modal__input" 
+        type="text"
+        disabled
+        v-model="userSettings.email"
+        label="Email"
+      /><!-- :rules="[email]" ref="email" -->
+      <v-file-input
+        class="modal__input" 
+        :rules="[avatarRules]"
+        accept="image/png, image/jpeg, image/bmp"
+        placeholder="Pick an avatar"
+        prepend-icon="mdi-camera"
+        label="Avatar"
+        v-model="fileAvatar"
+      />
       <v-btn 
-      class="btn white--text" 
-      color="green"
-      type="submit" 
-      @click.prevent="handlerSubmit">
-        Yes
-    </v-btn>
-    <v-btn 
-      class="btn grey--darken-3--text"
-      @click="noSave">
-        No
-    </v-btn>
+        class="align-self-end card__btn  white--text" 
+        type="submit"
+        color="purple lighten-2"
+        >
+          Submit
+      </v-btn>
+    </v-form>
+    <div 
+      v-else 
+      class="d-flex 
+      justify-space-around 
+      content"
+    >
+      <p>Do you want save your changes?</p> 
+      <div class="d-flex justify-end">
+        <v-btn 
+        class="btn white--text" 
+        color="green"
+        type="submit" 
+        @click.prevent="handlerSubmit">
+          Yes
+      </v-btn>
+      <v-btn 
+        class="btn grey--darken-3--text"
+        @click="noSave">
+          No
+      </v-btn>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -87,7 +87,6 @@ export default @Component({
 class UpdateUserForm extends Vue {
 @State details
 @Action updateUser
-// @dialogState isOpen
 @dialogAction toggleIsOpen
 
   data () {
@@ -114,26 +113,17 @@ class UpdateUserForm extends Vue {
 
   snackbar = false
   isNote = false
-  formHasErrors = false
-
-  
 
   submit () {
-    // this.formHasErrors = false
     
     this.compress(this.fileAvatar)
-    // this.v()
-    // Object.keys(this.userSettings).forEach(f => {
-    //   if (!this.userSettings[f]) this.formHasErrors = true
-    //   this.$refs[f].validate(true)
-    // })
         
-    if(this.v()){
+    if(this.isValid()){
        this.toggleIsNote()
        }
   }
 
-  v() {
+  isValid() {
     return this.$refs.form.validate()
   }
 
@@ -157,10 +147,6 @@ class UpdateUserForm extends Vue {
         // this.userSettings.password = ''
     }
   }
-
-  //   checkForm() {
-  //   return !Object.keys(this.userSettings).filter(f => !this.$refs[f].validate()).length
-  // }
 
   checkProp(){
         for(const prop in this.userSettings){
