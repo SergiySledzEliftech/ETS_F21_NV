@@ -8,12 +8,12 @@
             </v-col>
             <v-col cols="12" sm="2" class="rounded-lg">
                 <v-card class="pa-2 d-flex align-center justify-center">
-                Course: {{Math.round(rate*1000)/1000}}
+                Course: {{rate | getFourDecimal}}
                 </v-card>
             </v-col>
             <v-col cols="12" sm="2" class="rounded-lg">
                 <v-card class="pa-2 d-flex align-center justify-center">
-                Dynamic: {{Math.round(change*1000)/1000}}
+                Dynamic: {{change | getPercents}}
                 </v-card>
             </v-col>
             <v-col cols="12" sm="1" class="rounded-lg">
@@ -35,24 +35,23 @@
 </template>
 
 <script>
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Prop, Vue } from 'vue-property-decorator'
+import Component from 'nuxt-class-component'
 
 @Component({
-  props: {
-      title: {
-          type: String
-      },
-      rate: {
-          type: Number
-      }, 
-      change: {
-          type: Number
-      }, 
-      favorite: {
-          type: Boolean
-      }
-  },
+    filters: {
+        getFourDecimal (val) {
+            return val && Math.round(val*10000)/10000 + " EUR"
+        },
+        getPercents (val) {
+            return val && Math.round(val*10000)/100 + "%"
+        }
+    }
 })
 export default class ListItem extends Vue {
+    @Prop({type: String}) title
+    @Prop({type: Number}) rate
+    @Prop({type: Number}) change
+    @Prop({type: Boolean}) favorite
 }
 </script>
