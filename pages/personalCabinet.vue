@@ -95,13 +95,15 @@ import Avatar from '../components/Avatar.vue'
 import UserInformation from '../components/UserInformation.vue'
 import Tabs from '../components/Tabs.vue'
 
+
 const {State, Action} = namespace('user')
 
 export default @Component({
   components: {
     Dialog,
     UserInformation,
-    Avatar
+    Avatar,
+    Tabs
   }
 })
 

@@ -32,25 +32,25 @@
             <v-list-item 
               v-for="listItem of value" 
               :key="listItem.name"
-              class="d-flex justify-between"
+              class="d-flex justify-space-between"
             >
               <span 
                 v-if="listItem.date"
-                class="mr-auto">
+                ><!--class="mr-auto"-->
                 Date: {{parseDate(listItem.date)}}
               </span> 
               <span 
                 v-if="listItem.name"
-                class="mr-auto">
-                {{listItem.name}}
+                class="mr-auto"><!---->
+                {{listItem.name}} 
               </span> 
               <span 
                 v-else
-                class="mr-auto">
-                {{listItem.currencyName}}
+                ><!--class="mr-auto"-->
+                
               </span> 
               <span>
-                {{roundCurrency(listItem.amount)}}
+                {{listItem.currencyName}} {{roundCurrency(listItem.amount)}}
               </span> 
               <span
                 v-if="listItem.spent"
@@ -69,11 +69,22 @@
                 class="
                 d-none
                 d-sm-flex
-                ml-auto">
+                ml-auto"><!---->
                 buy quickly
               </v-btn>
             </v-list-item>
           </v-list>
+          <v-btn 
+            v-if="key === 'history'"
+            @click="getHistory"
+            class="justify-center
+            d-block
+            ml-auto
+            mr-auto
+            mb-8"
+          >
+          load more
+          </v-btn>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -84,9 +95,12 @@
 import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
+import { serverUrl } from '../utils/config'
+
 export default @Component({})
 
 class Tabs extends Vue{
+
   tabs = {
     tab: null,
     items: {
@@ -96,11 +110,29 @@ class Tabs extends Vue{
     text: "lorem"
   }
 
+  paramsHistory = {
+      currency: 'ALL',
+      page: 1,
+      limit: 5,
+      userId: '61926bc6418dbb9a949cdeb1'
+    }
+
   async mounted() {
-    this.tabs.items.currencies = await this.$axios.$get('http://localhost:4000/userCurrencies/currencies/all?userId=61926bc6418dbb9a949cdeb1')
-    const data = await this.$axios.$get('http://localhost:4000/transaction-history?currency=ALL&page=1&limit=5&userId=61926bc6418dbb9a949cdeb1')
-    const result = JSON.stringify(data)
-    this.tabs.items.history = JSON.parse(result).data
+    this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/currencies/all?userId=61926bc6418dbb9a949cdeb1`)
+    this.getHistory()
+  }
+
+  async getHistory() {
+    try {
+        const data = await this.$axios.$get(`${serverUrl}/transaction-history`, {params: this.paramsHistory})
+        const result = JSON.stringify(data)
+        this.tabs.items.history = [...this.tabs.items.history, ...JSON.parse(result).data]
+        this.paramsHistory.page = this.paramsHistory.page + 1
+        console.log(this.paramsHistory.page);
+    } catch (error) {
+      
+    }
+
   }
 
   roundCurrency(num) {
