@@ -3,8 +3,7 @@
   class="notification-btn ma-2" 
   small 
   rounded
-  :to="link || null"
-  @click="onClick || null">
+  @click="onClick">
     <v-icon color="white">{{ icon }}</v-icon>
     <p class="font-weight-light white--text pt-3">{{ text }}</p>
   </v-btn>
@@ -18,9 +17,8 @@ export default @Component({})
 
 class GradientRoundedButton extends Vue {
   @Prop({type: String}) icon
-  @Prop({type: Function}) onClick
+  @Prop({type: Function, required: true}) onClick
   @Prop({type: String, required: true}) text
-  @Prop({type: [String, Boolean]}) link
 
 }
 </script>

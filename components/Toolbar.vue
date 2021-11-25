@@ -38,6 +38,7 @@
       <gradient-rounded-button
       v-if="styleInputSeen"
       icon="mdi-bell"
+      :onClick="() => console.log('Click')"
       text="12"/>
     </div>
     
