@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <v-container>
+
       <v-column>
         <v-container>
           <v-row>
@@ -38,11 +39,17 @@
             <!--<v-btn @click="$auth.loginWith('local', { data: 'my-login' })" to="/">Login</v-btn>-->
           </v-form>
         </v-container>
-      </v-column>
+      </v-column> 
+
     </v-container>
   </div>
 </template>
 
+<style scoped>
+.v-application .mt-4 {
+    margin-bottom: 16px;
+}
+</style>
 
 <script>
 import { Component, Vue } from "nuxt-property-decorator";

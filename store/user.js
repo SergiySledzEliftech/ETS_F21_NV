@@ -6,7 +6,15 @@ export const state = () => ({
 const BASE_URL = 'http://localhost:4000'
 
 export const actions = {
-  // async saveUser () {} для регистрации
+  async saveUser (ctx, b) {
+    const body = b
+    try {
+      const response = await this.$axios.$post(`${BASE_URL}/users`, body)
+      ctx.commit('updateUser', response)
+    } catch (error) {
+      // console.log(error)
+    }
+  },
 
   async getUser (ctx, id) {
     // console.log('in getUser')
