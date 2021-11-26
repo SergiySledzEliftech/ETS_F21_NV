@@ -15,13 +15,10 @@
           />    
       </template>
       <v-card>        
-        <slot></slot>
-        <!-- <v-divider></v-divider> -->
+        <slot toggleIsOpen="toggleIsOpen"></slot>
       </v-card>
     </v-dialog>
   </div>
-
-      
 </template>
 
 <script>
@@ -30,7 +27,7 @@ import Component, {namespace} from 'nuxt-class-component'
 
 import GradientRoundedButton from '../components/GradientRoundedButton.vue'
 
-const {State: dialogState, Action: dialogAction} = namespace('dialog')
+const {State, Action} = namespace('dialog')
 
 @Component({
   components: {
@@ -42,8 +39,8 @@ export default class Dialog extends Vue {
   @Prop({type: String, required: true}) textCloseButton
   @Prop({type: String, required: true}) width
   @Prop({}) Template 
-  @dialogState isOpen
-  @dialogAction toggleIsOpen
+  @State isOpen
+  @Action toggleIsOpen
   dialog = false
 }
 </script>
