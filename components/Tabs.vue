@@ -1,24 +1,39 @@
 <template>
   <v-card>
     <v-toolbar
-      color="blue"
-      dark
-      flat
+      
+      class="color-pink"
+      white
+      
     >
       <v-tabs
         v-model="tabs.tab"
         align-with-title
+        
       >
-        <v-tabs-slider color="purple" />
+        <v-tabs-slider 
+          color="purple"
+          
+        />
         <v-tab
           v-for="(value, key) in tabs.items"
           :key="key"
         >
           <span
-            class="d-none d-sm-flex">
+            active
+            class="
+              d-flex
+              color-pink"
+            >
+            <span
+              class="d-none 
+                d-sm-flex"
+            >
               your&nbsp;
-          </span>
+            </span>
           {{ key }}
+          </span>
+          
         </v-tab>
       </v-tabs>
     </v-toolbar>
@@ -27,7 +42,11 @@
         v-for="(value, key) in tabs.items"
         :key="key"
       >
-        <v-card flat>
+        <Scroll
+          height="480">
+          <v-card
+          flat
+        >
           <v-list>
             <v-list-item 
               v-for="listItem of value" 
@@ -36,8 +55,14 @@
             >
               <span 
                 v-if="listItem.date"
+                class="d-flex"
                 ><!--class="mr-auto"-->
-                Date: {{parseDate(listItem.date)}}
+                <span class="d-none
+                  d-sm-flex"
+                >
+                  Date:&nbsp;
+                </span>
+                {{parseDate(listItem.date)}}
               </span> 
               <span 
                 v-if="listItem.name"
@@ -64,28 +89,24 @@
               >
                 bought
               </span>
-              <v-btn 
+              <BuyBtn
                 v-if="key !== 'history'"
-                class="
-                d-none
-                d-sm-flex
-                ml-auto"><!---->
-                buy quickly
-              </v-btn>
+                class="ml-auto"
+                textOrIcon="mdi-cart-arrow-down"
+                :whatToDo="goTrade"
+              />
             </v-list-item>
           </v-list>
-          <v-btn 
+          <Button
             v-if="key === 'history'"
-            @click="getHistory"
-            class="justify-center
-            d-block
+            :onClick="getHistory"
+            text="load more"
+            class="d-flex
             ml-auto
-            mr-auto
-            mb-8"
-          >
-          load more
-          </v-btn>
+            mr-auto"
+          />
         </v-card>
+        </Scroll>
       </v-tab-item>
     </v-tabs-items>
   </v-card>
@@ -95,9 +116,19 @@
 import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
+import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+import BuyBtn from '../components/BuyBtn.vue'
+import Scroll from '../components/ScrollContainer.vue'
+
 import { serverUrl } from '../utils/config'
 
-export default @Component({})
+export default @Component({
+    components:{
+      BuyBtn,
+      Scroll,
+      Button: GradientRoundedButton
+    }
+  })
 
 class Tabs extends Vue{
 
@@ -128,7 +159,6 @@ class Tabs extends Vue{
         const result = JSON.stringify(data)
         this.tabs.items.history = [...this.tabs.items.history, ...JSON.parse(result).data]
         this.paramsHistory.page = this.paramsHistory.page + 1
-        console.log(this.paramsHistory.page);
     } catch (error) {
       
     }
@@ -143,10 +173,16 @@ class Tabs extends Vue{
     return date.split('T')[0].split('-').reverse().join('.')
   }
 
+  goTrade () {
+    this.$router.push("/trade")
+  }
+
 }
 </script>
 
 <style scoped>
+
+
   .btn {
     margin-right: 0;
     margin-left: auto;
@@ -154,5 +190,9 @@ class Tabs extends Vue{
 
   .spent {
     margin-left: 10px;
+  }
+
+  .color-pink{
+    color: rgb(214, 76, 161);
   }
 </style>

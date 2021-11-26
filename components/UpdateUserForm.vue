@@ -40,22 +40,18 @@
       />
       <div
         class="d-flex
-          justify-space-between"
-        >
-        <v-btn 
+        justify-space-between"
+      >
+        <Button
           class="align-self-end card__btn  white--text" 
-          type="submit"
-          color="purple lighten-2"
-          >
-            Submit
-        </v-btn>
-        <v-btn
-          color="primary"
-          text
-          @click="toggleIsOpen"
-        >
-          Close
-        </v-btn>
+          text="Submit"
+          :onClick="submit"
+
+          /><!--type="submit"-->
+        <Button
+          :onClick="toggleIsOpen"
+          text="Close"
+        />
       </div>
     </v-form>
     <div 
@@ -66,18 +62,16 @@
     >
       <p>Do you want save your changes?</p> 
       <div class="d-flex justify-end">
-        <v-btn 
-        class="btn white--text" 
-        color="green"
-        type="submit" 
-        @click.prevent="handlerSubmit">
-          Yes
-      </v-btn>
-      <v-btn 
-        class="btn grey--darken-3--text"
-        @click="noSave">
-          No
-      </v-btn>
+        <Button
+        class="btn" 
+        text="Yes"
+        :onClick="handlerSubmit"
+        />
+        <Button 
+          class="btn"
+          text="No"
+          :onClick="noSave"
+        />
       </div>
     </div>
   </div>
@@ -87,12 +81,17 @@
 import { Inject, Prop, Vue} from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
+import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+
 import rules from '../utils/form-validation-rules.js'
 
 const {State, Action} = namespace('user')
 const {State: dialogState, Action: dialogAction} = namespace('dialog')
 
 export default @Component({
+  components:{
+    Button: GradientRoundedButton
+  }
 
 })
 
