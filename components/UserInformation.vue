@@ -16,7 +16,7 @@
       Balance: ${{details.dollarBalance}}
     </p>
     <p
-      v-if="bonusButton" 
+      v-if="!bonusButton" 
       class="accont__info" 
     >
       Top up your balance: {{bonusTime}} 

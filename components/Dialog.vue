@@ -7,32 +7,16 @@
       @keydown.esc="toggleIsOpen"
     >
       <template v-slot:activator="{ on, attrs }">
-        <!-- <buy-btn 
-          :textOrIcon="textOpenButton" 
-          :whatToDo="toggleIsOpen"
-        /> -->
-        <v-btn
-          color="purple lighten-1"
-          dark
+        <Button
           v-bind="attrs"
           v-on="on"
-          @click="toggleIsOpen"
-          
-          >
-          {{ textOpenButton }}
-          </v-btn>        
+          :text="textOpenButton"
+          :onClick="toggleIsOpen"         
+          />    
       </template>
-
-      <v-card>
-        
+      <v-card>        
         <slot></slot>
-
-        <v-divider></v-divider>
-
-        <!-- <v-card-actions>
-          <v-spacer></v-spacer>
-
-        </v-card-actions> -->
+        <!-- <v-divider></v-divider> -->
       </v-card>
     </v-dialog>
   </div>
@@ -44,12 +28,14 @@
 import { Prop, Vue } from 'vue-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
-import BuyBtn from './BuyBtn.vue'
+import GradientRoundedButton from '../components/GradientRoundedButton.vue'
 
 const {State: dialogState, Action: dialogAction} = namespace('dialog')
 
 @Component({
-  components: {BuyBtn}
+  components: {
+    Button: GradientRoundedButton
+  }
 })
 export default class Dialog extends Vue {
   @Prop({type: String, required: true}) textOpenButton
