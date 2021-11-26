@@ -64,24 +64,6 @@
         </v-col>
       </v-row>
     </v-container>
-
-    <!-- <v-snackbar
-      v-model="snackbar"
-      :multi-line="multiLine"
-    >
-      {{ text }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="red"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar> -->
   </div>
 </template>
 
@@ -110,12 +92,6 @@ export default @Component({
 class AccountSettings extends Vue{
   @State details
   @Action getUser 
-  
-  
-  multiLine = true
-  snackbar = false
-  text = `Changes saved.`
-
   // isLoading = true
 
   big_size = 'big-size'

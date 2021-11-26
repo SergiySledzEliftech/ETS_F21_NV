@@ -38,13 +38,25 @@
         label="Avatar"
         v-model="fileAvatar"
       />
-      <v-btn 
-        class="align-self-end card__btn  white--text" 
-        type="submit"
-        color="purple lighten-2"
+      <div
+        class="d-flex
+          justify-space-between"
         >
-          Submit
-      </v-btn>
+        <v-btn 
+          class="align-self-end card__btn  white--text" 
+          type="submit"
+          color="purple lighten-2"
+          >
+            Submit
+        </v-btn>
+        <v-btn
+          color="primary"
+          text
+          @click="toggleIsOpen"
+        >
+          Close
+        </v-btn>
+      </div>
     </v-form>
     <div 
       v-else 

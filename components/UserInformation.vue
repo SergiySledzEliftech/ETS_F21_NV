@@ -16,18 +16,18 @@
       Balance: ${{details.dollarBalance}}
     </p>
     <p
-      v-if="!bonusButton" 
+      v-if="bonusButton" 
       class="accont__info" 
     >
       Top up your balance: {{bonusTime}} 
     </p>
-    <v-btn 
+    <Button 
       v-else
-      class="accont__info white--text last" 
-      color="blue" 
-      @click="handlerTakeBonus">
-        Take bonus
-    </v-btn>
+      text="Take bonus"
+      class="accont__info last" 
+      :onClick="handlerTakeBonus">
+        
+    </Button>
   </div>
 </template>
 
@@ -35,9 +35,16 @@
 import Component, { namespace } from 'nuxt-class-component'
 import { Inject, Vue } from 'nuxt-property-decorator'
 
+import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+
+
 const { State, Action } = namespace('user')
 
-@Component({})
+@Component({
+  components:{
+    Button: GradientRoundedButton
+  }
+})
 
 export default class UserInformation extends Vue{
   @Inject({default: null}) notificationsBar;
