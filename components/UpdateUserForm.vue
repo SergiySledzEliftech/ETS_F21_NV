@@ -86,7 +86,6 @@ import GradientRoundedButton from '../components/GradientRoundedButton.vue'
 import rules from '../utils/form-validation-rules.js'
 
 const {State, Action} = namespace('user')
-const {State: dialogState, Action: dialogAction} = namespace('dialog')
 
 export default @Component({
   components:{
@@ -97,9 +96,9 @@ export default @Component({
 
 class UpdateUserForm extends Vue {
   @Inject({default: null}) notificationsBar;
+  @Prop({type: String, required: true}) toggleIsOpen
   @State details
   @Action updateUser
-  @dialogAction toggleIsOpen
 
   data () {
     return {
@@ -144,7 +143,6 @@ class UpdateUserForm extends Vue {
       // this.isLoading = true
       this.toggleIsOpen()
       this.toggleIsNote()
-      // this.snackbar = true
       this.checkProp()
       await this.updateUser({id: this.details._id, body: {...this.userSettings}})
       this.notificationsBar.consoleSuccess('user update');

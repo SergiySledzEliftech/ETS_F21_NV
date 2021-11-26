@@ -72,7 +72,6 @@ import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import Dialog from '../components/Dialog.vue'
-// import UpdateUserForm from '../components/UpdateUserForm.vue'
 import Avatar from '../components/Avatar.vue'
 import UserInformation from '../components/UserInformation.vue'
 import Tabs from '../components/Tabs.vue'
