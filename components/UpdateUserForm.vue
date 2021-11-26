@@ -38,13 +38,25 @@
         label="Avatar"
         v-model="fileAvatar"
       />
-      <v-btn 
-        class="align-self-end card__btn  white--text" 
-        type="submit"
-        color="purple lighten-2"
+      <div
+        class="d-flex
+          justify-space-between"
         >
-          Submit
-      </v-btn>
+        <v-btn 
+          class="align-self-end card__btn  white--text" 
+          type="submit"
+          color="purple lighten-2"
+          >
+            Submit
+        </v-btn>
+        <v-btn
+          color="primary"
+          text
+          @click="toggleIsOpen"
+        >
+          Close
+        </v-btn>
+      </div>
     </v-form>
     <div 
       v-else 
@@ -85,10 +97,10 @@ export default @Component({
 })
 
 class UpdateUserForm extends Vue {
-// @Inject({default: null}) notificationsBar;
-@State details
-@Action updateUser
-@dialogAction toggleIsOpen
+  @Inject({default: null}) notificationsBar;
+  @State details
+  @Action updateUser
+  @dialogAction toggleIsOpen
 
   data () {
     return {
@@ -136,9 +148,9 @@ class UpdateUserForm extends Vue {
       // this.snackbar = true
       this.checkProp()
       await this.updateUser({id: this.details._id, body: {...this.userSettings}})
-      // this.notificationsBar.consoleSuccess('user update');
+      this.notificationsBar.consoleSuccess('user update');
     } catch (error) {
-      console.log(error.message);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally{
       // this.isLoading = false
         this.userSettings.nickname = ''

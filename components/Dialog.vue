@@ -18,9 +18,9 @@
           v-on="on"
           @click="toggleIsOpen"
           
-        >
+          >
           {{ textOpenButton }}
-        </v-btn>
+          </v-btn>        
       </template>
 
       <v-card>
@@ -29,16 +29,10 @@
 
         <v-divider></v-divider>
 
-        <v-card-actions>
+        <!-- <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="toggleIsOpen"
-          >
-            {{textCloseButton}}
-          </v-btn>
-        </v-card-actions>
+
+        </v-card-actions> -->
       </v-card>
     </v-dialog>
   </div>
