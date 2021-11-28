@@ -4,17 +4,13 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchCurrencies (ctx, { userId }) {
+  async fetchGlobalCurrencies (ctx) {
     try {
       const response = await this.$axios
-        .$get('http://localhost:4000/globalCurrencies/latest', {
-          params: {
-            userId
-          }
-        })
+        .$get('http://localhost:4000/globalCurrencies/latest')
       ctx.commit('updateCurrencies', response)
     } catch (error) {
-      console.log(error)
+      return error
     }
   }
 }
