@@ -1,18 +1,30 @@
+import { serverUrl } from '../utils/config'
+
 export const state = () => ({
   currencies: [],
-  balance: 10000
+  balance: null
 })
 
 export const actions = {
-  async fetchCurrencies (ctx, { userId }) {
+  async fetchUserCurrencies (ctx, { userId }) {
     try {
       const response = await this.$axios
-        .$get('http://localhost:4000/userCurrencies', {
+        .$get(serverUrl + '/userCurrencies/currencies/all', {
           params: {
             userId
           }
         })
       ctx.commit('updateCurrencies', response)
+    } catch (error) {
+      return error
+    }
+  },
+
+  async fetchBalance (ctx, { userId }) {
+    try {
+      const response = await this.$axios
+        .get(serverUrl + '/users/balance/' + userId)
+      ctx.commit('updateBalance', response.data)
     } catch (error) {
       return error
     }
@@ -22,5 +34,9 @@ export const actions = {
 export const mutations = {
   updateCurrencies (state, currencies) {
     state.currencies = currencies
+  },
+
+  updateBalance (state, balance) {
+    state.balance = balance
   }
 }
