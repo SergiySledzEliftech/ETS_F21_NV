@@ -64,24 +64,6 @@
         </v-col>
       </v-row>
     </v-container>
-
-    <!-- <v-snackbar
-      v-model="snackbar"
-      :multi-line="multiLine"
-    >
-      {{ text }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="red"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar> -->
   </div>
 </template>
 
@@ -90,10 +72,10 @@ import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import Dialog from '../components/Dialog.vue'
-// import UpdateUserForm from '../components/UpdateUserForm.vue'
 import Avatar from '../components/Avatar.vue'
 import UserInformation from '../components/UserInformation.vue'
 import Tabs from '../components/Tabs.vue'
+
 
 const {State, Action} = namespace('user')
 
@@ -101,19 +83,14 @@ export default @Component({
   components: {
     Dialog,
     UserInformation,
-    Avatar
+    Avatar,
+    Tabs
   }
 })
 
 class AccountSettings extends Vue{
   @State details
   @Action getUser 
-  
-  
-  multiLine = true
-  snackbar = false
-  text = `Changes saved.`
-
   // isLoading = true
 
   big_size = 'big-size'
@@ -121,19 +98,16 @@ class AccountSettings extends Vue{
   mounted() {
     // this.isLoading = true
     this.refreshUser()
-    
   }
 
   async refreshUser(){
     try {
-      this.isLoading = true
+      // this.isLoading = true
       await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
-
-
     } catch (error) {
-      console.log(error);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally {
-      this.isLoading = false
+      // this.isLoading = false
     }  
   }
 }
