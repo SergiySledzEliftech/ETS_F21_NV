@@ -33,13 +33,6 @@
     icon>
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
-
-    <div :style="styleXSScreen">
-      <gradient-rounded-button
-      v-if="styleInputSeen"
-      icon="mdi-bell"
-      text="12"/>
-    </div>
     
     <div :style="styleXSScreen">
       <avatar-icon
@@ -59,7 +52,7 @@
 <script>
 import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Watch } from 'vue-property-decorator'
 import AvatarIcon from './AvatarIcon.vue'
 import GradientRoundedButton from './GradientRoundedButton.vue'
 
@@ -76,13 +69,19 @@ class Toolbar extends Vue {
   @Prop({type: String, required: true}) avatarSrc
   @Prop({type: String, required: true}) name
 
+  inputSeen = false;
+
   data() {
     return {
       titleStr: this.title.split('|')[0],
     }
   }
 
-  inputSeen = false;
+  @Watch('title')
+  onTitleChange() {
+    this.titleStr = this.title.split('|')[0];
+  }
+
   get styleInputSeen() {
     return !this.inputSeen || this.$vuetify.breakpoint.mdAndUp;
   } 

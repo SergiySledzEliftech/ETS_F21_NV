@@ -1,9 +1,9 @@
+import { serverUrl } from '../utils/config'
+
 export const state = () => ({
   details: {},
   isLoading: false
 })
-
-const BASE_URL = 'http://localhost:4000'
 
 export const actions = {
   // async saveUser () {} для регистрации
@@ -11,7 +11,7 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      const response = await this.$axios.$get(`${BASE_URL}/users/${id}`)
+      const response = await this.$axios.$get(`${serverUrl}/users/${id}`)
 
       ctx.commit('updateUser', response)
     } catch (error) {
@@ -21,7 +21,7 @@ export const actions = {
 
   async updateUser (ctx, { id, body }) {
     try {
-      const response = await this.$axios.$put(`${BASE_URL}/users/${id}`, body)
+      const response = await this.$axios.$put(`${serverUrl}/users/${id}`, body)
       ctx.commit('updateUser', response)
     } catch (error) {
 
@@ -34,7 +34,7 @@ export const actions = {
       dollarBalance: 50
     }
     try {
-      const response = await this.$axios.$put(`${BASE_URL}/users/balance/${id}`, body)
+      const response = await this.$axios.$put(`${serverUrl}/users/balance/${id}`, body)
       ctx.commit('updateBalance', response)
     } catch (error) {
 

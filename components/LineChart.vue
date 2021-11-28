@@ -42,8 +42,6 @@ export default class Chart extends Vue {
   }
 
   @Watch('dataLabels', {deep: true})
-  @Watch('dataArray', {deep: true})
-  @Watch('lineLabels', {deep: true})
   updateChart() {
     const data = this.composeData()
     

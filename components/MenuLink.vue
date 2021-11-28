@@ -2,11 +2,11 @@
   <v-list-item 
   class="mb-4"  
   :to="link" 
-  color="blue lighten-1"
+  :color="this.$vuetify.theme.themes.light.primary"
   @click="onMenuLinkClick">
     <v-icon>{{ icon }}</v-icon>
     <v-icon 
-    color="blue"
+    :color="this.$vuetify.theme.themes.light.primary"
     :class="{'icon-circle-half': true, 'd-none': halfCircleDisplayNoneBool}" 
     x-small>mdi-circle-half</v-icon>
     <v-list-item-content class="mx-4 font-weight-light">
@@ -50,7 +50,7 @@ class MenuLink extends Vue {
   transform: rotate(180deg);
   position: absolute;
   left: -18px;
-  box-shadow: inset 0 0 0px 10px #42A5F5,
+  box-shadow: inset 0 0 0px 10px #64B5F6,
               0 0 3px 6px #bcdaf3;
   border-radius: 50%;
 }

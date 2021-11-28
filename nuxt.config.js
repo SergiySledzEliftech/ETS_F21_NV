@@ -61,7 +61,9 @@ export default {
           success: colors.green.accent3
         },
         light: {
-          primary: '#42A5F5'
+          primary: '#70a1ff',
+          error: '#ff6b81', //'#FF409A', //'#F50057'
+          success: '#2ed573'
         }
       }
     }

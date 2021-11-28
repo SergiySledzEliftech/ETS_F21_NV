@@ -30,7 +30,10 @@
               <v-col 
                 class="d-flex 
                 justify-center
-                align-center"
+                align-center
+                col-sm-5 
+                col-md-5 
+                col-lg-5 "
               >
                 <Avatar 
                   :size="big_size"
@@ -38,9 +41,9 @@
               </v-col>
               <v-col 
                 class="col-xs-12 
-                col-sm-5 
+                col-sm-7 
                 col-md-7 
-                col-lg-6 
+                col-lg-7 
                 p__relative"
               >
                 <user-information />
@@ -57,64 +60,10 @@
           </v-container>
         </v-col>
         <v-col class="col-sm-12 col-lg-6">
-          <v-card>
-            <v-toolbar
-              color="blue"
-              dark
-              flat
-            >
-              <v-tabs
-                v-model="tabs.tab"
-                align-with-title
-              >
-                <v-tabs-slider color="purple" />
-                <v-tab
-                  v-for="{name} in tabs.items"
-                  :key="name"
-                >
-                  {{ name }}
-                </v-tab>
-              </v-tabs>
-            </v-toolbar>
-            <v-tabs-items v-model="tabs.tab">
-              <v-tab-item
-                v-for="item in tabs.items"
-                :key="item.name"
-              >
-                <v-card flat>
-                  <v-list>
-                    <v-list-item 
-                      v-for="listItem in item.list" 
-                      :key="listItem"
-                    >
-                      {{listItem}}
-                    </v-list-item>
-                  </v-list>
-                </v-card>
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card>
+          <Tabs />
         </v-col>
       </v-row>
     </v-container>
-
-    <v-snackbar
-      v-model="snackbar"
-      :multi-line="multiLine"
-    >
-      {{ text }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="red"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
@@ -123,9 +72,10 @@ import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import Dialog from '../components/Dialog.vue'
-// import UpdateUserForm from '../components/UpdateUserForm.vue'
 import Avatar from '../components/Avatar.vue'
 import UserInformation from '../components/UserInformation.vue'
+import Tabs from '../components/Tabs.vue'
+
 
 const {State, Action} = namespace('user')
 
@@ -133,52 +83,31 @@ export default @Component({
   components: {
     Dialog,
     UserInformation,
-    Avatar
+    Avatar,
+    Tabs
   }
 })
 
 class AccountSettings extends Vue{
   @State details
   @Action getUser 
-  
-  
-  multiLine = true
-  snackbar = false
-  text = `Changes saved.`
-
   // isLoading = true
 
   big_size = 'big-size'
 
-  tabs = {
-    tab: null,
-    items: [
-      {
-        name: "history", 
-        list: ["BTC", "EFR", "TCP", "DER"]},
-     {
-       name: "portfolio", 
-      list: ["USD", "EUR", "PLD", "BFS"]}
-      ],
-    text: "lorem"
-  }
-
   mounted() {
     // this.isLoading = true
     this.refreshUser()
-    
   }
 
   async refreshUser(){
     try {
-      this.isLoading = true
+      // this.isLoading = true
       await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
-
-
     } catch (error) {
-      console.log(error);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally {
-      this.isLoading = false
+      // this.isLoading = false
     }  
   }
 }

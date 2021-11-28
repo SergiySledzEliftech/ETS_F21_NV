@@ -21,34 +21,42 @@
     >
       Top up your balance: {{bonusTime}} 
     </p>
-    <v-btn 
+    <Button 
       v-else
-      class="accont__info white--text last" 
-      color="blue" 
-      @click="handlerTakeBonus">
-        Take bonus
-    </v-btn>
+      text="Take bonus"
+      class="accont__info last" 
+      :onClick="handlerTakeBonus">
+        
+    </Button>
   </div>
 </template>
 
 <script>
 import Component, { namespace } from 'nuxt-class-component'
-import { Vue } from 'nuxt-property-decorator'
+import { Inject, Vue } from 'nuxt-property-decorator'
+
+import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+
 
 const { State, Action } = namespace('user')
 
-@Component({})
+@Component({
+  components:{
+    Button: GradientRoundedButton
+  }
+})
 
 export default class UserInformation extends Vue{
-@State details
-@Action takeBonus
+  @Inject({default: null}) notificationsBar;
+  @State details
+  @Action takeBonus
 
   bonusTime = null
   bonusButton = false
   idInterval = ''
 
   mounted(){
-    this.chekBonusTime()
+    this.checkBonusTime()
     this.timer()
   }
 
@@ -57,21 +65,21 @@ export default class UserInformation extends Vue{
   }
 
     timer(){
-    this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
+    this.idInterval = setInterval(() => {this.checkBonusTime()}, 1000)
   }
 
   async handlerTakeBonus(){
     try {
-      this.isLoading = true
+      // this.isLoading = true
       await this.takeBonus(this.details._id)
     } catch (error) {
-      console.log(error);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally {
-        this.isLoading = false
+        // this.isLoading = false
     } 
   }
 
-  chekBonusTime(){
+  checkBonusTime(){
     const time = Date.now() - new Date(this.details.lastBonusTime)
     if(time < 21600000){
       this.bonusButton = false
