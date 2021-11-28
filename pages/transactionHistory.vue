@@ -1,33 +1,35 @@
 <template>
   <div id="transaction-history-container">
-
     <v-row id="chart-options-container">
       <v-col
       cols="12"
       md="4"
       :style="[this.$vuetify.breakpoint.mdAndUp ? { 'padding': '30px', 'margin-top': '60px'} : {}]">
-        <date-picker 
-        :dateRange="dateRange"
-        :updateDates ="updateDateRange"
-        :formattedStateDates="formattedDateRange"/>
+        <date-picker
+        :stateDates="dateRange"
+        :formattedStateDates="formatDates"
+        :updateDates="updateDateRange"/>
 
         <v-select 
         class="my-6" 
         :items="currencies" 
         v-model="currency" 
         label="Select currency" 
-        dense/>
+        dense
+        :disabled="loading"/>
 
         <slider
         label="Rows on the page"
         :min="1"
         :max="30"
         :model="limitNumber"
+        :disabled="loading"
         @changeModel="changeLimit"/>
 
         <gradient-rounded-button 
         text="Update transactions"
-        :onClick="getTransactionHistory"/>
+        :onClick="getTransactionHistory"
+        :loading="loading"/>
       </v-col>
 
       <v-col
@@ -45,17 +47,20 @@
       </v-col>
     </v-row>
 
-    <v-pagination 
+    <pagination 
     v-if="transactions.length !== 0" 
-    v-model="page" 
-    :length="pageCount" 
-    @input="next"
-    class="my-2"/>
-    <v-data-table 
-    :headers="headers" 
-    :items="transactions" 
-    class="elevation-1" 
-    hide-default-footer/>
+    :model="page"
+    :pageCount="pageCount"
+    @onPageChange="onPageChange"
+    :disabled="loading"/>
+    <div class="data-table-holder">
+      <data-table
+      :headers="headers"
+      :data="transactions"
+      class="elevation-1"
+      :needSearch="false"
+      hide-default-footer/>
+    </div>
   </div>
 </template>
 
@@ -66,6 +71,8 @@ import Chart from '../components/LineChart.vue'
 import DatePicker from '../components/Datepicker.vue'
 import GradientRoundedButton from '../components/GradientRoundedButton.vue'
 import Slider from '../components/Slider.vue'
+import DataTable from '../components/DataTable.vue'
+import Pagination from '../components/Pagination.vue'
 
 const { State, Action, Mutation, Getter } = namespace('transactionHistory');
 
@@ -75,6 +82,8 @@ export default @Component({
     DatePicker,
     GradientRoundedButton,
     Slider,
+    DataTable,
+    Pagination
   },
 })
 
@@ -89,7 +98,7 @@ class TransactionHistory extends Vue{
   @State dateRange;
   @State limitNumber;
 
-  @Getter formattedDateRange;
+  @Getter formatDates;
 
   @Action fetchTransactions;
 
@@ -97,20 +106,21 @@ class TransactionHistory extends Vue{
   @Mutation updateLimitNumber;
 
   page = 1;
+  loading = false;
   currency = 'UAH';
   currencies = ['UAH', 'EUR', 'USD'];
 
   headers = [{ text: 'Currency', value: 'currencyName' },
              { text: 'Amount', value: 'amount' },
-             { text: 'Date', value: 'date' },]
+             { text: 'Date', value: 'date' },
+             { text: 'Rate', value: 'rate'},
+             { text: 'Spent', value: 'spent'}]
 
   head() {
     return {
       title: 'Transaction History',
     }
   }
-
-  next(page) {}
 
   @Watch('pageNumber')
   changePage() {
@@ -123,7 +133,7 @@ class TransactionHistory extends Vue{
 
   @Watch('page')
   async getTransactionHistory() {
-    console.log('click')
+    this.loading = true;
     const page = this.page;
     const currency = this.currency;
     const limit = this.limitNumber;
@@ -134,11 +144,16 @@ class TransactionHistory extends Vue{
     } catch (error) {
       this.notificationsBar.consoleError(error.message);
     }
+    this.loading = false;
   }
 
-  async mounted() {
+  mounted() {
     this.updateLimitNumber(this.limitNumber);
     this.getTransactionHistory();
+  }
+
+  onPageChange(page) {
+    this.page = page;
   }
 }
 </script>
@@ -146,5 +161,10 @@ class TransactionHistory extends Vue{
 <style scoped>
 div#transaction-history-container {
   padding: 10px;
+}
+
+div.data-table-holder {
+  height: 283px;
+  overflow: scroll;
 }
 </style>

@@ -4,15 +4,15 @@
 
     <v-snackbar
     v-model="snackbarError"
-    :timeout="8000"
+    :timeout="10000"
     right
     color="error"
-    light>
-      <span class="white--text">{{ errorText }}</span>
+    elevation="1"
+    dark>
+      <span>{{ errorText }}</span>
 
       <template v-slot:action="{ attrs }">
         <v-btn
-        color="white"
         text
         v-bind="attrs"
         @click="snackbarError = false">
@@ -26,12 +26,12 @@
     :timeout="4000"
     right
     color="success"
-    light>
+    dark>
       <span>{{ successText }}</span>
 
       <template v-slot:action="{ attrs }">
         <v-btn
-        color="black"
+        color="white"
         text
         v-bind="attrs"
         @click="snackbarSuccess = false">
@@ -67,7 +67,3 @@ class NotificationsBar extends Vue {
 
 }
 </script>
-
-<style scoped>
-
-</style>
