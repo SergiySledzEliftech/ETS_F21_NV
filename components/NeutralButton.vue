@@ -5,7 +5,7 @@
   :loading="loading"
   :type="type"
   x-large
-  @click="click"
+  @click="onClick"
   :color="color">
     {{ text }}
   </v-btn>

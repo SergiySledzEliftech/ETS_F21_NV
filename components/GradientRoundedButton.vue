@@ -6,7 +6,7 @@
   height="35px"
   :loading="loading"
   :type="type"
-  @click="click"
+  @click="onClick"
   dark>
     <v-icon v-if="icon" color="white">{{ icon }}</v-icon>
     <span class="font-weight-medium white--text">{{ text }}</span>
