@@ -25,13 +25,13 @@
 import { Prop, Vue } from 'vue-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
-import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+import NeutralButton from '../components/NeutralButton.vue'
 
 const {State, Action} = namespace('dialog')
 
 @Component({
   components: {
-    Button: GradientRoundedButton
+    Button: NeutralButton
   }
 })
 export default class Dialog extends Vue {

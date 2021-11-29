@@ -43,13 +43,14 @@
         justify-space-between"
       >
         <Button
-          class="align-self-end card__btn  white--text" 
+          class="align-self-end card__btn" 
           text="Submit"
           :onClick="submit"
 
           /><!--type="submit"-->
         <Button
           :onClick="toggleIsOpen"
+          color="red"
           text="Close"
         />
       </div>
@@ -58,13 +59,19 @@
       v-else 
       class="d-flex 
       justify-space-around 
+      align-center
       content"
     >
-      <p>Do you want save your changes?</p> 
+      <p 
+        class="mb-0"
+      >
+        Do you want save your changes?
+      </p> 
       <div class="d-flex justify-end">
         <Button
         class="btn" 
         text="Yes"
+        color="green"
         :onClick="handlerSubmit"
         />
         <Button 
@@ -81,24 +88,26 @@
 import { Inject, Prop, Vue} from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
-import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+import NeutralButton from '../components/NeutralButton.vue'
 
 import rules from '../utils/form-validation-rules.js'
 
 const {State, Action} = namespace('user')
+const {State: S, Action: A} = namespace('dialog')
 
 export default @Component({
   components:{
-    Button: GradientRoundedButton
+    Button: NeutralButton
   }
 
 })
 
 class UpdateUserForm extends Vue {
   @Inject({default: null}) notificationsBar;
-  @Prop({type: String, required: true}) toggleIsOpen
+  // @Prop({type: String, required: true}) toggleIsOpen
   @State details
   @Action updateUser
+  @A toggleIsOpen
 
   data () {
     return {
@@ -126,7 +135,6 @@ class UpdateUserForm extends Vue {
   isNote = false
 
   submit () {
-    
     this.compress(this.fileAvatar)
         
     if(this.isValid()){

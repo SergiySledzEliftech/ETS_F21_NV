@@ -48,7 +48,7 @@
               >
                 <user-information />
                 <Dialog
-                  textOpenButton="Update"
+                  textOpenButton="Edit"
                   textCloseButton="Close"
                   width="500"
                   class="btn__update white--text" 
@@ -121,17 +121,16 @@ class AccountSettings extends Vue{
     left: 50%;
     transform: translate(-50% -50%);
     z-index: 2;
-  }
+  }*/
 
-  .container {
-    padding: 15px;
-    margin-right: 0;
-    margin-left: 0;
-  }
+  /* .container {
+    padding-top: 30px;
+
+  } */
 
   
 
-  .btn {
+/*  .btn {
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
@@ -150,7 +149,7 @@ class AccountSettings extends Vue{
   .p__relative {
     position: relative;
     max-width: 300px;
-    padding-bottom: 70px;
+    padding-bottom: 90px;
     margin-right: auto;
     margin-left: auto;
   } 
