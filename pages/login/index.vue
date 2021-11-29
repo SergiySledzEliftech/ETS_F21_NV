@@ -2,7 +2,9 @@
   <v-form v-model="valid">
     <v-container fill-height fluid fill-width>
       <v-col cols="5" md="5">
-        <v-btn to="login/register">Don't have an account? Create one!</v-btn>
+        <v-btn color="purple lighten-4" to="login/register"
+          >Don't have an account? Create one!</v-btn
+        >
       </v-col>
 
       <v-col cols="12" md="5">
@@ -25,7 +27,11 @@
         </v-row>
 
         <v-row cols="10" md="4" justify="center">
-          <v-btn class="btn" type="submit" @click.prevent="sendLogInData"
+          <v-btn
+            class="btn"
+            type="submit"
+            @click.prevent="sendLogInData"
+            color="purple lighten-2"
             >Log in</v-btn
           >
         </v-row>
