@@ -1,5 +1,6 @@
 export const state = () => ({
   details: {},
+  userJWT: String,
   isLoading: false
 })
 
@@ -10,6 +11,17 @@ export const actions = {
     const body = b
     try {
       const response = await this.$axios.$post(`${BASE_URL}/users`, body)
+      ctx.commit('updateUser', response)
+    } catch (error) {
+      // console.log(error)
+    }
+  },
+
+  async getUserJwt (ctx, b) {
+    const body = b
+    try {
+      const response = await this.$axios.$post(`${BASE_URL}/users/login`, body)
+      // http://localhost:4000/users/login
       ctx.commit('updateUser', response)
     } catch (error) {
       // console.log(error)
