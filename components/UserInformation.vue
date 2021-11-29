@@ -15,12 +15,28 @@
     >
       Balance: ${{details.dollarBalance}}
     </p>
-    <p
+    <div 
       v-if="!bonusButton" 
-      class="accont__info" 
+      class="d-flex
+      align-center
+      justify-space-between"
     >
-      Top up your balance: {{bonusTime}} 
-    </p>
+      <p
+        class="accont__info
+        mb-0" 
+      >
+        Top up your balance: 
+      </p>
+      <v-progress-circular
+        :rotate="360"
+        :size="100"
+        :width="15"
+        :value="value"
+        color="green"
+      >
+        {{ bonusTime }}
+      </v-progress-circular>
+    </div>
     <Button 
       v-else
       text="Take bonus"
@@ -35,14 +51,14 @@
 import Component, { namespace } from 'nuxt-class-component'
 import { Inject, Vue } from 'nuxt-property-decorator'
 
-import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+import NeutralButton from '../components/NeutralButton.vue'
 
 
 const { State, Action } = namespace('user')
 
 @Component({
   components:{
-    Button: GradientRoundedButton
+    Button: NeutralButton
   }
 })
 
@@ -54,6 +70,8 @@ export default class UserInformation extends Vue{
   bonusTime = null
   bonusButton = false
   idInterval = ''
+
+  value = 30
 
   mounted(){
     this.checkBonusTime()
@@ -80,9 +98,11 @@ export default class UserInformation extends Vue{
   }
 
   checkBonusTime(){
+    const SIX_HOURS = 21600000
     const time = Date.now() - new Date(this.details.lastBonusTime)
-    if(time < 21600000){
+    if(time < SIX_HOURS){
       this.bonusButton = false
+      this.value = Math.round(time/SIX_HOURS*100)
       this.msToTime(21600000 - time)
     } else {
     this.bonusButton = true

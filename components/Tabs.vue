@@ -116,7 +116,7 @@
 import { Vue } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
-import GradientRoundedButton from '../components/GradientRoundedButton.vue'
+import NeutralButton from '../components/NeutralButton.vue'
 import BuyBtn from '../components/BuyBtn.vue'
 import Scroll from '../components/ScrollContainer.vue'
 
@@ -126,7 +126,7 @@ export default @Component({
     components:{
       BuyBtn,
       Scroll,
-      Button: GradientRoundedButton
+      Button: NeutralButton
     }
   })
 
