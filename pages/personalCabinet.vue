@@ -36,7 +36,7 @@
                 col-lg-5 "
               >
                 <Avatar 
-                  :size="big_size"
+                  :size="BIG_SIZE"
                 />
               </v-col>
               <v-col 
@@ -93,7 +93,8 @@ class AccountSettings extends Vue{
   @Action getUser 
   // isLoading = true
 
-  big_size = 'big-size'
+  BIG_SIZE = 'big-size'
+  SMALL_SIZE = 'small-size'
 
   mounted() {
     // this.isLoading = true
