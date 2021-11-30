@@ -18,7 +18,7 @@
           Your balance: {{ balance }}$
         </v-col>
         <v-col cols="6">
-          Rate: {{ rate }}
+          Rate: {{ localRate }}
         </v-col>
       </v-row>
       <v-row>
@@ -27,13 +27,10 @@
           sm="6"
         >
           Select currency:
-          <v-autocomplete
-            class="autocomplete"
-            :items="currenciesSigns"
-            v-model="currency"
-            v-on:change="changeValues"
-          >
-          </v-autocomplete>
+          <Selector
+            :itemsList="currenciesSigns"
+            :setStoreValueFunction="setCurrencyName"
+          />
         </v-col>
 
         <v-col
@@ -44,29 +41,29 @@
           <v-text-field
             id="amount-field"
             type="number"
-            v-model="amount"
-            :max="maxAmount"
+            v-model="localAmount"
+            :max="localMaxAmount"
           >
           </v-text-field>
           <v-slider
             class="slider"
-            v-model="amount"
-            :max="maxAmount"
+            v-model="localAmount"
+            :max="localMaxAmount"
             @change="changeCanBuy"
           ></v-slider>
         </v-col>
       </v-row>
     </v-card-text>
     <currency-purchase-modal-actions />
-    
   </v-card>
 </template>
 
 <script>
 
-import { Component, Vue, namespace, Prop } from "nuxt-property-decorator";
-import CurrencyPurchaseModalHeader from './CurrencyPurchaseModalHeader.vue'
-import CurrencyPurchaseModalActions from './CurrencyPurchaseModalActions.vue'
+import { Component, Vue, namespace, Prop, Watch } from "nuxt-property-decorator";
+import CurrencyPurchaseModalHeader from './CurrencyPurchaseModalHeader.vue';
+import CurrencyPurchaseModalActions from './CurrencyPurchaseModalActions.vue';
+import Selector from './Selector.vue';
 
 const {
   State: GlobalState,
@@ -82,7 +79,13 @@ const {
 } = namespace('purchaseModal');
 
 
-@Component({})
+@Component({
+  components: {
+    CurrencyPurchaseModalHeader,
+    CurrencyPurchaseModalActions,
+    Selector
+  }
+})
 export default class CurrencyPurchaseModalCard extends Vue {
   @GlobalState currenciesRates
   @GlobalState currenciesSigns
@@ -92,25 +95,26 @@ export default class CurrencyPurchaseModalCard extends Vue {
   @LocalAction fetchBalance
 
   @ModalState canBuy
+  @ModalState currencyName
+  @ModalAction setCurrencyName
   @ModalAction setCanBuy
   @ModalAction setModal
 
   @Prop({ type: String, required: true }) userId
 
-  currency = null
-  amount = null
-  min = 0
-  rate = null
-  maxAmount = null
+  localAmount = null
+  localRate = null
+  localMaxAmount = null
 
+  @Watch('currencyName')
   changeValues () {
     const balance = this.balance;
-    this.rate = this.currenciesRates[this.currency];
-    this.maxAmount = Math.floor(balance * this.rate);
+    this.localRate = this.currenciesRates[this.currencyName];
+    this.localMaxAmount = Math.floor(balance * this.localRate);
   }
 
   changeCanBuy () {
-    this.setCanBuy(!!this.amount && !!this.currency)
+    this.setCanBuy(!!this.localAmount && !!this.currencyName)
   }
   
   async buyCurrency () {
