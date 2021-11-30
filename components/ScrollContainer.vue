@@ -1,6 +1,6 @@
 <template>
   <div 
-    :style="`max-height: ${height}px`"
+    :style="`height: ${height}px`"
     class="scroll"
     ref="scroll"
   >

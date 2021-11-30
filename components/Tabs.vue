@@ -1,19 +1,15 @@
 <template>
   <v-card>
     <v-toolbar
-      
       class="color-pink"
       white
-      
     >
       <v-tabs
         v-model="tabs.tab"
         align-with-title
-        
       >
         <v-tabs-slider 
           color="purple"
-          
         />
         <v-tab
           v-for="(value, key) in tabs.items"
@@ -33,7 +29,6 @@
             </span>
           {{ key }}
           </span>
-          
         </v-tab>
       </v-tabs>
     </v-toolbar>
@@ -43,7 +38,7 @@
         :key="key"
       >
         <Scroll
-          height="480">
+          height="326">
           <v-card
           flat
         >
@@ -56,7 +51,7 @@
               <span 
                 v-if="listItem.date"
                 class="d-flex"
-                ><!--class="mr-auto"-->
+                >
                 <span class="d-none
                   d-sm-flex"
                 >
@@ -66,13 +61,12 @@
               </span> 
               <span 
                 v-if="listItem.name"
-                class="mr-auto"><!---->
+                class="mr-auto">
                 {{listItem.name}} 
               </span> 
               <span 
                 v-else
-                ><!--class="mr-auto"-->
-                
+                >
               </span> 
               <span>
                 {{listItem.currencyName}} {{roundCurrency(listItem.amount)}}

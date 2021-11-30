@@ -40,13 +40,13 @@
       />
       <div
         class="d-flex
-        justify-space-between"
+        justify-space-between
+        flex-wrap"
       >
         <Button
           class="align-self-end card__btn" 
           text="Submit"
           :onClick="submit"
-
           /><!--type="submit"-->
         <Button
           :onClick="toggleIsOpen"
@@ -67,7 +67,8 @@
       >
         Do you want save your changes?
       </p> 
-      <div class="d-flex justify-end">
+      <div class="d-flex
+       justify-end">
         <Button
         class="btn" 
         text="Yes"
@@ -104,7 +105,6 @@ export default @Component({
 
 class UpdateUserForm extends Vue {
   @Inject({default: null}) notificationsBar;
-  // @Prop({type: String, required: true}) toggleIsOpen
   @State details
   @Action updateUser
   @A toggleIsOpen
@@ -148,7 +148,6 @@ class UpdateUserForm extends Vue {
 
     async handlerSubmit(){
     try {
-      // this.isLoading = true
       this.toggleIsOpen()
       this.toggleIsNote()
       this.checkProp()
@@ -157,12 +156,9 @@ class UpdateUserForm extends Vue {
     } catch (error) {
       this.notificationsBar.consoleSuccess(error.message);
     } finally{
-      // this.isLoading = false
         this.userSettings.nickname = ''
-        // this.userSettings.email = ''
         this.userSettings.avatar = ''
         this.fileAvatar = null
-        // this.userSettings.password = ''
     }
   }
 
@@ -201,7 +197,7 @@ class UpdateUserForm extends Vue {
         const elem = document.createElement('canvas');
         const ctx = elem.getContext('2d');
         // img.width и img.height будет содержать оригинальные размеры
-        const width = 180;
+        const width = 300;
         const scaleFactor = width / img.width;
 
         elem.width = width;
@@ -249,6 +245,12 @@ class UpdateUserForm extends Vue {
   .content{
     padding-top: 40px;
     padding-bottom: 40px;
+  }
+
+  @media (max-width: 560px) {
+    .content {
+      flex-direction: column;
+    }
   }
 
   .btn{

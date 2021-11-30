@@ -19,7 +19,9 @@
       v-if="!bonusButton" 
       class="d-flex
       align-center
-      justify-space-between"
+      justify-space-between
+      flex-wrap
+      width"
     >
       <p
         class="accont__info
@@ -38,12 +40,13 @@
       </v-progress-circular>
     </div>
     <Button 
-      v-else
+      v-else 
       text="Take bonus"
-      class="accont__info last" 
-      :onClick="handlerTakeBonus">
-        
-    </Button>
+      :onClick="handlerTakeBonus"
+      class="ml-0 
+      mr-auto
+      height"
+      />
   </div>
 </template>
 
@@ -88,12 +91,10 @@ export default class UserInformation extends Vue{
 
   async handlerTakeBonus(){
     try {
-      // this.isLoading = true
       await this.takeBonus(this.details._id)
     } catch (error) {
       this.notificationsBar.consoleSuccess(error.message);
     } finally {
-        // this.isLoading = false
     } 
   }
 
@@ -130,9 +131,9 @@ export default class UserInformation extends Vue{
     margin-top: 10px;
   }
 
-  .account__info .last {
-    display: inline-block;
-    margin-bottom: 60px;
+  .width {
+    max-width: 286px;
+    min-width: 160px;
   }
 
 </style>

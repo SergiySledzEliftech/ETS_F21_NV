@@ -10,12 +10,13 @@
         <Button
           v-bind="attrs"
           v-on="on"
+          class="ml-0 mr-auto"
           :text="textOpenButton"
-          :onClick="toggleIsOpen"         
+          :onClick="toggleIsOpen"   
           />    
       </template>
       <v-card>        
-        <slot toggleIsOpen="toggleIsOpen"></slot>
+        <slot></slot>
       </v-card>
     </v-dialog>
   </div>
