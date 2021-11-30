@@ -1,7 +1,8 @@
 <template>
   <div>
     Welcome to dashboard!
-    <DatePicker 
+    <DatePicker
+      :isDisabled="loading"
       :stateDates="dateRange"
       :formattedStateDates="formatDates"
       :updateDates="updateDateRange"
@@ -17,12 +18,13 @@
 
     <DataTable
       class="pa-10"
+      height="400px"
       :headers="[
-        {text: 'Currency name', sortable: true, value: 'currency', align: 'start'}, 
-        {text: 'Current rate, EUR', sortable: true, value: 'rate', align: 'center'}, 
-        {text: 'Change, %', sortable: true, value: 'change', align: 'center'},
-        {text: 'Favorite', sortable: true, value: 'favorite', align: 'center'}, 
-        {text: 'Buy currency', sortable: false, value: 'actions', align: 'center'}, 
+        {text: 'Currency name', sortable: true, value: 'currency', align: 'start', width: '50%'}, 
+        {text: 'Current rate, EUR', sortable: true, value: 'rate', align: 'center', width: '15%'}, 
+        {text: 'Change, %', sortable: true, value: 'change', align: 'center', width: '15%'},
+        {text: 'Favorite', sortable: true, value: 'favorite', align: 'center', width: '10%'}, 
+        {text: '', sortable: false, value: 'actions', align: 'center', width: '10%'}, 
       ]"
       :data="dataForTable"
       :needSearch="true"
@@ -45,6 +47,8 @@ import DataTable from '../components/DataTable.vue'
 import BuyBtn from '../components/BuyBtn.vue'
 import DatePicker from '../components/Datepicker.vue'
 
+import { serverUrl } from '../utils/config'
+
 const {State, Mutation, Getter} = namespace('dashboardStore')
 
 
@@ -62,6 +66,7 @@ export default class DashboardPage extends Vue{
   @State isLoading
   @State fluctData
 
+  @Getter dates
   @Getter formatDates
   @Getter fluctLabels
   @Getter changesForChart
@@ -81,11 +86,7 @@ export default class DashboardPage extends Vue{
 
   async mounted() {
     await this.callAPI(this.dateRange)
-    this.changeLoading()
-    this.unsubscribe = this.$store.subscribe((updateDateRange, _) => {
-      return this.callAPI(updateDateRange.payload)
-    })
-    console.log("dataForTable: ", this.dataForTable)
+    this.unsubscribe = this.$store.watch(this.dates, () => this.callAPI(this.dateRange))
   }
 
   unmounted() {
@@ -97,15 +98,9 @@ export default class DashboardPage extends Vue{
   }
 
   async callAPI([start, end]) {
-      const dataCrypto = await this.$axios(`https://api.exchangerate.host/fluctuation?start_date=${start}&end_date=${end}&source=crypto`)
-      const dataBank = await this.$axios(`https://api.exchangerate.host/fluctuation?start_date=${start}&end_date=${end}&source=ecb`)
-      const data = {...dataCrypto.data.rates, ...dataBank.data.rates}
-      
-      const dataSorted = Object.entries(data)
-        .map(([name, values]) => [name, {...values, start_rate: 1 / values.start_rate, end_rate: 1 / values.end_rate}])
-        .filter(([_, values]) => values.end_rate > 0.01 && values.end_rate < 100000)
-
-      this.updateFluctData(dataSorted)
+      this.loading = true
+      const dataSorted = await this.$axios(`${serverUrl}/globalCurrencies/changes?start_date=${start}&end_date=${end}&source=crypto`)
+      this.updateFluctData(dataSorted.data)
 
       this.loading = false
   }

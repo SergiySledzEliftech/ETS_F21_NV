@@ -1,15 +1,16 @@
 import { DateTime } from 'luxon'
 
 export const state = () => ({
-  dateRange: [DateTime.now().minus({ days: 2 }).toFormat('yyyy-M-dd'), DateTime.now().minus({ days: 1 }).toFormat('yyyy-M-dd')],
+  dateRange: [DateTime.now().minus({ days: 2 }).toFormat('yyyy-MM-dd'), DateTime.now().minus({ days: 1 }).toFormat('yyyy-MM-dd')],
   fluctData: [],
   isLoading: true
 })
 
 export const getters = {
+  dates: state => () => state.dateRange,
   formatDates ({ dateRange }) {
-    const startDate = DateTime.fromFormat(dateRange[0], 'yyyy-M-dd').toFormat('LLL dd yyyy')
-    const endDate = DateTime.fromFormat(dateRange[1], 'yyyy-M-dd').toFormat('LLL dd yyyy')
+    const startDate = DateTime.fromFormat(dateRange[0], 'yyyy-MM-dd').toFormat('LLL dd yyyy')
+    const endDate = DateTime.fromFormat(dateRange[1], 'yyyy-MM-dd').toFormat('LLL dd yyyy')
     return [startDate, endDate]
   },
   fluctLabels ({ fluctData }) {
@@ -18,13 +19,13 @@ export const getters = {
   },
   changesForChart ({ fluctData }) {
     const sorted = sortAndSlice(fluctData)
-    return sorted.map(arr => Math.round(arr[1].change_pct * 10000) / 100)
+    return sorted.map(arr => arr[1].change_pct)
   },
   dataForTable ({ fluctData }) {
     return fluctData.map(([name, values]) => ({
       currency: name,
-      rate: Math.round(values.end_rate * 100) / 100,
-      change: Math.round(values.change_pct * 10000) / 100,
+      rate: values.end_rate,
+      change: values.change_pct,
       favorite: false
     }))
   }
@@ -33,12 +34,12 @@ export const getters = {
 export const mutations = {
   updateDateRange (state, [startDate, endDate]) {
     state.dateRange = [
-      DateTime.fromFormat(startDate, 'yyyy-M-dd').toFormat('yyyy-M-dd'),
-      DateTime.fromFormat(endDate, 'yyyy-M-dd').toFormat('yyyy-M-dd')
+      DateTime.fromFormat(startDate, 'yyyy-MM-dd').toFormat('yyyy-MM-dd'),
+      DateTime.fromFormat(endDate, 'yyyy-MM-dd').toFormat('yyyy-MM-dd')
     ]
   },
   changeLoading (state) {
-    return !state.isLoading
+    state.isLoading = !state.isLoading
   },
   updateFluctData (state, newData) {
     state.fluctData = newData
