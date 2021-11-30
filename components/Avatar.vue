@@ -4,7 +4,7 @@
       v-if="details.avatar"
       :src="details.avatar"
       :class="size" 
-      class="rounded-xl"
+      class="rounded-xl width"
       alt="avatar"
     >
     <div 
@@ -16,7 +16,11 @@
       align-center 
       rounded-circle" 
       > 
-        <span :class="size"  class="box d-flex align-center justify-center">
+        <span :class="size"  
+          class="box 
+          d-flex 
+          align-center 
+          justify-center">
           {{ details.nickname && details.nickname[0] }}
         </span>
     </div>
@@ -61,6 +65,18 @@ export default class Avatar extends Vue{
     height: auto;
     font-weight: bold;
   }
+
+  .width {
+    width: 100%; 
+    min-width: 200px;
+    height: auto;
+  }
+
+  /* @media (max-width: 959px) {
+    .width {
+    width: 200px; 
+  }
+  } */
 
   .big-size{
 

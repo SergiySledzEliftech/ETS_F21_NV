@@ -16,7 +16,14 @@
       :name="name"/>
       
       <v-main>
-        <Nuxt />
+        <div class="v-progress-holder">
+          <v-progress-circular
+          v-show="pageLoading"
+          :size="50"
+          color="primary"
+          indeterminate/>
+        </div>
+        <Nuxt v-if="!pageLoading"/>
       </v-main>
     </notifications-bar>
   </v-app>
@@ -40,7 +47,8 @@ export default @Component({
 class DefautPage extends Vue {
   drawer = false;
   logo = 'mainLogo.png';
-  avatarClickLink = '/';
+  pageLoading = true;
+  avatarClickLink = '';
   name = 'Miracle Volkman';
   titleParts = ['Train', 'der'];
   avatarSrc = 'https://thispersondoesnotexist.com/image';
@@ -53,21 +61,26 @@ class DefautPage extends Vue {
   logoutLink = {name: 'Logout', link: '/login', icon: 'mdi-logout'}
   title = 'Trainder';
 
-  
-
-
   head () {
-    let sefl = this
+    let self = this;
     if (process.browser) this.title = document.title;
     return {
       changed ({title}) {
-        sefl.title = title;
+        self.title = title;
       }
     }
   };
+
+  mounted() {
+    this.pageLoading = false;
+  }
 }
 </script>
 
 <style scoped>
-
+div.v-progress-holder {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 </style>

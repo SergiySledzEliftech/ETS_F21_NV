@@ -13,11 +13,10 @@ export const state = () => ({
 })
 
 export const getters = {
-  formattedDateRange ({ dateRange }) {
-    return [
-      DateTime.fromFormat(dateRange[0], 'yyyy-M-dd').toFormat('LLL dd yyyy'),
-      DateTime.fromFormat(dateRange[1], 'yyyy-M-dd').toFormat('LLL dd yyyy')
-    ]
+  formatDates ({ dateRange }) {
+    const startDate = DateTime.fromFormat(dateRange[0], 'yyyy-M-dd').toFormat('LLL dd yyyy')
+    const endDate = DateTime.fromFormat(dateRange[1], 'yyyy-M-dd').toFormat('LLL dd yyyy')
+    return [startDate, endDate]
   }
 }
 
@@ -43,7 +42,10 @@ export const mutations = {
   },
 
   updateDateRange (state, [startDate, endDate]) {
-    state.dateRange = [startDate, endDate]
+    state.dateRange = [
+      DateTime.fromFormat(startDate, 'yyyy-M-dd').toFormat('yyyy-M-dd'),
+      DateTime.fromFormat(endDate, 'yyyy-M-dd').toFormat('yyyy-M-dd')
+    ]
   },
 
   updateLimitNumber (state, limitNumber) {

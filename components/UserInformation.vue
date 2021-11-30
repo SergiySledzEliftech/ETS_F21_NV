@@ -15,40 +15,69 @@
     >
       Balance: ${{details.dollarBalance}}
     </p>
-    <p
+    <div 
       v-if="!bonusButton" 
-      class="accont__info" 
+      class="d-flex
+      align-center
+      justify-space-between
+      flex-wrap
+      width"
     >
-      Top up your balance: {{bonusTime}} 
-    </p>
-    <v-btn 
-      v-else
-      class="accont__info white--text last" 
-      color="blue" 
-      @click="handlerTakeBonus">
-        Take bonus
-    </v-btn>
+      <p
+        class="accont__info
+        mb-0" 
+      >
+        Top up your balance: 
+      </p>
+      <v-progress-circular
+        :rotate="360"
+        :size="100"
+        :width="15"
+        :value="value"
+        color="green"
+      >
+        {{ bonusTime }}
+      </v-progress-circular>
+    </div>
+    <Button 
+      v-else 
+      text="Take bonus"
+      :onClick="handlerTakeBonus"
+      class="ml-0 
+      mr-auto
+      height"
+      />
   </div>
 </template>
 
 <script>
 import Component, { namespace } from 'nuxt-class-component'
-import { Vue } from 'nuxt-property-decorator'
+import { Inject, Vue } from 'nuxt-property-decorator'
+
+import NeutralButton from '../components/NeutralButton.vue'
+
 
 const { State, Action } = namespace('user')
 
-@Component({})
+@Component({
+  components:{
+    Button: NeutralButton
+  }
+})
 
 export default class UserInformation extends Vue{
-@State details
-@Action takeBonus
+  @Inject({default: null}) notificationsBar;
+  @State details
+  @Action takeBonus
 
   bonusTime = null
   bonusButton = false
   idInterval = ''
 
+  value = 30
+
   mounted(){
-    this.chekBonusTime()
+    this.checkBonusTime()
     this.timer()
   }
 
@@ -57,24 +86,24 @@ export default class UserInformation extends Vue{
   }
 
     timer(){
-    this.idInterval = setInterval(() => {this.chekBonusTime()}, 1000)
+    this.idInterval = setInterval(() => {this.checkBonusTime()}, 1000)
   }
 
   async handlerTakeBonus(){
     try {
-      this.isLoading = true
       await this.takeBonus(this.details._id)
     } catch (error) {
-      console.log(error);
+      this.notificationsBar.consoleSuccess(error.message);
     } finally {
-        this.isLoading = false
     } 
   }
 
-  chekBonusTime(){
+  checkBonusTime(){
+    const SIX_HOURS = 21600000
     const time = Date.now() - new Date(this.details.lastBonusTime)
-    if(time < 21600000){
+    if(time < SIX_HOURS){
       this.bonusButton = false
+      this.value = Math.round(time/SIX_HOURS*100)
       this.msToTime(21600000 - time)
     } else {
     this.bonusButton = true
@@ -102,9 +131,9 @@ export default class UserInformation extends Vue{
     margin-top: 10px;
   }
 
-  .account__info .last {
-    display: inline-block;
-    margin-bottom: 60px;
+  .width {
+    max-width: 286px;
+    min-width: 160px;
   }
 
 </style>

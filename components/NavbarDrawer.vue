@@ -1,7 +1,8 @@
 <template>
   <v-navigation-drawer 
   v-model="drawerBool" 
-  floating color="rgb(255,242,245)" 
+  floating 
+  color="rgb(255,242,245)" 
   :mini-variant="mini"
   mini-variant-width="70" 
   width="300" 
@@ -10,7 +11,10 @@
     <v-container>
       <v-list flat>
 
-        <logo-title :logo="logo" :title-parts="titleParts" @changeDrawerPosition="changeDrawerPosition"/>
+        <logo-title 
+        :logo="logo" 
+        :title-parts="titleParts" 
+        @changeDrawerPosition="changeDrawerPosition"/>
 
         <div>
           <menu-link 

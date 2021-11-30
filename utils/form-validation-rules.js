@@ -7,7 +7,7 @@ const rules = {
     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return pattern.test(value) || 'Invalid e-mail.'
   },
-  avatar: value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'
+  avatar: value => !value || value.size < 200000 || 'Avatar size should be less than 0.19 MB!'
 }
 
 export default rules
