@@ -66,7 +66,7 @@ export default class Avatar extends Vue{
     font-weight: bold;
   }
 
-  .width {
+  .width.big-size {
     width: 100%; 
     min-width: 200px;
     height: auto;
