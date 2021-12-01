@@ -1,32 +1,48 @@
 <template>
-  <v-form v-model="valid">
-    <v-container fill-height fluid fill-width>
-      <v-col cols="5" md="5">
-        <v-btn color="purple lighten-4" to="login/register"
-          >Don't have an account? Create one!</v-btn
-        >
-      </v-col>
+  <!-- <v-form v-model="valid"> -->
+  <v-container fill-height fluid fill-width>
+    <v-row align="center" justify="center">
+      <v-col cols="12">
+        <v-card class="mx-auto" max-width="520" color="rgb(255,242,245)">
+          <v-row align="center" justify="center">
+            <v-col cols="10">
+              <v-card-title class="text-h2 justify-center"
+                >Welcome</v-card-title
+              >
+              <!-- <v-card-subtitle
+              >Listen to your favorite artists and albums whenever and wherever,
+              online and offline.</v-card-subtitle
+            > -->
 
-      <v-col cols="12" md="5">
-        <v-row align="center" justify="center">
-          <v-text-field
-            v-model="logInData.email"
-            :rules="emailRules"
-            label="E-mail"
-            required
-          ></v-text-field>
-        </v-row>
-
-        <v-row cols="12" md="4">
-          <v-text-field
-            v-model="logInData.password"
-            type="password"
-            label="Password"
-            required
-          ></v-text-field>
-        </v-row>
-
-        <v-row cols="10" md="4" justify="center">
+              <v-card-actions>
+                <!-- <v-col cols="12" md="5"> -->
+                <v-row align="center" justify="center">
+                  <v-btn color="rgb(255,242,245)" to="login/register"
+                    >Don't have an account? Create one!</v-btn
+                  >
+                </v-row>
+              </v-card-actions>
+              <v-card-actions>
+                <v-row align="center" justify="center">
+                  <v-text-field
+                    v-model="logInData.email"
+                    :rules="emailRules"
+                    label="E-mail"
+                    required
+                  ></v-text-field>
+                </v-row>
+              </v-card-actions>
+              <v-card-actions>
+                <v-row align="center" justify="center">
+                  <v-text-field
+                    v-model="logInData.password"
+                    type="password"
+                    label="Password"
+                    required
+                  ></v-text-field>
+                </v-row>
+              </v-card-actions>
+              <!-- <v-row cols="10" md="4" justify="center">
           <v-btn
             class="btn"
             type="submit"
@@ -34,17 +50,32 @@
             color="purple lighten-2"
             >Log in</v-btn
           >
-        </v-row>
+        </v-row> -->
+              <v-card-actions />
+              <v-card-actions>
+                <v-row align="center" justify="center">
+                  <gradient-rounded-button
+                    text="Log in"
+                    :onClick="sendLogInData"
+                    :loading="loading"
+                  />
+                </v-row>
+              </v-card-actions>
+               <v-card-actions />
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
-    </v-container>
-  </v-form>
+    </v-row>
+  </v-container>
+  <!-- </v-form> -->
 </template>
 
 <style scoped>
-.container.fill-height {
+/* .container.fill-height {
   justify-content: center;
-  margin-top: 166px;
-}
+  margin-top: 30px;
+} */
 </style>
 
 <script>
