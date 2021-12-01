@@ -17,7 +17,7 @@
           Your balance: {{ balance }}$
         </v-col>
         <v-col cols="6">
-          Rate: {{ localRate }}
+          Rate: {{ getRate }}
         </v-col>
       </v-row>
       <v-row>
@@ -53,7 +53,9 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <currency-purchase-modal-actions />
+    <currency-purchase-modal-actions
+      :userId="userId"
+    />
   </v-card>
 </template>
 
@@ -74,7 +76,8 @@ const {
 } = namespace('userCurrencies');
 const {
   State: ModalState,
-  Action: ModalAction
+  Action: ModalAction,
+  Getter: ModalGetter
 } = namespace('purchaseModal');
 
 
@@ -98,6 +101,10 @@ export default class CurrencyPurchaseModalCard extends Vue {
   @ModalAction setCurrencyName
   @ModalAction setCanBuy
   @ModalAction setModal
+  @ModalAction setAmount
+  @ModalAction setRate
+  @ModalGetter getAmount
+  @ModalGetter getRate
 
   @Prop({ type: String, required: true }) userId
 
@@ -106,18 +113,19 @@ export default class CurrencyPurchaseModalCard extends Vue {
   localMaxAmount = null
 
   @Watch('currencyName')
+  @Watch('localAmount')
   changeValues () {
+    console.log(this.currencyName)
+    console.log(this.localAmount)
     const balance = this.balance;
     this.localRate = this.currenciesRates[this.currencyName];
     this.localMaxAmount = Math.floor(balance * this.localRate);
+    this.setAmount(this.localAmount);
+    this.setRate(this.localRate);
   }
 
   changeCanBuy () {
     this.setCanBuy(!!this.localAmount && !!this.currencyName)
-  }
-  
-  async buyCurrency () {
-
   }
 
   async mounted () {

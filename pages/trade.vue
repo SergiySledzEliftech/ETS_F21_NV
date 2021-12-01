@@ -1,6 +1,7 @@
 <template>
-
-  <div class="trade-wrapper">
+  <v-container
+    :fluid="fluid"
+  >
     <div class="finder">
 
     </div>
@@ -41,27 +42,29 @@
       <h2>You don't have any currencies yet</h2>
       <v-btn>Buy some</v-btn>
     </div>
+    
+    <CurrencyPurchaseModal
+      :userId="userId"
+    />
+
     <v-btn
       @click="setModal(true)"
     >
       Buy currency
     </v-btn>
-    <CurrencyPurchaseModal
-      :userId="userId"
-    />
-
-  </div>
+  </v-container>
 </template>
 
 <script>
 import { Component, Vue, namespace } from 'nuxt-property-decorator';
 import CurrencyPurchaseModal from '~/components/CurrencyPurchaseModal.vue';
-
 const { State, Action } = namespace('userCurrencies');
 const { State: ModalState, Action: ModalAction } = namespace('purchaseModal');
 
 @Component({
-  components: { CurrencyPurchaseModal },
+  components: {
+    CurrencyPurchaseModal
+  },
 })
 
 export default class TradePage extends Vue {
@@ -76,9 +79,9 @@ export default class TradePage extends Vue {
     }
   }
 
-  dialog = true
+  dialog = false
   userId = '61926bc6418dbb9a949cdeb1'
-
+  fluid = true
 
   async mounted () {
     this.fetchUserCurrencies({
@@ -97,15 +100,6 @@ export default class TradePage extends Vue {
 </script>
 
 <style>
-.trade-wrapper {
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-}
-
-.currencies {
-  flex-wrap: wrap;
-}
 
 .currencies .card {
   width: 350px;
@@ -117,9 +111,6 @@ export default class TradePage extends Vue {
 }
 
 .buy-suggestion {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   position: absolute;
   top: 0;
   bottom: 0;

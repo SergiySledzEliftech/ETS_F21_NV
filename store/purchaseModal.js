@@ -1,7 +1,9 @@
 export const state = () => ({
   modal: false,
   canBuy: false,
-  currencyName: null
+  currencyName: null,
+  amount: null,
+  rate: null
 })
 
 export const actions = {
@@ -15,12 +17,32 @@ export const actions = {
 
   setCurrencyName (ctx, currencyName) {
     ctx.commit('updateCurrencyName', currencyName)
+  },
+
+  setRate (ctx, rate) {
+    ctx.commit('updateRate', rate)
+  },
+
+  setAmount (ctx, amount) {
+    ctx.commit('updateAmount', amount)
   }
 }
 
 export const getters = {
   getCanBuy (state) {
     return state.canBuy
+  },
+
+  getAmount (state) {
+    return state.amount
+  },
+
+  getRate (state) {
+    return state.rate
+  },
+
+  getCurrencyName (state) {
+    return state.currencyName
   }
 }
 
@@ -35,5 +57,13 @@ export const mutations = {
 
   updateCanBuy (state, canBuy) {
     state.canBuy = canBuy
+  },
+
+  updateRate (state, rate) {
+    state.rate = rate
+  },
+
+  updateAmount (state, amount) {
+    state.amount = amount
   }
 }
