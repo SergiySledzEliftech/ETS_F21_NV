@@ -15,6 +15,7 @@ export default class Chart extends Vue {
   // Объект настроек для графика. В данном случае график будет менять размер при изменении размеров окна с сохранением пропорций,
   // отключена легенда и добавлены надписи внутри баров со значениями.
   options = {
+        indexAxis: 'x',
         responsive: true,
         maintainAspectRatio: false,
         legend: {
@@ -27,7 +28,7 @@ export default class Chart extends Vue {
           display: false,
         },
         animation: {
-          duration: 1,
+          duration: 1000,
           onComplete: function () {
             const chartInstance = this.chart
             const ctx = chartInstance.ctx;
@@ -74,7 +75,9 @@ export default class Chart extends Vue {
       datasets: [{
         data: this.dataArray,
         label: this.datalabel,
-        backgroundColor: colors
+        backgroundColor: colors,
+        borderRadius: 5,
+        borderSkipped: false,
       }]},
       this.options
     )

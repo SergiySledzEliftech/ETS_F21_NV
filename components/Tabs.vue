@@ -143,7 +143,7 @@ class Tabs extends Vue{
     }
 
   async mounted() {
-    this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/currencies/all?userId=61926bc6418dbb9a949cdeb1`)
+    this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/all?userId=61926bc6418dbb9a949cdeb1`)
     this.getHistory()
   }
 
