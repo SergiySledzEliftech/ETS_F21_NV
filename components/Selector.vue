@@ -2,6 +2,8 @@
   <v-autocomplete
     :items="itemsList"
     v-model="localValue"
+    :label="label"
+    :disabled="disabled"
     v-on:change="setStoreValueFunction(localValue)"
   />
 </template>
@@ -13,6 +15,8 @@ import { Component, Vue, Prop } from "nuxt-property-decorator";
 export default class Selector extends Vue {
   @Prop({ type: Array }) itemsList
   @Prop({ type: Function }) setStoreValueFunction
+  @Prop({ type: String }) label
+  @Prop({ type: Boolean }) disabled
 
   localValue = null
 }

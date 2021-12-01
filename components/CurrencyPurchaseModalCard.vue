@@ -7,7 +7,6 @@
       <div class="graph d-flex justify-center align-center">
         graph
       </div>
-
     </v-card-text>
 
     <v-card-text>
@@ -66,12 +65,12 @@ import CurrencyPurchaseModalActions from './CurrencyPurchaseModalActions.vue';
 import Selector from './Selector.vue';
 
 const {
-  State: GlobalState,
-  Action: GlobalAction // оставить state
+  State,
+  Action
 } = namespace('globalCurrencies');
 const {
-  State: LocalState,
-  Action: LocalAction //user currency state
+  State: UserCurrenciesState,
+  Action: UserCurrenciesAction //user currency state
 } = namespace('userCurrencies');
 const {
   State: ModalState,
@@ -87,12 +86,12 @@ const {
   }
 })
 export default class CurrencyPurchaseModalCard extends Vue {
-  @GlobalState currenciesRates
-  @GlobalState currenciesSigns
-  @GlobalAction fetchGlobalCurrencies
+  @State currenciesRates
+  @State currenciesSigns
+  @Action fetchGlobalCurrencies
 
-  @LocalState balance
-  @LocalAction fetchBalance
+  @UserCurrenciesState balance
+  @UserCurrenciesAction fetchBalance
 
   @ModalState canBuy
   @ModalState currencyName
