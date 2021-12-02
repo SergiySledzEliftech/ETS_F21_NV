@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import { Prop, Vue, Watch, Emit } from 'nuxt-property-decorator'
+import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 
-export default @Component({})
+@Component({})
 
-class GradientRoundedButton extends Vue {
+export default class GradientRoundedButton extends Vue {
   @Prop({type: String}) icon;
   @Prop({type: Function, required: true}) onClick;
   @Prop({type: String, required: true}) text;

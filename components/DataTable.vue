@@ -1,5 +1,6 @@
 <template>
-  <div v-if="data.length">
+  <div v-if="data.length"
+  class="elevation-0">
     <v-data-table
       :page.sync="page"
       hide-default-footer
@@ -9,11 +10,14 @@
       :loading="loading"
       loading-text="We're loading data for you..."
       :search="search"
-      class="elevation-1"
+      class="elevation-0 data-table-class"
       multi-sort
       dense
+      @update:page="onPageChange"
+      @update:items-per-page="onItemsPerPageChange"
       :height="height"
       fixed-header
+      :server-items-length="numberOfPages"
     >
       <template v-slot:top>
         <v-row>
@@ -34,7 +38,8 @@
             <v-col cols="4">
               <v-pagination
                 v-model="page"
-                :length="pageCount"
+                :disabled="loading"
+                :length="numberOfPages || pageCount"
                 :total-visible="6"
               />
             </v-col>
@@ -49,7 +54,7 @@
 </template>
 
 <script>
-import { Prop, Vue, Watch } from 'vue-property-decorator'
+import { Prop, Vue, Watch, Emit } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 
 import BuyBtn from '../components/BuyBtn.vue'
@@ -67,15 +72,36 @@ export default class DataTable extends Vue {
   // Параметр отвечает за фун-ю поиска по таблице, если значение true, то над таблицей появляется строка поиска, которая фильтрует содержимое по имени. При значении false строки поиска не будет
   @Prop({type: Boolean, required: true}) needSearch
   @Prop({type: Number | String, default: "auto"}) height
+  
+  @Prop({type: Number}) numberOfPages;
+  @Prop({type: Number, default: 10}) limitNumber;
+  @Prop({type: Number, default: 1}) pageNumber;
 
   loading = true
   search = ''
-  page = 1
-  limit = 10
   pageCount = 0
+
+  data() {
+    return {
+      limit: this.limitNumber,
+      page: this.pageNumber
+    }
+  }
 
   mounted() {
     this.loading = false
+  }
+
+  @Emit('onLimitChange')
+  onItemsPerPageChange() {
+    if (!this.numberOfPages) return;
+    this.page = 1; 
+    return this.limit;
+  }
+
+  @Emit('onPageChange')
+  onPageChange() {
+    return this.page;
   }
 
   @Watch("data")
@@ -92,3 +118,9 @@ export default class DataTable extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.data-table-class {
+  padding: 0 4px 0 10px;
+}
+</style>

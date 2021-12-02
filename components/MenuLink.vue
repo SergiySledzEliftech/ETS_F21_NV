@@ -1,6 +1,6 @@
 <template>
   <v-list-item 
-  class="mb-4"  
+  class="mb-4 menu-link"  
   :to="link" 
   :color="this.$vuetify.theme.themes.light.primary"
   @click="onMenuLinkClick">
@@ -20,9 +20,9 @@ import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 import { Emit } from 'vue-property-decorator'
 
-export default @Component({})
+@Component({})
 
-class MenuLink extends Vue {
+export default class MenuLink extends Vue {
   @Prop({type: String, required: true}) icon
   @Prop({type: String, required: true}) name
   @Prop({type: String, required: true}) link 
@@ -53,5 +53,11 @@ class MenuLink extends Vue {
   box-shadow: inset 0 0 0px 10px #64B5F6,
               0 0 3px 6px #bcdaf3;
   border-radius: 50%;
+}
+
+.menu-link:hover {
+  background-color: rgba(165, 165, 165, 0.2);
+  transition-duration: 1s;
+  border-radius: 10px;
 }
 </style>
