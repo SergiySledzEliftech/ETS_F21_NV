@@ -18,9 +18,9 @@ import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 import { Emit } from 'vue-property-decorator'
 
-export default @Component({})
+@Component({})
 
-class AvatarTitle extends Vue {
+export default class AvatarTitle extends Vue {
   @Prop({type: String, required: true}) logo;
   @Prop({type: Array, required: true}) titleParts;
 

@@ -2,11 +2,11 @@
   <v-list-item 
   class="mb-4 menu-link"  
   :to="link" 
-  :color="this.$vuetify.theme.themes.light.primary"
+  color="primary"
   @click="onMenuLinkClick">
     <v-icon>{{ icon }}</v-icon>
     <v-icon 
-    :color="this.$vuetify.theme.themes.light.primary"
+    color="primary"
     :class="{'icon-circle-half': true, 'd-none': halfCircleDisplayNoneBool}" 
     x-small>mdi-circle-half</v-icon>
     <v-list-item-content class="mx-4 font-weight-light">
@@ -57,7 +57,10 @@ export default class MenuLink extends Vue {
 
 .menu-link:hover {
   background-color: rgba(165, 165, 165, 0.2);
-  transition-duration: 1s;
   border-radius: 10px;
+}
+
+.menu-link {
+  transition: background-color 1s ease;
 }
 </style>

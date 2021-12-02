@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { Prop, Vue, Watch, Emit } from 'nuxt-property-decorator'
+import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 
 @Component({})
