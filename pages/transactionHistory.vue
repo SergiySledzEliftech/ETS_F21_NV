@@ -8,23 +8,16 @@
         <date-picker
         :stateDates="dateRange"
         :formattedStateDates="formatDates"
-        :updateDates="updateDateRange"/>
-
-        <v-select 
-        class="my-6" 
-        :items="currencies" 
-        v-model="currency" 
-        label="Select currency" 
-        dense
-        :disabled="loading"/>
-
-        <slider
-        label="Rows on the page"
-        :min="1"
-        :max="30"
-        :model="limitNumber"
+        :updateDates="updateDateRange"
+        :isDisabled="loading"/>
+        
+        <selector
+        class="my-6"
         :disabled="loading"
-        @changeModel="changeLimit"/>
+        label="Select currency"
+        :defaultValue="currency"
+        :itemsList="currenciesSigns"
+        :setStoreValueFunction="setCurrencyName"/>
 
         <gradient-rounded-button 
         text="Update transactions"
@@ -47,47 +40,47 @@
       </v-col>
     </v-row>
 
-    <pagination 
-    v-if="transactions.length !== 0" 
-    :model="page"
-    :pageCount="pageCount"
+    <data-table
+    :headers="headers"
+    :data="transactions"
+    class="elevation-1"
+    :needSearch="false"
+    height="283px"
+    :numberOfPages="pageCount"
+    :limitNumber="limitNumber"
+    :pageNumber="pageNumber"
     @onPageChange="onPageChange"
-    :disabled="loading"/>
-    <div class="data-table-holder">
-      <data-table
-      :headers="headers"
-      :data="transactions"
-      class="elevation-1"
-      :needSearch="false"
-      hide-default-footer/>
-    </div>
+    @onLimitChange="changeLimit"/>
   </div>
 </template>
 
 <script>
 import { DateTime } from 'luxon'
 import { Component, namespace, Vue, Watch, Inject } from 'nuxt-property-decorator'
+
 import Chart from '../components/LineChart.vue'
 import DatePicker from '../components/Datepicker.vue'
 import GradientRoundedButton from '../components/GradientRoundedButton.vue'
-import Slider from '../components/Slider.vue'
 import DataTable from '../components/DataTable.vue'
-import Pagination from '../components/Pagination.vue'
+import Selector from '../components/Selector.vue'
+
+import headMixin from '~/helpers/mixins/headMixin'
 
 const { State, Action, Mutation, Getter } = namespace('transactionHistory');
+const { State: GlobalCurrencyState, Action: GlobalCurrencyAction } = namespace('globalCurrencies');
 
-export default @Component({
+@Component({
   components: {
     Chart,
     DatePicker,
     GradientRoundedButton,
-    Slider,
     DataTable,
-    Pagination
+    Selector
   },
+  mixins: [headMixin]
 })
 
-class TransactionHistory extends Vue{
+export default class TransactionHistory extends Vue{
   @Inject({default: null}) notificationsBar;
 
   @State transactions;
@@ -97,63 +90,68 @@ class TransactionHistory extends Vue{
   @State transactionAmounts;
   @State dateRange;
   @State limitNumber;
+  @State currency;
+  @GlobalCurrencyState currenciesSigns;
 
   @Getter formatDates;
 
   @Action fetchTransactions;
+  @GlobalCurrencyAction fetchGlobalCurrencies;
 
   @Mutation updateDateRange;
   @Mutation updateLimitNumber;
+  @Mutation updateCurrency;
+  @Mutation updatePageNumber;
 
-  page = 1;
   loading = false;
-  currency = 'UAH';
-  currencies = ['UAH', 'EUR', 'USD'];
+  title = 'Transaction History';
 
   headers = [{ text: 'Currency', value: 'currencyName' },
              { text: 'Amount', value: 'amount' },
              { text: 'Date', value: 'date' },
              { text: 'Rate', value: 'rate'},
-             { text: 'Spent', value: 'spent'}]
-
-  head() {
-    return {
-      title: 'Transaction History',
-    }
-  }
-
-  @Watch('pageNumber')
-  changePage() {
-    this.page = this.pageNumber;
-  }
+             { text: 'Spent', value: 'spent'}];
 
   changeLimit(limit) {
     this.updateLimitNumber(limit);
+    this.onPageChange(1);
+  }
+
+  setCurrencyName(currency) {
+    this.updateCurrency(currency);
   }
 
   @Watch('page')
   async getTransactionHistory() {
     this.loading = true;
-    const page = this.page;
+    const page = this.pageNumber;
     const currency = this.currency;
     const limit = this.limitNumber;
+    console.log(limit);
     try {
       const params = { currency, page, limit };
       params.dateRange = this.dateRange.map(date => DateTime.fromFormat(date, 'yyyy-M-dd').toISO()).join('#');
       await this.fetchTransactions(params);
-    } catch (error) {
-      this.notificationsBar.consoleError(error.message);
+    } catch (err) {
+      this.notificationsBar.consoleError(err.message);
     }
     this.loading = false;
   }
 
-  mounted() {
+  async mounted() {
     this.updateLimitNumber(this.limitNumber);
     this.getTransactionHistory();
+
+    try {
+      await this.fetchGlobalCurrencies();
+    } catch (err) {
+      this.notificationsBar.consoleError(err.message);
+    }
   }
 
   onPageChange(page) {
-    this.page = page;
+    this.updatePageNumber(page);
+    this.getTransactionHistory()
   }
 }
 </script>
@@ -161,10 +159,5 @@ class TransactionHistory extends Vue{
 <style scoped>
 div#transaction-history-container {
   padding: 10px;
-}
-
-div.data-table-holder {
-  height: 283px;
-  overflow: scroll;
 }
 </style>

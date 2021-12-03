@@ -17,8 +17,14 @@ export default class Selector extends Vue {
   @Prop({ type: Function }) setStoreValueFunction
   @Prop({ type: String }) label
   @Prop({ type: Boolean }) disabled
+  @Prop({ type: String }) defaultValue
 
-  localValue = null
+  data() {
+    return {
+      localValue: this.defaultValue
+    }
+  }
+
 }
 
 </script>

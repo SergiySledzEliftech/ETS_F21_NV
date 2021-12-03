@@ -8,7 +8,8 @@ export const state = () => ({
   transactionDates: [],
   transactionAmounts: [],
   pageNumber: 1,
-  limitNumber: 6,
+  limitNumber: 10,
+  currency: 'ALL',
   dateRange: [DateTime.now().minus({ days: 10 }).toFormat('yyyy-M-dd'), DateTime.now().minus({ days: 1 }).toFormat('yyyy-M-dd')]
 })
 
@@ -50,6 +51,10 @@ export const mutations = {
 
   updateLimitNumber (state, limitNumber) {
     state.limitNumber = limitNumber
+  },
+
+  updateCurrency (state, currency) {
+    state.currency = currency
   }
 }
 

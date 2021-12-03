@@ -47,14 +47,14 @@ import Component from 'nuxt-class-component'
 import MenuLink from './MenuLink.vue'
 import LogoTitle from './LogoTitle.vue'
 
-export default @Component({
+@Component({
   components: {
     MenuLink,
     LogoTitle
   }
 })
 
-class NavbarDrawer extends Vue {
+export default class NavbarDrawer extends Vue {
   @Prop({type: Array, required: true}) links
   @Prop({type: String, required: true}) logo 
   @Prop({type: Boolean, required: true}) drawer

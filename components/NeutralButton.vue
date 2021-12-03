@@ -12,12 +12,12 @@
 </template>
 
 <script>
-import { Prop, Vue, Watch, Emit } from 'nuxt-property-decorator'
+import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 
-export default @Component({})
+@Component({})
 
-class NeutralButton extends Vue {
+export default class NeutralButton extends Vue {
   @Prop({type: String, required: true}) text;
   @Prop({type: String, default: 'primary'}) color;
   @Prop({type: Function, required: true}) onClick;
