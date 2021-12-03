@@ -4,6 +4,7 @@
   >
     <v-btn
       color="indigo darken-1"
+      text
       :disabled="!getCanBuy"
       @click="buyCurrency"
     >
@@ -11,7 +12,7 @@
     </v-btn>
     <v-btn
       @click="setModal(false)"
-      color="red darken-1"
+      text
     >
       Close
     </v-btn>
@@ -36,6 +37,9 @@ export default class CurrencyPurchaseModalActions extends Vue {
   @State canBuy
   @State currencyName
   @Action setModal
+  @Action setAmount
+  @Action setRate
+  @Action setCurrencyName
   @Getter getCanBuy
   @Getter getRate
   @Getter getAmount
@@ -64,6 +68,12 @@ export default class CurrencyPurchaseModalActions extends Vue {
       this.fetchUserCurrencies({ userId: this.userId });
       this.fetchBalance({ userId: this.userId });
     }
+  }
+
+  nullVallues() {
+    this.setRate(null);
+    this.setAmount(null);
+    this.setCurrencyName(null);
   }
 }
 

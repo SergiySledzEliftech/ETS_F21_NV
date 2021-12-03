@@ -1,12 +1,15 @@
 <template>
-  <v-card
-      class="dialog"
-  >
+  <v-card>
+    <v-card-header>
     <currency-purchase-modal-header />
+    </v-card-header>
     <v-card-text>
-      <div class="graph d-flex justify-center align-center">
-        graph
-      </div>
+      <Chart
+        :dataLabels="dates" 
+        :dataArray="rates"
+        :lineLabels="labels"
+        style="{display: block; height: 300px; width: 500px}"
+      />
     </v-card-text>
 
     <v-card-text>
@@ -48,7 +51,6 @@
             class="slider"
             v-model="localAmount"
             :max="localMaxAmount"
-            @change="changeCanBuy"
           ></v-slider>
         </v-col>
       </v-row>
@@ -61,10 +63,13 @@
 
 <script>
 
-import { Component, Vue, namespace, Prop, Watch } from "nuxt-property-decorator";
+import { Component, Vue, namespace, Prop, Watch, Inject } from "nuxt-property-decorator";
 import CurrencyPurchaseModalHeader from './CurrencyPurchaseModalHeader.vue';
 import CurrencyPurchaseModalActions from './CurrencyPurchaseModalActions.vue';
 import Selector from './Selector.vue';
+import Chart from './LineChart.vue';
+
+import { DateTime } from 'luxon';
 
 const {
   State,
@@ -72,7 +77,7 @@ const {
 } = namespace('globalCurrencies');
 const {
   State: UserCurrenciesState,
-  Action: UserCurrenciesAction //user currency state
+  Action: UserCurrenciesAction
 } = namespace('userCurrencies');
 const {
   State: ModalState,
@@ -85,10 +90,13 @@ const {
   components: {
     CurrencyPurchaseModalHeader,
     CurrencyPurchaseModalActions,
-    Selector
+    Selector,
+    Chart
   }
 })
 export default class CurrencyPurchaseModalCard extends Vue {
+  @Inject({default: null}) notificationsBar;
+
   @State currenciesRates
   @State currenciesSigns
   @Action fetchGlobalCurrencies
@@ -112,11 +120,14 @@ export default class CurrencyPurchaseModalCard extends Vue {
   localRate = null
   localMaxAmount = null
 
+  dates = [this.getDateForChart(6), this.getDateForChart(5), this.getDateForChart(4) ,this.getDateForChart(3), this.getDateForChart(2), this.getDateForChart(1)]
+  rates = [[26, 26, 26, 26, 26, 26]]
+  labels = ['UAH']
+
   @Watch('currencyName')
   @Watch('localAmount')
   changeValues () {
-    console.log(this.currencyName)
-    console.log(this.localAmount)
+    console.log('lol')
     const balance = this.balance;
     this.localRate = this.currenciesRates[this.currencyName];
     this.localMaxAmount = Math.floor(balance * this.localRate);
@@ -124,13 +135,22 @@ export default class CurrencyPurchaseModalCard extends Vue {
     this.setRate(this.localRate);
   }
 
+  getDateForChart (daysBack) {
+    return DateTime.now().minus({ days: daysBack }).toFormat('yyyy-M-dd');
+  }
+
+  @Watch('currencyName')
+  @Watch('getAmount')
   changeCanBuy () {
-    this.setCanBuy(!!this.localAmount && !!this.currencyName)
+    console.log(this.currencyName)
+    this.setCanBuy(!!this.getAmount && !!this.currencyName)
   }
 
   async mounted () {
     this.fetchGlobalCurrencies();
     this.fetchBalance({ userId: this.userId });
+    console.log(this.dates);
+    this.notificationsBar.consoleError('pidj');
   }
 }
 

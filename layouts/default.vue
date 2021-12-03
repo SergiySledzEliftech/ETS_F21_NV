@@ -1,6 +1,6 @@
 <template>
-  <v-app light>
-    <notifications-bar>
+  <v-app light style="fill-height">
+    <notifications-bar> 
       <navbar-drawer 
       :links="links" 
       :logout-link="logoutLink" 
@@ -15,7 +15,9 @@
       :avatar-src="avatarSrc"
       :name="name"/>
       
-      <v-main>
+      <v-main
+        style="height: 100%"
+      >
         <div class="v-progress-holder">
           <v-progress-circular
           v-show="pageLoading"

@@ -1,5 +1,4 @@
 <template>
-  <v-card-header>
     <v-card-text>
       <v-row>
         <v-col
@@ -10,12 +9,11 @@
         </v-col>
       </v-row>
     </v-card-text>
-  </v-card-header>
 </template>
 
 <script>
 
-import { Component, Vue, namespace, Prop } from "nuxt-property-decorator";
+import { Component, Vue } from "nuxt-property-decorator";
 
 
 @Component({})
