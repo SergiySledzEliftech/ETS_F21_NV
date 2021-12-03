@@ -1,21 +1,38 @@
 <template>
+  <!-- <div
+    :style="{ 'background-image': 'url(https://vuejs.org/images/logo.png)' }"
+  > -->
   <v-container fill-height fluid fill-width>
     <v-row align="center" justify="center">
       <v-col cols="12">
         <v-card class="mx-auto" max-width="520" color="rgb(255,242,245)">
           <v-row align="center" justify="center">
             <v-col cols="10">
+              <!-- <img src="@/assets/img/clear.gif" /> -->
+
               <v-card-title class="text-h2 justify-center"
                 >Trainder</v-card-title
               >
               <v-card-subtitle align="center" class="ma-1">
-                Welcome! Sign in to continue!
+                Welcome! Let`s create an account!
               </v-card-subtitle>
 
               <v-card-actions class="pt-1 mb-2">
                 <v-row align="center" justify="center">
                   <v-text-field
-                    v-model="logInData.email"
+                    v-model="userRegData.nickname"
+                    :rules="[rule.required, rule.minName]"
+                    label="Nickname"
+                    counter
+                    required
+                  />
+                </v-row>
+              </v-card-actions>
+
+              <v-card-actions class="mb-2">
+                <v-row align="center" justify="center">
+                  <v-text-field
+                    v-model="userRegData.email"
                     :rules="[rule.required, rule.email]"
                     label="E-mail"
                     required
@@ -26,7 +43,7 @@
               <v-card-actions class="mb-2">
                 <v-row align="center" justify="center">
                   <v-text-field
-                    v-model="logInData.password"
+                    v-model="userRegData.password"
                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                     :rules="[rule.required, rule.min]"
                     :type="show1 ? 'text' : 'password'"
@@ -47,25 +64,25 @@
                   align-items="center"
                 >
                   <v-card-subtitle class="pa-0" align="center">
-                    <router-link to="/register" exact>Don`t have an account? Sign up!</router-link>
+                    <router-link to="/login" exact
+                      >Already registrated? Sign in</router-link
+                    >
                   </v-card-subtitle>
 
                   <gradient-rounded-button
                     class="ma-2"
-                    text="Sign in"
-                    :onClick="sendLogInData"
+                    text="Sign up"
+                    :onClick="sendUserRegData"
                     :loading="loading"
                   />
                 </v-row>
               </v-card-actions>
 
-              <!-- <v-card-actions>
-                <v-row align="center" justify="center">
-                  <v-btn color="rgb(255,242,245)" to="/register"
-                    >Don't have an account? Create one!</v-btn
-                  >
-                </v-row>
-              </v-card-actions> -->
+              <!-- <v-row justify="center">
+                <v-card-subtitle align="center" class="mb-3">
+                  <router-link to="/login" exact>sign in</router-link>
+                </v-card-subtitle>
+              </v-row> -->
             </v-col>
           </v-row>
         </v-card>
@@ -77,17 +94,22 @@
 <style></style>
 
 <script>
-import rules from "/utils/form-validation-rules.js";
-import { Component, Vue, namespace } from "nuxt-property-decorator";
+import rules from "../utils/form-validation-rules.js";
+import LogoTitle from "../components/LogoTitle.vue";
+import { Component, namespace, Vue } from "nuxt-property-decorator";
+import GradientRoundedButton from "../components/GradientRoundedButton.vue";
+//import GradientRoundedButton from "./GradientRoundedButton.vue";
+
 const { State, Action } = namespace("user");
 
 @Component({
   layout: "empty",
-  components: {},
+  components: { GradientRoundedButton },
+  GradientRoundedButton,
 })
-export default class LoginPage extends Vue {
-  @State userJWT;
-  @Action getUserJwt;
+export default class RegisterPage extends Vue {
+  @State details;
+  @Action saveUser;
 
   data() {
     return {
@@ -96,21 +118,26 @@ export default class LoginPage extends Vue {
       rule: {
         required: rules.required,
         min: (v) => v.length >= 8 || "Min 8 characters",
+        minName: rules.minLength,
         email: rules.email,
       },
     };
   }
 
-  logInData = {
-    email: "",
+  userRegData = {
+    nickname: "",
     password: "",
+    email: "",
   };
 
-  async sendLogInData() {
-    await this.getUserJwt(this.logInData);
+  async sendUserRegData() {
+    console.log(this.userRegData);
+    await this.saveUser(this.userRegData);
+    //await this.$axios.$post("http://localhost:4000/users", this.userRegData);
 
-    this.logInData.email = "";
-    this.logInData.password = "";
+    this.userRegData.nickname = "";
+    this.userRegData.email = "";
+    this.userRegData.password = "";
   }
 }
 </script>
