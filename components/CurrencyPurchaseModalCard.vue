@@ -15,9 +15,10 @@
     <v-card-text>
       <v-row>
         <v-col
+          v-if="balance"
           cols="6"
         >
-          Your balance: {{ balance }}$
+          Your balance: {{ balance.toFixed(2) }}$
         </v-col>
         <v-col cols="6">
           Rate: {{ getRate }}
@@ -41,14 +42,12 @@
         >
           Amount:
           <v-text-field
-            id="amount-field"
             type="number"
             v-model="localAmount"
             :max="localMaxAmount"
           >
           </v-text-field>
           <v-slider
-            class="slider"
             v-model="localAmount"
             :max="localMaxAmount"
           ></v-slider>
@@ -70,6 +69,7 @@ import Selector from './Selector.vue';
 import Chart from './LineChart.vue';
 
 import { DateTime } from 'luxon';
+import { serverUrl } from '../utils/config';
 
 const {
   State,
@@ -120,14 +120,15 @@ export default class CurrencyPurchaseModalCard extends Vue {
   localRate = null
   localMaxAmount = null
 
-  dates = [this.getDateForChart(6), this.getDateForChart(5), this.getDateForChart(4) ,this.getDateForChart(3), this.getDateForChart(2), this.getDateForChart(1)]
-  rates = [[26, 26, 26, 26, 26, 26]]
+  numberOfMonthsForChart = 7
+
+  dates = [this.getDateForChart(7), this.getDateForChart(6), this.getDateForChart(5), this.getDateForChart(4) ,this.getDateForChart(3), this.getDateForChart(2), this.getDateForChart(1)]
+  rates = [[520.45, 495.36, 489.41, 493.36, 490.44, 477.87, 489.76]]
   labels = ['UAH']
 
   @Watch('currencyName')
   @Watch('localAmount')
   changeValues () {
-    console.log('lol')
     const balance = this.balance;
     this.localRate = this.currenciesRates[this.currencyName];
     this.localMaxAmount = Math.floor(balance * this.localRate);
@@ -135,38 +136,47 @@ export default class CurrencyPurchaseModalCard extends Vue {
     this.setRate(this.localRate);
   }
 
-  getDateForChart (daysBack) {
-    return DateTime.now().minus({ days: daysBack }).toFormat('yyyy-M-dd');
+  getDateForChart (monthsBack) {
+    return DateTime.now().minus({ month: monthsBack }).toFormat('yyyy-M-dd');
   }
 
   @Watch('currencyName')
   @Watch('getAmount')
   changeCanBuy () {
-    console.log(this.currencyName)
     this.setCanBuy(!!this.getAmount && !!this.currencyName)
   }
 
   async mounted () {
     this.fetchGlobalCurrencies();
     this.fetchBalance({ userId: this.userId });
-    console.log(this.dates);
     this.notificationsBar.consoleError('pidj');
+  }
+
+  @Watch('currencyName')
+  async getDataForChart () {
+    let localDates = [];
+    let localRates = [];
+    const localLabels = [this.currencyName];
+    for(let i = 0; i < this.numberOfMonthsForChart; i++) {
+      const date = this.getDateForChart(i);
+      const rateObj = await this.$axios
+        .$get(serverUrl + '/globalCurrencies/history', {
+          params: {
+            date,
+            currency: this.currencyName
+          }
+        });
+      if (rateObj) {
+        localRates.unshift(Number(rateObj[this.currencyName].toFixed(2)));
+      } else {
+        localRates.unshift(0);
+      }
+      localDates.unshift(date);
+    }
+    this.rates[0] = localRates;
+    this.labels = localLabels;
+    this.dates = localDates;
   }
 }
 
 </script>
-
-<style>
-.amount > *:first-child {
-  margin-right: 20px;
-}
-
-#amount-field {
-  width: 60%;
-}
-
-.graph {
-  border: 1px solid black;
-  height: 250px;
-}
-</style>

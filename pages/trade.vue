@@ -1,7 +1,8 @@
 <template>
-  <div style="">
+  <div style="height: 100%">
     <v-container
       fluid
+      style="position: relative"
       v-if="currencies.length"
     >
       <div class="finder">
@@ -24,7 +25,7 @@
               {{ currency.name }}
             </v-card-title>
             <v-card-text>
-              Amount: {{ currency.amount }}
+              Amount: {{ currency.amount.toFixed(2) }}
             </v-card-text>
             <v-card-text>
               Updated at: {{ parseDate(new Date(currency.updatedAt)) }}
@@ -45,7 +46,6 @@
       <v-btn
         class="buy-button"
         @click="setModal(true)"
-        absolute
       >
         Buy currency
       </v-btn>
@@ -64,7 +64,7 @@
 import { Component, Vue, namespace } from 'nuxt-property-decorator';
 import CurrencyPurchaseModal from '~/components/CurrencyPurchaseModal.vue';
 const { State, Action } = namespace('userCurrencies');
-const { State: ModalState, Action: ModalAction } = namespace('purchaseModal');
+const { Action: ModalAction } = namespace('purchaseModal');
 
 @Component({
   components: {
@@ -106,6 +106,7 @@ export default class TradePage extends Vue {
 
 <style>
 .buy-button {
+  position: fixed;
   bottom: 20px;
   right: 20px;
 }
@@ -115,7 +116,7 @@ export default class TradePage extends Vue {
 }
 
 .card .actions {
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .buy-suggestion {
