@@ -1,52 +1,132 @@
 <template>
   <div>
-    <h2 
+    <p 
       class="account__info" 
     >
-      Nick: {{details.nickname}}
-    </h2>
+      Nick: 
+      <span 
+        class="font-weight-black">
+        {{details.nickname}}
+      </span> 
+    </p>
+        <p 
+      class="account__info"
+    >
+      First name:  
+      <span 
+        class="font-weight-black">
+        {{details.firstName}}
+      </span>  
+    </p>
+        <p 
+      class="account__info"
+    >
+      Last name:  
+      <span 
+        class="font-weight-black">
+        {{details.lastName}} 
+      </span> 
+    </p>
+        <p 
+      class="account__info"
+    >
+      Number:   
+      <span 
+        class="font-weight-black">
+        <nobr> {{details.number}} </nobr>
+      </span> 
+    </p>
     <p 
       class="account__info"
     >
-      Email: {{details.email}}  
+      Email:   
+      <span 
+        class="font-weight-black">
+        {{details.email}}
+      </span> 
     </p>
     <p 
       class="account__info" 
     >
-      Balance: ${{details.dollarBalance}}
+      Balance: 
+      <span 
+        class="font-weight-black">
+        ${{details.dollarBalance}}
+      </span> 
     </p>
-    <div 
-      v-if="!bonusButton" 
+    <h2>Social links</h2>
+    <div
       class="d-flex
-      align-center
       justify-space-between
-      flex-wrap
-      width"
-    >
-      <p
-        class="accont__info
-        mb-0" 
+      align-center
+      box">
+      <a 
+        :href="details.twitter"
+        target="_blank"
+        class="d-flex
+        align-center
+        justify-center
+        text-decoration-none
+        hover"
       >
-        Top up your balance: 
-      </p>
-      <v-progress-circular
-        :rotate="360"
-        :size="100"
-        :width="15"
-        :value="value"
-        color="green"
+        <v-icon
+        large
+        
+        color="blue"
+        >
+          mdi-twitter
+        </v-icon>
+      </a>
+      <a 
+        :href="details.facebook"
+        target="_blank"
+        class="d-flex
+        align-center
+        justify-center
+        text-decoration-none
+        hover"
+        >
+        <v-icon
+        large
+        color="blue"
+        >
+          mdi-facebook
+        </v-icon>
+      </a>
+      <a 
+        :href="details.instagram"
+        target="_blank"
+        class="d-flex
+        align-center
+        justify-center
+        text-decoration-none 
+        hover"
       >
-        {{ bonusTime }}
-      </v-progress-circular>
+        <v-icon
+        large
+        color="blue"
+        >
+          mdi-instagram
+        </v-icon>
+      </a>
+      <a 
+        :href="details.linkedin"
+        target="_blank"
+        class="d-flex
+        align-center
+        justify-center
+        text-decoration-none
+        hover"
+      >
+        <v-icon
+        large
+        color="blue"
+        >
+          mdi-linkedin
+        </v-icon>
+      </a>
     </div>
-    <Button 
-      v-else 
-      text="Take bonus"
-      :onClick="handlerTakeBonus"
-      class="ml-0 
-      mr-auto
-      height"
-      />
+    
   </div>
 </template>
 
@@ -70,59 +150,6 @@ export default class UserInformation extends Vue{
   @State details
   @Action takeBonus
 
-  bonusTime = null
-  bonusButton = false
-  idInterval = ''
-
-  value = 30
-
-  mounted(){
-    this.checkBonusTime()
-    this.timer()
-  }
-
-    unmounted() {
-    clearInterval(this.idInterval)
-  }
-
-    timer(){
-    this.idInterval = setInterval(() => {this.checkBonusTime()}, 1000)
-  }
-
-  async handlerTakeBonus(){
-    try {
-      await this.takeBonus(this.details._id)
-    } catch (error) {
-      this.notificationsBar.consoleSuccess(error.message);
-    } finally {
-    } 
-  }
-
-  checkBonusTime(){
-    const SIX_HOURS = 21600000
-    const time = Date.now() - new Date(this.details.lastBonusTime)
-    if(time < SIX_HOURS){
-      this.bonusButton = false
-      this.value = Math.round(time/SIX_HOURS*100)
-      this.msToTime(21600000 - time)
-    } else {
-    this.bonusButton = true
-    }
-  }
-
-  msToTime(duration) {
-  var milliseconds = parseInt((duration % 1000) / 100),
-    seconds = parseInt((duration / 1000) % 60),
-    minutes = parseInt((duration / (1000 * 60)) % 60),
-    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
-
-  hours = (hours < 10) ? "0" + hours : hours;
-  minutes = (minutes < 10) ? "0" + minutes : minutes;
-  seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-  this.bonusTime = hours + ":" + minutes + ":" + seconds;
-}
-
 }
 </script>
 
@@ -131,9 +158,23 @@ export default class UserInformation extends Vue{
     margin-top: 10px;
   }
 
-  .width {
-    max-width: 286px;
-    min-width: 160px;
+  .box {
+    max-width: 265px;
+    height: 80px;
   }
+
+  .hover {
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+  }
+
+  .hover:hover,
+  .hover:focus {
+    background-color: rgba(187, 17, 221, 0.3);
+  }
+
+
+
 
 </style>

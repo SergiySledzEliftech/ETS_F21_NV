@@ -28,7 +28,7 @@ class Copyright extends Vue {
 <style scoped>
   @media (min-width: 1200px ) {
     .padding {
-    padding-top: 100px;
+    padding-top: 50px;
   }
   }
   .font-size {

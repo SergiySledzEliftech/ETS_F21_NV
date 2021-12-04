@@ -26,7 +26,7 @@
 import { Prop, Vue } from 'vue-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
-import NeutralButton from '../components/NeutralButton.vue'
+import NeutralButton from '../components/NeutralButton'
 
 const {State, Action} = namespace('dialog')
 

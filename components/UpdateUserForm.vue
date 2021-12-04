@@ -17,18 +17,51 @@
       />
       <v-text-field 
         class="modal__input" 
-        type="password" 
-        disabled
-        v-model="userSettings.password"
-        label="Password"
-      /><!-- :rules="[password]" ref="password" -->
+        type="text" 
+        v-model="userSettings.firstName"
+        label="First name"
+      />
       <v-text-field
         class="modal__input" 
         type="text"
-        disabled
-        v-model="userSettings.email"
-        label="Email"
-      /><!-- :rules="[email]" ref="email" -->
+        v-model="userSettings.lastName"
+        label="Last name"
+      />
+      <v-text-field
+        class="modal__input" 
+        type="text"
+        v-model="userSettings.number"
+        :rules="[lengthNumber]"
+        label="Number: +381112223344"
+      />
+      <v-text-field
+        class="modal__input" 
+        type="text"
+        v-model="userSettings.facebook"
+        :rules="[url]"
+        label="Is your Facebook"
+      />
+      <v-text-field
+        class="modal__input" 
+        type="text"
+        v-model="userSettings.twitter"
+        :rules="[url]"
+        label="Is your Twitter"
+      />
+      <v-text-field
+        class="modal__input" 
+        type="text"
+        v-model="userSettings.instagram"
+        :rules="[url]"
+        label="Is your Instagram"
+      />
+      <v-text-field
+        class="modal__input" 
+        type="text"
+        v-model="userSettings.linkedin"
+        :rules="[url]"
+        label="Is your LinkedIn"
+      />
       <v-file-input
         class="modal__input" 
         :rules="[avatarRules]"
@@ -58,7 +91,7 @@
     <div 
       v-else 
       class="d-flex 
-      justify-space-around 
+      flex-column
       align-center
       content"
     >
@@ -114,8 +147,9 @@ class UpdateUserForm extends Vue {
       required: rules.required,
       minLength: rules.minLength,
       maxLength: rules.maxLength,
-      // password: rules.password,
-      // email: rules.email,
+      lengthNumber: rules.lengthNumber,
+      url: rules.url,
+      // number: rules.number,
       avatarRules: rules.avatar
     }
   }
@@ -126,8 +160,13 @@ class UpdateUserForm extends Vue {
 
   userSettings = {
     nickname: '',
-    // email: '',
-    // password: '',
+    lastName: '',
+    number: '',
+    facebook: '',
+    linkedin: '',
+    twitter: '',
+    instagram: '',
+    firstName: '',
     avatar: ''
   }
 
@@ -154,10 +193,17 @@ class UpdateUserForm extends Vue {
       await this.updateUser({id: this.details._id, body: {...this.userSettings}})
       this.notificationsBar.consoleSuccess('user update');
     } catch (error) {
-      this.notificationsBar.consoleSuccess(error.message);
+      this.notificationsBar.consoleError(error.message);
     } finally{
         this.userSettings.nickname = ''
         this.userSettings.avatar = ''
+        this.userSettings.number = ''
+        this.userSettings.facebook = ''
+        this.userSettings.instagram = ''
+        this.userSettings.linkedin = ''
+        this.userSettings.twitter = ''
+        this.userSettings.firstName = ''
+        this.userSettings.lastName = ''
         this.fileAvatar = null
     }
   }
@@ -256,4 +302,5 @@ class UpdateUserForm extends Vue {
   .btn{
     margin-left: 8px;
   }
+
 </style>

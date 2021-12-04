@@ -4,7 +4,6 @@
   class="ma-2"
   :loading="loading"
   :type="type"
-  x-large
   @click="onClick"
   :color="color">
     {{ text }}
