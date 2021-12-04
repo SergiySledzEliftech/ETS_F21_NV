@@ -66,13 +66,14 @@
       justify-space-between
       align-center
       box">
-      <a 
+      <a
         :href="details.twitter"
         target="_blank"
         class="d-flex
         align-center
         justify-center
-        text-decoration-none"
+        text-decoration-none
+        link"
       >
         <v-icon
         large
@@ -88,7 +89,8 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none"
+        text-decoration-none
+        link"
         >
         <v-icon
         large
@@ -103,7 +105,8 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none"
+        text-decoration-none
+        link"
       >
         <v-icon
         large
@@ -118,7 +121,8 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none"
+        text-decoration-none
+        link"
       >
         <v-icon
         large
@@ -165,15 +169,16 @@ export default class UserInformation extends Vue{
     height: 80px;
   }
 
-  .hover {
+  .link {
     width: 45px;
     height: 45px;
     border-radius: 4px;
+    transition: background-color 1s ease;
   }
 
-  .hover:hover,
-  .hover:focus {
-    background-color: rgba(187, 17, 221, 0.3);
+  .link:hover,
+  .link:focus {
+      background-color: rgba(165, 165, 165, 0.2);
   }
 
   .width-40px {
