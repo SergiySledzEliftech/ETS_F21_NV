@@ -63,6 +63,9 @@
 <script>
 import { Component, Vue, namespace } from 'nuxt-property-decorator';
 import CurrencyPurchaseModal from '~/components/CurrencyPurchaseModal.vue';
+
+import headMixin from '~/helpers/mixins/headMixin'
+
 const { State, Action } = namespace('userCurrencies');
 const { Action: ModalAction } = namespace('purchaseModal');
 
@@ -70,6 +73,7 @@ const { Action: ModalAction } = namespace('purchaseModal');
   components: {
     CurrencyPurchaseModal
   },
+  mixins: [headMixin]
 })
 
 export default class TradePage extends Vue {
@@ -78,11 +82,7 @@ export default class TradePage extends Vue {
 
   @ModalAction setModal
 
-  head() {
-    return {
-      title: 'Trade',
-    }
-  }
+  title = 'Trade'
 
   dialog = false
   userId = '61926bc6418dbb9a949cdeb1'
