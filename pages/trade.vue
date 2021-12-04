@@ -112,7 +112,8 @@ export default class TradePage extends Vue {
 }
 
 .card {
-  width: 300px;
+  min-width: 260px;
+  max-width: 290px;
 }
 
 .card .actions {

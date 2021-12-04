@@ -21,7 +21,7 @@
 
 <script>
 
-import { Component, Vue, namespace, Prop, Watch } from "nuxt-property-decorator";
+import { Component, Vue, namespace, Prop, Inject } from "nuxt-property-decorator";
 import { serverUrl } from '~/utils/config';
 const {
   State,
@@ -34,6 +34,8 @@ const { Action: UserCurrenciesAction } = namespace('userCurrencies');
 
 @Component({})
 export default class CurrencyPurchaseModalActions extends Vue {
+  @Inject({default: null}) notificationsBar;
+
   @State canBuy
   @State currencyName
   @Action setModal
@@ -62,11 +64,13 @@ export default class CurrencyPurchaseModalActions extends Vue {
       if (response.result !== 'success') {
         throw new Error(response.result);
       }
+      this.notificationsBar.consoleSuccess('Currency has been successfully purchased');
     } catch (error) {
-      return error;
+      this.notificationsBar.consoleError(error.message);
     } finally {
       this.fetchUserCurrencies({ userId: this.userId });
       this.fetchBalance({ userId: this.userId });
+      this.setModal(false);
     }
   }
 

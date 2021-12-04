@@ -8,7 +8,7 @@
         :dataLabels="dates" 
         :dataArray="rates"
         :lineLabels="labels"
-        style="{display: block; height: 300px; width: 500px}"
+        style="{display: block; height: 400px; width: 500px}"
       />
     </v-card-text>
 
@@ -122,9 +122,9 @@ export default class CurrencyPurchaseModalCard extends Vue {
 
   numberOfMonthsForChart = 7
 
-  dates = [this.getDateForChart(7), this.getDateForChart(6), this.getDateForChart(5), this.getDateForChart(4) ,this.getDateForChart(3), this.getDateForChart(2), this.getDateForChart(1)]
-  rates = [[520.45, 495.36, 489.41, 493.36, 490.44, 477.87, 489.76]]
-  labels = ['UAH']
+  dates = []
+  rates = [[]]
+  labels = []
 
   @Watch('currencyName')
   @Watch('localAmount')
@@ -149,7 +149,6 @@ export default class CurrencyPurchaseModalCard extends Vue {
   async mounted () {
     this.fetchGlobalCurrencies();
     this.fetchBalance({ userId: this.userId });
-    this.notificationsBar.consoleError('pidj');
   }
 
   @Watch('currencyName')
@@ -167,7 +166,7 @@ export default class CurrencyPurchaseModalCard extends Vue {
           }
         });
       if (rateObj) {
-        localRates.unshift(Number(rateObj[this.currencyName].toFixed(2)));
+        localRates.unshift(rateObj[this.currencyName].toFixed(2));
       } else {
         localRates.unshift(0);
       }
