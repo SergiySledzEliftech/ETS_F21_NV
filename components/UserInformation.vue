@@ -3,7 +3,8 @@
     <p 
       class="account__info" 
     >
-      Nick: 
+      <span class=" width-40px">Nick:</span>
+       
       <span 
         class="font-weight-black">
         {{details.nickname}}
@@ -12,7 +13,8 @@
         <p 
       class="account__info"
     >
-      First name:  
+      <span class=" width-40px">First name:</span>
+        
       <span 
         class="font-weight-black">
         {{details.firstName}}
@@ -21,7 +23,8 @@
         <p 
       class="account__info"
     >
-      Last name:  
+      <span class=" width-40px">Last name:</span>
+        
       <span 
         class="font-weight-black">
         {{details.lastName}} 
@@ -30,7 +33,8 @@
         <p 
       class="account__info"
     >
-      Number:   
+      <span class=" width-40px">Number: </span>
+        
       <span 
         class="font-weight-black">
         <nobr> {{details.number}} </nobr>
@@ -39,7 +43,8 @@
     <p 
       class="account__info"
     >
-      Email:   
+      <span class=" width-40px">Email:</span>
+         
       <span 
         class="font-weight-black">
         {{details.email}}
@@ -48,7 +53,8 @@
     <p 
       class="account__info" 
     >
-      Balance: 
+      <span class=" width-40px">Balance: </span>
+      
       <span 
         class="font-weight-black">
         ${{details.dollarBalance}}
@@ -66,8 +72,7 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none
-        hover"
+        text-decoration-none"
       >
         <v-icon
         large
@@ -83,8 +88,7 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none
-        hover"
+        text-decoration-none"
         >
         <v-icon
         large
@@ -99,8 +103,7 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none 
-        hover"
+        text-decoration-none"
       >
         <v-icon
         large
@@ -115,8 +118,7 @@
         class="d-flex
         align-center
         justify-center
-        text-decoration-none
-        hover"
+        text-decoration-none"
       >
         <v-icon
         large
@@ -174,7 +176,10 @@ export default class UserInformation extends Vue{
     background-color: rgba(187, 17, 221, 0.3);
   }
 
-
+  .width-40px {
+    display: inline-block;
+    width: 90px;
+  }
 
 
 </style>
