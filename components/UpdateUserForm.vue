@@ -238,11 +238,9 @@ class UpdateUserForm extends Vue {
       const img = new Image();
 
       img.src = event.target.result;
-
       img.onload = () => {
         const elem = document.createElement('canvas');
         const ctx = elem.getContext('2d');
-        // img.width и img.height будет содержать оригинальные размеры
         const width = 300;
         const scaleFactor = width / img.width;
 
@@ -255,26 +253,23 @@ class UpdateUserForm extends Vue {
             type: 'image/jpeg',
             lastModified: Date.now()
           });
-            encodeImageFileAsURL(this.saveFile)
-
-            function encodeImageFileAsURL(saveFile) {
-            
-            const reader = new FileReader();
-            reader.onloadend = function() {
-              saveFile(reader.result);
-            }
-            reader.readAsDataURL(compressFile);
-          }
+          this.encodeImageFileAsURL(this.saveFile, compressFile)
         }, 'image/jpeg', 1);
       };
-      
       reader.onerror = error => console.log(error, 'error');
     };
   }
 
+  encodeImageFileAsURL(saveFile, file) {
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      saveFile(reader.result);
+    }
+    reader.readAsDataURL(file);
+  }
+
   saveFile(el){
     this.userSettings.avatar = el
-
   }
 // ############
 }
