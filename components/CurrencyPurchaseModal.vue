@@ -3,13 +3,11 @@
     v-model="modal"
     width="700"
     @click:outside="setModal(false)"
+    @keydown.esc="setModal(false)"
   >
-
-
     <currency-purchase-modal-card
       :userId="userId"
     />
-    
   </v-dialog>
 </template>
 
@@ -25,10 +23,7 @@ const { State, Action } = namespace('purchaseModal')
 export default class CurrencyPurchaseModal extends Vue {
   @State modal
   @Action setModal
-
   @Prop({ type: String, required: true }) userId
-
-  
 }
 </script>
 

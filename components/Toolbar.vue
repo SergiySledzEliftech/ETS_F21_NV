@@ -13,38 +13,15 @@
       {{ titleStr }}
     </v-toolbar-title>
 
-    <v-spacer 
-    v-if="styleInputSeen"/>
-
-    <v-col 
-    cols="8" 
-    sm="5" 
-    md="3" 
-    v-if="inputSeen">
-      <v-text-field 
-      @blur="inputSeen = !inputSeen" 
-      autofocus 
-      hide-details 
-      single-line/>
-    </v-col>
-
-    <v-btn 
-    @click="inputSeen = !inputSeen"
-    icon>
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn>
+    <v-spacer/>
     
-    <div :style="styleXSScreen">
-      <avatar-icon
-      v-if="styleInputSeen"
-      :link="avatarClickLink"
-      :image-link="avatarSrc"
-      :measurements="35"/>
+    <div>
+      <avatar
+      size="small-size"/>
     </div>
 
     <div 
     :style="styleXSScreen" 
-    v-if="this.$vuetify.breakpoint.smAndUp && styleInputSeen" 
     class="font-weight-light">{{ name }}</div>
   </v-app-bar>
 </template>
@@ -53,23 +30,19 @@
 import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 import { Emit, Watch } from 'vue-property-decorator'
-import AvatarIcon from './AvatarIcon.vue'
+import Avatar from './Avatar.vue'
 import GradientRoundedButton from './GradientRoundedButton.vue'
 
-export default @Component({
+@Component({
   components: {
-    AvatarIcon,
+    Avatar,
     GradientRoundedButton
   }
 })
 
-class Toolbar extends Vue {
+export default class Toolbar extends Vue {
   @Prop({type: String, required: true}) title
-  @Prop({type: String, required: true}) avatarClickLink
-  @Prop({type: String, required: true}) avatarSrc
   @Prop({type: String, required: true}) name
-
-  inputSeen = false;
 
   data() {
     return {
@@ -81,10 +54,6 @@ class Toolbar extends Vue {
   onTitleChange() {
     this.titleStr = this.title.split('|')[0];
   }
-
-  get styleInputSeen() {
-    return !this.inputSeen || this.$vuetify.breakpoint.mdAndUp;
-  } 
 
   get styleXSScreen() {
     return [this.$vuetify.breakpoint.xsOnly ? {'margin': '0'} : {'margin': '0 10px'}];

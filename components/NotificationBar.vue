@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <slot></slot>
 
     <v-snackbar
@@ -46,9 +46,9 @@
 import { Vue, Provide } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 
-export default @Component({})
+@Component({})
 
-class NotificationsBar extends Vue {
+export default class NotificationsBar extends Vue {
   @Provide() notificationsBar = this;
   errorText = 'Error';
   successText = 'Success';

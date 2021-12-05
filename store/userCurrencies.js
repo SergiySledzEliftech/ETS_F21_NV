@@ -9,7 +9,7 @@ export const actions = {
   async fetchUserCurrencies (ctx, { userId }) {
     try {
       const response = await this.$axios
-        .$get(serverUrl + '/userCurrencies/currencies/all', {
+        .$get(serverUrl + '/userCurrencies/all', {
           params: {
             userId
           }

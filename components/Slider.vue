@@ -19,9 +19,9 @@
 import { Prop, Vue, Emit } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
 
-export default @Component({})
+@Component({})
 
-class Slider extends Vue {
+export default class Slider extends Vue {
   @Prop({type: String}) label;
   @Prop({type: Number}) min;
   @Prop({type: Number}) max;

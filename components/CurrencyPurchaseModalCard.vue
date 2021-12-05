@@ -1,24 +1,27 @@
 <template>
-  <v-card
-      class="dialog"
-  >
+  <v-card>
+    <v-card-header>
     <currency-purchase-modal-header />
+    </v-card-header>
     <v-card-text>
-      <div class="graph d-flex justify-center align-center">
-        graph
-      </div>
-
+      <Chart
+        :dataLabels="dates" 
+        :dataArray="rates"
+        :lineLabels="labels"
+        style="{display: block; height: 400px; width: 500px}"
+      />
     </v-card-text>
 
     <v-card-text>
       <v-row>
         <v-col
+          v-if="balance"
           cols="6"
         >
-          Your balance: {{ balance }}$
+          Your balance: {{ balance.toFixed(2) }}$
         </v-col>
         <v-col cols="6">
-          Rate: {{ rate }}
+          Rate: {{ getRate }}
         </v-col>
       </v-row>
       <v-row>
@@ -27,13 +30,10 @@
           sm="6"
         >
           Select currency:
-          <v-autocomplete
-            class="autocomplete"
-            :items="currenciesSigns"
-            v-model="currency"
-            v-on:change="changeValues"
-          >
-          </v-autocomplete>
+          <Selector
+            :itemsList="currenciesSigns"
+            :setStoreValueFunction="setCurrencyName"
+          />
         </v-col>
 
         <v-col
@@ -42,100 +42,140 @@
         >
           Amount:
           <v-text-field
-            id="amount-field"
             type="number"
-            v-model="amount"
-            :max="maxAmount"
+            v-model="localAmount"
+            :max="localMaxAmount"
           >
           </v-text-field>
           <v-slider
-            class="slider"
-            v-model="amount"
-            :max="maxAmount"
-            @change="changeCanBuy"
+            v-model="localAmount"
+            :max="localMaxAmount"
           ></v-slider>
         </v-col>
       </v-row>
     </v-card-text>
-    <currency-purchase-modal-actions />
-    
+    <currency-purchase-modal-actions
+      :userId="userId"
+    />
   </v-card>
 </template>
 
 <script>
 
-import { Component, Vue, namespace, Prop } from "nuxt-property-decorator";
-import CurrencyPurchaseModalHeader from './CurrencyPurchaseModalHeader.vue'
-import CurrencyPurchaseModalActions from './CurrencyPurchaseModalActions.vue'
+import { Component, Vue, namespace, Prop, Watch, Inject } from "nuxt-property-decorator";
+import CurrencyPurchaseModalHeader from './CurrencyPurchaseModalHeader.vue';
+import CurrencyPurchaseModalActions from './CurrencyPurchaseModalActions.vue';
+import Selector from './Selector.vue';
+import Chart from './LineChart.vue';
+
+import { DateTime } from 'luxon';
+import { serverUrl } from '../utils/config';
 
 const {
-  State: GlobalState,
-  Action: GlobalAction // оставить state
+  State,
+  Action
 } = namespace('globalCurrencies');
 const {
-  State: LocalState,
-  Action: LocalAction //user currency state
+  State: UserCurrenciesState,
+  Action: UserCurrenciesAction
 } = namespace('userCurrencies');
 const {
   State: ModalState,
-  Action: ModalAction
+  Action: ModalAction,
+  Getter: ModalGetter
 } = namespace('purchaseModal');
 
 
-@Component({})
+@Component({
+  components: {
+    CurrencyPurchaseModalHeader,
+    CurrencyPurchaseModalActions,
+    Selector,
+    Chart
+  }
+})
 export default class CurrencyPurchaseModalCard extends Vue {
-  @GlobalState currenciesRates
-  @GlobalState currenciesSigns
-  @GlobalAction fetchGlobalCurrencies
+  @Inject({default: null}) notificationsBar;
 
-  @LocalState balance
-  @LocalAction fetchBalance
+  @State currenciesRates
+  @State currenciesSigns
+  @Action fetchGlobalCurrencies
+
+  @UserCurrenciesState balance
+  @UserCurrenciesAction fetchBalance
 
   @ModalState canBuy
+  @ModalState currencyName
+  @ModalAction setCurrencyName
   @ModalAction setCanBuy
   @ModalAction setModal
+  @ModalAction setAmount
+  @ModalAction setRate
+  @ModalGetter getAmount
+  @ModalGetter getRate
 
   @Prop({ type: String, required: true }) userId
 
-  currency = null
-  amount = null
-  min = 0
-  rate = null
-  maxAmount = null
+  localAmount = null
+  localRate = null
+  localMaxAmount = null
 
+  numberOfMonthsForChart = 7
+
+  dates = []
+  rates = [[]]
+  labels = []
+
+  @Watch('currencyName')
+  @Watch('localAmount')
   changeValues () {
     const balance = this.balance;
-    this.rate = this.currenciesRates[this.currency];
-    this.maxAmount = Math.floor(balance * this.rate);
+    this.localRate = this.currenciesRates[this.currencyName];
+    this.localMaxAmount = Math.floor(balance * this.localRate);
+    this.setAmount(this.localAmount);
+    this.setRate(this.localRate);
   }
 
+  getDateForChart (monthsBack) {
+    return DateTime.now().minus({ month: monthsBack }).toFormat('yyyy-M-dd');
+  }
+
+  @Watch('currencyName')
+  @Watch('getAmount')
   changeCanBuy () {
-    this.setCanBuy(!!this.amount && !!this.currency)
-  }
-  
-  async buyCurrency () {
-
+    this.setCanBuy(!!this.getAmount && !!this.currencyName)
   }
 
   async mounted () {
     this.fetchGlobalCurrencies();
     this.fetchBalance({ userId: this.userId });
   }
+
+  @Watch('currencyName')
+  async getDataForChart () {
+    let localDates = [];
+    let localRates = [];
+    const localLabels = [this.currencyName];
+    for(let i = 0; i < this.numberOfMonthsForChart; i++) {
+      const date = this.getDateForChart(i);
+      const rateObj = await this.$axios
+        .$get(serverUrl + '/globalCurrencies/history', {
+          params: {
+            date,
+            currency: this.currencyName
+          }
+        });
+      if (rateObj) {
+        localRates.unshift(rateObj[this.currencyName].toFixed(2));
+      } else {
+        localRates.unshift(0);
+      }
+      localDates.unshift(date);
+    }
+    this.rates[0] = localRates;
+    this.labels = localLabels;
+    this.dates = localDates;
+  }
 }
 
 </script>
-
-<style>
-.amount > *:first-child {
-  margin-right: 20px;
-}
-
-#amount-field {
-  width: 60%;
-}
-
-.graph {
-  border: 1px solid black;
-  height: 250px;
-}
-</style>

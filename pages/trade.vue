@@ -1,55 +1,62 @@
 <template>
-
-  <div class="trade-wrapper">
-    <div class="finder">
-
-    </div>
-    <v-row
+  <div style="height: 100%">
+    <v-container
+      fluid
+      style="position: relative"
       v-if="currencies.length"
     >
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-        v-for="currency in currencies"
-        v-bind:key="currency.name"
-      >
-        <v-card
-          class="card"
+      <div class="finder">
+      </div>
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
+          class="d-flex justify-space-around"
+          v-for="currency in currencies"
+          v-bind:key="currency.name"
         >
-          <v-card-title>
-            {{ currency.name }}
-          </v-card-title>
-          <v-card-text>
-            Amount: {{ currency.amount }}
-          </v-card-text>
-          <v-card-text>
-            Updated at: {{ parseDate(new Date(currency.updatedAt)) }}
-          </v-card-text>
-          <v-card-actions class="actions d-flex">
-            <v-btn>Buy more</v-btn>
-            <v-btn>Sell</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-
+          <v-card
+            class="card"
+          >
+            <v-card-title>
+              {{ currency.name }}
+            </v-card-title>
+            <v-card-text>
+              Amount: {{ currency.amount.toFixed(2) }}
+            </v-card-text>
+            <v-card-text>
+              Updated at: {{ parseDate(new Date(currency.updatedAt)) }}
+            </v-card-text>
+            <v-card-actions class="actions d-flex">
+              <v-btn
+                text
+              >
+                See more / sell
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+      <CurrencyPurchaseModal
+        :userId="userId"
+      />
+      <v-btn
+        class="buy-button"
+        @click="setModal(true)"
+      >
+        Buy currency
+      </v-btn>
+    </v-container>
     <div
       v-else
-      class="buy-suggestion d-flex"
+      class="buy-suggestion"
     >
       <h2>You don't have any currencies yet</h2>
       <v-btn>Buy some</v-btn>
     </div>
-    <v-btn
-      @click="setModal(true)"
-    >
-      Buy currency
-    </v-btn>
-    <CurrencyPurchaseModal
-      :userId="userId"
-    />
-
   </div>
 </template>
 
@@ -57,11 +64,16 @@
 import { Component, Vue, namespace } from 'nuxt-property-decorator';
 import CurrencyPurchaseModal from '~/components/CurrencyPurchaseModal.vue';
 
+import headMixin from '~/helpers/mixins/headMixin'
+
 const { State, Action } = namespace('userCurrencies');
-const { State: ModalState, Action: ModalAction } = namespace('purchaseModal');
+const { Action: ModalAction } = namespace('purchaseModal');
 
 @Component({
-  components: { CurrencyPurchaseModal },
+  components: {
+    CurrencyPurchaseModal
+  },
+  mixins: [headMixin]
 })
 
 export default class TradePage extends Vue {
@@ -70,15 +82,11 @@ export default class TradePage extends Vue {
 
   @ModalAction setModal
 
-  head() {
-    return {
-      title: 'Trade',
-    }
-  }
+  title = 'Trade'
 
-  dialog = true
+  dialog = false
   userId = '61926bc6418dbb9a949cdeb1'
-
+  fluid = true
 
   async mounted () {
     this.fetchUserCurrencies({
@@ -97,34 +105,23 @@ export default class TradePage extends Vue {
 </script>
 
 <style>
-.trade-wrapper {
-  flex-direction: column;
-  height: 100%;
-  position: relative;
+.buy-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 
-.currencies {
-  flex-wrap: wrap;
-}
-
-.currencies .card {
-  width: 350px;
-  margin: 10px 30px
+.card {
+  min-width: 260px;
+  max-width: 290px;
 }
 
 .card .actions {
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .buy-suggestion {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  margin-left: 20px;
 }
 
 </style>

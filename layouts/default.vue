@@ -1,6 +1,6 @@
 <template>
-  <v-app light>
-    <notifications-bar>
+  <v-app light style="fill-height">
+    <notifications-bar> 
       <navbar-drawer 
       :links="links" 
       :logout-link="logoutLink" 
@@ -11,11 +11,11 @@
       <toolbar
       :title="title"
       @changeDrawer="drawer = !drawer"
-      :avatar-click-link="avatarClickLink"
-      :avatar-src="avatarSrc"
       :name="name"/>
       
-      <v-main>
+      <v-main
+        style="height: 100%"
+      >
         <div class="v-progress-holder">
           <v-progress-circular
           v-show="pageLoading"
@@ -30,13 +30,16 @@
 </template>
 
 <script>
-import { Vue, Watch } from 'nuxt-property-decorator'
-import Component from 'nuxt-class-component'
+import { Vue } from 'nuxt-property-decorator'
+import Component, {namespace} from 'nuxt-class-component'
+
 import NavbarDrawer from '../components/NavbarDrawer.vue'
 import Toolbar from '../components/Toolbar.vue'
 import NotificationsBar from '../components/NotificationBar.vue'
 
-export default @Component({
+const {State, Action} = namespace('user')
+
+@Component({
   components: {
     NavbarDrawer,
     Toolbar,
@@ -44,14 +47,15 @@ export default @Component({
   }
 })
 
-class DefautPage extends Vue {
+export default class DefautPage extends Vue {
+  @State details;
+  @Action getUser; 
+
   drawer = false;
   logo = 'mainLogo.png';
   pageLoading = true;
-  avatarClickLink = '';
   name = 'Miracle Volkman';
   titleParts = ['Train', 'der'];
-  avatarSrc = 'https://thispersondoesnotexist.com/image';
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
            {name: 'News and Trends', link: '/news', icon: 'mdi-newspaper'},
@@ -74,6 +78,7 @@ class DefautPage extends Vue {
   mounted() {
     this.pageLoading = false;
   }
+  
 }
 </script>
 
