@@ -1,6 +1,5 @@
 <template>
-  <div v-if="data.length"
-  class="elevation-0">
+  <div v-if="data.length">
     <v-data-table
       :page.sync="page"
       hide-default-footer
@@ -20,23 +19,28 @@
       :server-items-length="numberOfPages"
     >
       <template v-slot:top>
-        <v-row>
-          <v-col cols="7">
+        <v-row class="mb-md-5 d-flex justify-center">
+          <v-col cols="9" sm="10" md="4" lg="7" xl="8" class="pa-0">
             <v-text-field v-if="needSearch"
               v-model="search"
               label="Currencies search"
               class="mx-4"
+              :color="color"
             />
           </v-col>
-            <v-col cols="1">
+            <v-col cols="3" sm="2" md="2" lg="1" class="pa-0">
               <v-select
-              class="mr-10"
                 :items="[10,20,50,100,500]"
                 v-model="limit"
+                class="d-flex justify-center"
+                :color="color"
+                :item-color="color"
               />
             </v-col>
-            <v-col cols="4">
+            <v-col cols="12" md="6" lg="4" xl="3" class="d-flex align-center justify-center pa-sm-0 pb-5">
               <v-pagination
+                :color="color"
+                class="mb-sm-12 my-md-auto"
                 v-model="page"
                 :disabled="loading"
                 :length="numberOfPages || pageCount"
@@ -76,6 +80,7 @@ export default class DataTable extends Vue {
   @Prop({type: Number}) numberOfPages;
   @Prop({type: Number, default: 10}) limitNumber;
   @Prop({type: Number, default: 1}) pageNumber;
+  @Prop({type: String, default: 'primary'}) color;
 
   loading = true
   search = ''
@@ -119,8 +124,33 @@ export default class DataTable extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 .data-table-class {
   padding: 0 4px 0 10px;
 }
+
+.v-data-table__wrapper::-webkit-scrollbar {
+    width: 24px;
+    height: 8px;
+    background-color: #143861;
+    color: pink;
+}
+
+.v-data-table__wrapper::-webkit-scrollbar{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.v-data-table__wrapper::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: rgb(190, 43, 141);
+}
+
+.v-data-table__wrapper::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
 </style>

@@ -1,11 +1,11 @@
 <script>
 import { Prop, Vue, Watch } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
-import { Bar } from 'vue-chartjs'
+import { HorizontalBar } from 'vue-chartjs'
 
 import getRandomColors from '../utils/getRandomColors';
 
-@Component({extends: Bar})
+@Component({extends: HorizontalBar})
 export default class Chart extends Vue {
   @Prop({type: Array, required: true}) dataLabels // Массив данных для оси координат Х, вида ['точка1', 'точка2', ...]. Сюда закидывать массив дат.
   @Prop({type: Array, required: true}) dataArray // Массив с данными для построение графика, вида [8,10,15, *остальные точки по оси Y*. Сюда закидывать массив значений для графика.
@@ -32,22 +32,23 @@ export default class Chart extends Vue {
             const chartInstance = this.chart
             const ctx = chartInstance.ctx;
             ctx.textAlign = 'center';
-            ctx.fillStyle = "c";
+            ctx.fillStyle = "rgba(111, 108, 153, 1)";
             ctx.textBaseline = 'bottom';
             this.data.datasets.forEach(function (dataset, i) {
                 let meta = chartInstance.controller.getDatasetMeta(i);
                 meta.data.forEach(function (bar, index) {
-                    let maxData = bar._yScale._endValue
-                    let breakValueForTitlePosition = (bar._yScale._endValue - bar._yScale._startValue) / 100 * 10
+                    let maxData = bar._xScale._endValue
+                    let breakValueForTitlePosition = (bar._xScale._endValue - bar._xScale._startValue) / 100 * 10
 
                     let data = `${dataset.data[index]}%`;
-                    let yPosition = bar._model.y - 5
+                    let yPosition = bar._model.y + 7
+                    let xPosition = bar._model.x + 25
 
                     if (maxData - dataset.data[index] <= breakValueForTitlePosition){
-                      yPosition = bar._model.y + 25
+                      xPosition = bar._model.x - 25
                     }
 
-                    ctx.fillText(data, bar._model.x, yPosition);
+                    ctx.fillText(data, xPosition, yPosition);
                 });
             });
           }
