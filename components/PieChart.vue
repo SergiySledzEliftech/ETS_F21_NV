@@ -1,11 +1,11 @@
 <script>
 import { Prop, Vue, Watch } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
-import { Bar } from 'vue-chartjs'
+import { Doughnut } from 'vue-chartjs'
 
 import getRandomColors from '../utils/getRandomColors';
 
-@Component({extends: Bar})
+@Component({extends: Doughnut})
 export default class Chart extends Vue {
   @Prop({type: Array, required: true}) dataLabels // Массив данных для оси координат Х, вида ['точка1', 'точка2', ...]. Сюда закидывать массив дат.
   @Prop({type: Array, required: true}) dataArray // Массив с данными для построение графика, вида [8,10,15, *остальные точки по оси Y*. Сюда закидывать массив значений для графика.
@@ -15,45 +15,21 @@ export default class Chart extends Vue {
   // Объект настроек для графика. В данном случае график будет менять размер при изменении размеров окна с сохранением пропорций,
   // отключена легенда и добавлены надписи внутри баров со значениями.
   options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-          display: false
-        },
-        tooltips: {
-            enabled: true
-        },
-        title: {
-          display: false,
-        },
-        animation: {
-          duration: 1000,
-          onComplete: function () {
-            const chartInstance = this.chart
-            const ctx = chartInstance.ctx;
-            ctx.textAlign = 'center';
-            ctx.fillStyle = "c";
-            ctx.textBaseline = 'bottom';
-            this.data.datasets.forEach(function (dataset, i) {
-                let meta = chartInstance.controller.getDatasetMeta(i);
-                meta.data.forEach(function (bar, index) {
-                    let maxData = bar._yScale._endValue
-                    let breakValueForTitlePosition = (bar._yScale._endValue - bar._yScale._startValue) / 100 * 10
-
-                    let data = `${dataset.data[index]}%`;
-                    let yPosition = bar._model.y - 5
-
-                    if (maxData - dataset.data[index] <= breakValueForTitlePosition){
-                      yPosition = bar._model.y + 25
-                    }
-
-                    ctx.fillText(data, bar._model.x, yPosition);
-                });
-            });
-          }
-        }
+    responsive: true,
+    clip: 0,
+    title: {
+      display: false,
+      text: ""
+    },
+    animation: {
+      duration: 1000,
+      onComplete: function () {
+        const chartInstance = this.chart
+        const ctx = chartInstance.ctx;
+        ctx.textAlign = 'center';
       }
-
+    }
+  }
   mounted () {
     this.updateChart();
   }
@@ -75,8 +51,6 @@ export default class Chart extends Vue {
         data: this.dataArray,
         label: this.datalabel,
         backgroundColor: colors,
-        borderRadius: 5,
-        borderSkipped: false,
       }]},
       this.options
     )
