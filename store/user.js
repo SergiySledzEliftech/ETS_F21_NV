@@ -15,7 +15,7 @@ export const actions = {
 
       ctx.commit('updateUser', response)
     } catch (error) {
-      // console.log(error)
+      throw new Error(error.message)
     }
   },
 
@@ -24,7 +24,7 @@ export const actions = {
       const response = await this.$axios.$put(`${serverUrl}/users/${id}`, body)
       ctx.commit('updateUser', response)
     } catch (error) {
-
+      throw new Error(error.message)
     }
   },
 
@@ -37,7 +37,7 @@ export const actions = {
       const response = await this.$axios.$put(`${serverUrl}/users/balance/${id}`, body)
       ctx.commit('updateBalance', response)
     } catch (error) {
-
+      throw new Error(error.message)
     }
   }
 }
