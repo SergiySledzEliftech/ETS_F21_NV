@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data.length">
+  <div v-if="data.length" class="elevation-0">
     <v-data-table
       :page.sync="page"
       hide-default-footer

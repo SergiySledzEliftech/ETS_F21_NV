@@ -23,7 +23,7 @@
 
     <v-snackbar
     v-model="snackbarSuccess"
-    :timeout="4000"
+    :timeout="10000"
     right
     color="success"
     dark>

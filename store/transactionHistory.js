@@ -10,7 +10,7 @@ export const state = () => ({
   pageNumber: 1,
   limitNumber: 10,
   currency: 'ALL',
-  dateRange: [DateTime.now().minus({ days: 10 }).toFormat('yyyy-M-dd'), DateTime.now().minus({ days: 1 }).toFormat('yyyy-M-dd')]
+  dateRange: [DateTime.now().minus({ days: 30 }).toFormat('yyyy-M-dd'), DateTime.now().minus({ days: 1 }).toFormat('yyyy-M-dd')]
 })
 
 export const getters = {
@@ -60,7 +60,7 @@ export const mutations = {
 
 export const actions = {
   async fetchTransactions (ctx, params = {}) {
-    const defaultParams = { currency: 'USD', page: 1, limit: 10 }
+    const defaultParams = { currency: 'ALL', page: 1, limit: 10 }
     for (const param in defaultParams) {
       if (!Object.prototype.hasOwnProperty.call(params, param)) {
         params[param] = defaultParams[param]
