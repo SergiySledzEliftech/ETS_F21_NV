@@ -1,6 +1,7 @@
 <template>
   <v-container fill-height fluid fill-width>
-    <v-row align="center" justify="center">
+    <!-- <div :style="{'background-image': 'url(' + require('./static/background.jpg') + ')'}"></div> -->
+    <v-row align="center" justify-content="center" align-items="center">
       <v-col cols="12">
         <v-card class="mx-auto" max-width="520" color="rgb(255,242,245)">
           <v-row align="center" justify="center">
@@ -47,13 +48,15 @@
                   align-items="center"
                 >
                   <v-card-subtitle class="pa-0" align="center">
-                    <router-link to="/register" exact>Don`t have an account? Sign up!</router-link>
+                    <router-link to="/register" exact
+                      >Don`t have an account? Sign up!</router-link
+                    >
                   </v-card-subtitle>
 
                   <gradient-rounded-button
                     class="ma-2"
                     text="Sign in"
-                    :onClick="sendLogInData"
+                    :onClick="logIn"
                     :loading="loading"
                   />
                 </v-row>
@@ -74,7 +77,11 @@
   </v-container>
 </template>
 
-<style></style>
+<style>
+.v-container {
+  background-image: "../static/background.jpg";
+}
+</style>
 
 <script>
 import rules from "/utils/form-validation-rules.js";
@@ -87,7 +94,13 @@ const { State, Action } = namespace("user");
 })
 export default class LoginPage extends Vue {
   @State userJWT;
-  @Action getUserJwt;
+  @Action login;
+
+  loading = true;
+
+  mounted() {
+    this.loading = false;
+  }
 
   data() {
     return {
@@ -106,9 +119,9 @@ export default class LoginPage extends Vue {
     password: "",
   };
 
-  async sendLogInData() {
-    await this.getUserJwt(this.logInData);
-
+  async logIn() {
+    await this.login(this.logInData);
+    
     this.logInData.email = "";
     this.logInData.password = "";
   }
