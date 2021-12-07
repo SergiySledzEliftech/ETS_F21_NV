@@ -19,20 +19,20 @@
       :server-items-length="numberOfPages"
     >
       <template v-slot:top>
-        <v-row class="mb-md-5 d-flex justify-center">
-          <v-col cols="9" sm="10" md="4" lg="7" xl="8" class="pa-0">
+        <v-row class="my-5 d-flex justify-center align-items-center">
+          <v-col cols="9" sm="10" md="4" lg="7" xl="8" class="d-flex align-center justify-center pa-0">
             <v-text-field v-if="needSearch"
               v-model="search"
               label="Currencies search"
-              class="mx-4"
+              class="ma-0 mr-4 pa-0"
               :color="color"
             />
           </v-col>
-            <v-col cols="3" sm="2" md="2" lg="1" class="pa-0">
+            <v-col cols="3" sm="2" md="2" lg="1" class="d-flex align-center justify-center pa-0">
               <v-select
                 :items="[10,20,50,100,500]"
                 v-model="limit"
-                class="d-flex justify-center"
+                class="ma-0 pa-0"
                 :color="color"
                 :item-color="color"
               />
@@ -151,6 +151,14 @@ export default class DataTable extends Vue {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	border-radius: 10px;
 	background-color: #F5F5F5;
+}
+
+.v-input__slot {
+  margin: 0;
+}
+
+.v-text-field__details {
+  position: absolute;
 }
 
 </style>
