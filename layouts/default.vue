@@ -7,7 +7,7 @@
       :logo="logo" 
       :drawer="drawer"
       :title-parts="titleParts"
-      :onLogoutClick="onLogoutClick"/>
+      :onLogoutClick="logout"/>
 
       <toolbar
       :title="title"
@@ -51,6 +51,8 @@ const {State, Action} = namespace('user')
 export default class DefautPage extends Vue {
   @State details;
   @Action getUser; 
+  @Action logout; 
+  @Action refreshToken; 
 
   drawer = false;
   logo = 'mainLogo.png';
@@ -90,9 +92,9 @@ export default class DefautPage extends Vue {
     this.pageLoading = false;
   }
 
-  onLogoutClick() {
-    console.log('exit');
-  }
+  // onLogoutClick() {
+  //   console.log('exit');
+  // }
   
 }
 </script>

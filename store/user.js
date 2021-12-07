@@ -2,7 +2,7 @@ import { serverUrl } from '../utils/config'
 
 export const state = () => ({
   details: {},
-  userJWT: String,
+  userJWT: '',
   isLoading: false
 })
 
@@ -23,12 +23,20 @@ export const actions = {
     try {
       const response = await this.$axios.$post(`${serverUrl}/auth/login`, body)
       this.$axios.setToken(response.access_token, 'Bearer') // пример
-      
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
       // console.log(error)
     }
+  },
+
+  refreshToken (ctx, token) {
+    this.$axios.setToken(token, 'Bearer')
+    ctx.commit('refreshToken', token)
+  },
+
+  addToken (ctx, token) {
+    ctx.commit('addToken', token)
   },
 
   logout (ctx) {
@@ -42,7 +50,7 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOTI1YTMyYWYyYjBjYmNkOTMzMGYzZiIsImlhdCI6MTYzODgzMDU2NiwiZXhwIjoxNjM4OTE2OTY2fQ.C2dkWR8TtCfBSc-Jv0f8aJCOanEtemkDsgxq7ZEhC04', 'Bearer')
+      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOTI1YTMyYWYyYjBjYmNkOTMzMGYzZiIsImlhdCI6MTYzODg3NTU3MiwiZXhwIjoxNjM4OTYxOTcyfQ.EtNV_fP75k3cx-B-6GKBkaNHix6GYAhmbv2m30_BCz8', 'Bearer')
       const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
 
       ctx.commit('updateUser', response)
@@ -82,6 +90,10 @@ export const mutations = {
 
   updateBalance (state, user) {
     state.details = user
+  },
+
+  refreshToken (state, token) {
+    state.userJWT = token
   },
 
   updateJWT (state, user) {
