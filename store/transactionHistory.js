@@ -69,6 +69,7 @@ export const actions = {
     const url = `${serverUrl}/transaction-history`
     const parameters = params
 
+    this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
     const { data, numberOfPages, currentPage } = await this.$axios.$get(url, { params: parameters })
     const transactions = styleTransactionDates(data)
     ctx.commit('updatePageCount', numberOfPages)

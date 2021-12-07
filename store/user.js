@@ -50,7 +50,7 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYWY4N2NhMjgwODYzYmVjOTJkMjliYSIsImlhdCI6MTYzODg5MzU1NywiZXhwIjoxNjM4OTc5OTU3fQ.ydNUZEDx6iJEarmcXW1DQsmMcrsTV0JElQcAf8DuDB8', 'Bearer')
+      this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
       const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
 
       ctx.commit('updateUser', response)

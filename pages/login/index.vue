@@ -89,9 +89,10 @@ import { Component, Vue, namespace, Watch, Inject } from "nuxt-property-decorato
 const { State, Action } = namespace("user");
 
 @Component({
-  layout: "empty",
+  layout: 'empty',
   components: {},
 })
+
 export default class LoginPage extends Vue {
   @State userJWT;
   @Action login;
