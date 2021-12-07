@@ -2,6 +2,9 @@
   <div v-if="error" width="100%" height="100%">
     <ErrorPage />
   </div>
+  <div v-else-if="!loading && !dataForTable.length" width="100%" height="100%">
+    <NoResults />
+  </div>
   <v-col v-else>
     <DatePicker
       :isDisabled="loading"
@@ -68,6 +71,7 @@ import DataTable from '../components/DataTable.vue'
 import BuyBtn from '../components/BuyBtn.vue'
 import DatePicker from '../components/Datepicker.vue'
 import ErrorPage from '../components/Error.vue'
+import NoResults from '../components/NoResults.vue'
 
 import { serverUrl } from '../utils/config'
 import headMixin from '~/helpers/mixins/headMixin'
@@ -82,7 +86,8 @@ const {State, Mutation, Getter} = namespace('dashboardStore')
       DataTable,
       BuyBtn,
       DatePicker,
-      ErrorPage
+      ErrorPage,
+      NoResults
   },
   mixins: [headMixin]
 })
@@ -109,6 +114,9 @@ export default class DashboardPage extends Vue{
   error = null
 
   async mounted() {
+    const token = this.$cookies.get('userToken')
+    token && this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
+    
     await this.callAPI(this.dateRange)
     this.unsubscribe = this.$store.watch(this.dates, () => this.callAPI(this.dateRange))
   }
