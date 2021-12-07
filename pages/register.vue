@@ -89,7 +89,7 @@
 
 <script>
 import rules from "../utils/form-validation-rules.js";
-import { Component, Inject, namespace, Vue } from "nuxt-property-decorator";
+import { Component, Inject, namespace, Vue, Watch } from "nuxt-property-decorator";
 import GradientRoundedButton from "../components/GradientRoundedButton.vue";
 
 const { State, Action } = namespace("user");
@@ -101,6 +101,7 @@ const { State, Action } = namespace("user");
 })
 export default class RegisterPage extends Vue {
   @State details;
+  @State userJWT;
   @Action saveUser;
   @Inject({ default: null }) notificationsBar;
 
@@ -133,6 +134,11 @@ export default class RegisterPage extends Vue {
     this.userRegData.nickname = "";
     this.userRegData.email = "";
     this.userRegData.password = "";
+  }
+
+  @Watch('userJWT') 
+  onJWTUpdate() {
+    this.$router.push('/');
   }
 }
 </script>
