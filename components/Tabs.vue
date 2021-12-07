@@ -68,14 +68,22 @@
                 v-else
                 >
               </span> 
-              <span>
-                {{listItem.currencyName}} {{roundCurrency(listItem.amount)}}
+              <span 
+                class="slot"
+              >
+                <span>{{listItem.currencyName}}</span>
+                  <span>{{roundCurrency(listItem.amount)}}</span> 
               </span> 
               <span
                 v-if="listItem.spent"
                 class="spent"
               >
-                spent
+                <span  
+                  class="slot"
+                >
+                  <span>spent</span>
+                  <span>{{roundCurrency(listItem.spent)}}</span>  
+                </span> 
               </span>
               <span
                 v-if="listItem.bought"
@@ -192,7 +200,11 @@ class Tabs extends Vue{
 </script>
 
 <style scoped>
-
+  .slot {
+    display: flex;
+    justify-content: space-between;
+    width: 110px;
+  }
 
   .btn {
     margin-right: 0;

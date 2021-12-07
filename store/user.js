@@ -83,7 +83,10 @@ export const actions = {
 }
 
 export const mutations = {
-  updateUser (state, { user }) {
+  updateUser (state, user) {
+    if (user?.user) {
+      state.details = user
+    }
     state.details = user
     // console.log(state.details)
   },
