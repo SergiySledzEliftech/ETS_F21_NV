@@ -98,13 +98,16 @@ export const mutations = {
 
   updateJWT (state, user) {
     state.userJWT = user.access_token
-    localStorage.setItem('user', JSON.stringify(state.userJWT))
-    // console.log(state.userJWT)
+    this.$cookies.set('userToken', JSON.stringify(state.userJWT), {
+      secure: true,
+      sameSite: true
+    })
   },
 
   clearJwt (state) {
     state.userJWT = ''
-    localStorage.removeItem('user')
+    this.$cookies.removeAll()
+    this.$router.push('/login')
   }
 
 }

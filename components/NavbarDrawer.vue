@@ -33,9 +33,8 @@
         
         <div class="logout-item-container">
           <menu-link 
-          class="my-4 logout-item" 
+          class="logout-item" 
           :icon="logoutLink.icon"
-          :link="logoutLink.link"
           :name="logoutLink.name"
           :halfCircleDisplayNone="true" 
           @onMenuLinkClick="onLogoutClick"/>
@@ -136,5 +135,6 @@ export default class NavbarDrawer extends Vue {
 .logout-item {
   position: absolute;
   bottom: 0;
+  width: 100%;
 }
 </style>

@@ -2,12 +2,14 @@
   <v-app light>
     <notifications-bar>
       <v-main>
-        <v-progress-circular
-        v-show="pageLoading"
-        :size="50"
-        color="primary"
-        indeterminate/>
-        <Nuxt />
+        <div class="v-progress-holder">
+          <v-progress-circular
+          v-show="pageLoading"
+          :size="50"
+          color="primary"
+          indeterminate/>
+        </div>
+        <Nuxt v-if="!pageLoading"/>
       </v-main>
     </notifications-bar>
   </v-app>
@@ -44,3 +46,11 @@ export default class EmptyPage extends Vue {
   }
 }
 </script>
+
+<style scoped>
+div.v-progress-holder {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+</style>

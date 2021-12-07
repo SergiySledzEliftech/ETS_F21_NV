@@ -1,3 +1,5 @@
-export default function ({ store, redirect }) {
-  // if (process.client && !user.isLoggedIn) { return redirect('/login') }
+export default function ({ store, redirect, app, route }) {
+  if (!app.$cookies.get('userToken') && route.path !== '/login') {
+    return redirect('/login')
+  }
 }

@@ -79,10 +79,6 @@ export default class DefautPage extends Vue {
     }
   };
 
-  async created() {
-    await this.getUser('61925a32af2b0cbcd9330f3f');
-  }
-
   @Watch('details', {deep: true})
   changeNickname() {
     this.name = this.details.nickname;
@@ -91,10 +87,6 @@ export default class DefautPage extends Vue {
   mounted() {
     this.pageLoading = false;
   }
-
-  // onLogoutClick() {
-  //   console.log('exit');
-  // }
   
 }
 </script>
