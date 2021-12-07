@@ -25,7 +25,7 @@ import { Emit } from 'vue-property-decorator'
 export default class MenuLink extends Vue {
   @Prop({type: String, required: true}) icon
   @Prop({type: String, required: true}) name
-  @Prop({type: String, required: true}) link 
+  @Prop({type: String}) link 
   @Prop({type: Boolean, required: true}) halfCircleDisplayNone
 
   halfCircleDisplayNoneBool = true;

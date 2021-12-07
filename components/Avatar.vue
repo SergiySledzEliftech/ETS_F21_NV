@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="details">
     <img
       v-if="details.avatar"
       :src="details.avatar"
