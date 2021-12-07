@@ -101,7 +101,7 @@
 <script>
 import rules from "../utils/form-validation-rules.js";
 import LogoTitle from "../components/LogoTitle.vue";
-import { Component, namespace, Vue } from "nuxt-property-decorator";
+import { Component, Inject, namespace, Vue } from "nuxt-property-decorator";
 import GradientRoundedButton from "../components/GradientRoundedButton.vue";
 //import GradientRoundedButton from "./GradientRoundedButton.vue";
 
@@ -116,6 +116,7 @@ const { State, Action } = namespace("user");
 export default class RegisterPage extends Vue {
   @State details;
   @Action saveUser;
+  @Inject({default: null}) notificationsBar;
 
   data() {
     return {
@@ -138,7 +139,12 @@ export default class RegisterPage extends Vue {
 
   async sendUserRegData() {
     //console.log(this.userRegData);
-    await this.saveUser(this.userRegData);
+    try {
+      await this.saveUser(this.userRegData);
+      
+    } catch (error) {
+      this.notificationsBar.consoleError(error.message)
+    }
     //await this.$axios.$post("http://localhost:4000/auth/register", this.userRegData);
 
     this.userRegData.nickname = "";

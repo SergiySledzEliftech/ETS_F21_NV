@@ -85,7 +85,7 @@
 
 <script>
 import rules from "/utils/form-validation-rules.js";
-import { Component, Vue, namespace, Watch } from "nuxt-property-decorator";
+import { Component, Vue, namespace, Watch, Inject } from "nuxt-property-decorator";
 const { State, Action } = namespace("user");
 
 @Component({
@@ -95,6 +95,7 @@ const { State, Action } = namespace("user");
 export default class LoginPage extends Vue {
   @State userJWT;
   @Action login;
+  @Inject({default: null}) notificationsBar;
 
   loading = true;
 
@@ -120,7 +121,12 @@ export default class LoginPage extends Vue {
   };
 
   async logIn() {
-    await this.login(this.logInData);
+    try {
+      await this.login(this.logInData);
+      
+    } catch (error) {
+      this.notificationsBar.consoleError(error.message)
+    }
     
     this.logInData.email = "";
     this.logInData.password = "";
