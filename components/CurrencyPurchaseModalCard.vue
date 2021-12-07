@@ -120,7 +120,7 @@ export default class CurrencyPurchaseModalCard extends Vue {
   localRate = null
   localMaxAmount = null
 
-  numberOfMonthsForChart = 7
+  numberOfMonthsForChart = 8
 
   dates = []
   rates = [[]]
@@ -156,7 +156,7 @@ export default class CurrencyPurchaseModalCard extends Vue {
     let localDates = [];
     let localRates = [];
     const localLabels = [this.currencyName];
-    for(let i = 0; i < this.numberOfMonthsForChart; i++) {
+    for(let i = 1; i < this.numberOfMonthsForChart; i++) {
       const date = this.getDateForChart(i);
       const rateObj = await this.$axios
         .$get(serverUrl + '/globalCurrencies/history', {
