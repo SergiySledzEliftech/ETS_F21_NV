@@ -44,3 +44,12 @@ export default class EmptyPage extends Vue {
   }
 }
 </script>
+
+<style scoped>
+div.v-progress-holder {
+  padding: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+</style>

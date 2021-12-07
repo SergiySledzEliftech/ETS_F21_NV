@@ -78,13 +78,14 @@
 
 <script>
 import rules from "/utils/form-validation-rules.js";
-import { Component, Vue, namespace, Inject } from "nuxt-property-decorator";
+import { Component, Vue, namespace, Watch, Inject } from "nuxt-property-decorator";
 const { State, Action } = namespace("user");
 
 @Component({
-  layout: "empty",
+  layout: 'empty',
   components: {},
 })
+
 export default class LoginPage extends Vue {
   @State userJWT;
   @Action login;
@@ -123,6 +124,11 @@ export default class LoginPage extends Vue {
 
     this.logInData.email = "";
     this.logInData.password = "";
+  }
+
+  @Watch('userJWT') 
+  onJWTUpdate() {
+    this.$router.push('/');
   }
 }
 </script>
