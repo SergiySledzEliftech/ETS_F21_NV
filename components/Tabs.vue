@@ -68,14 +68,22 @@
                 v-else
                 >
               </span> 
-              <span>
-                {{listItem.currencyName}} {{roundCurrency(listItem.amount)}}
+              <span 
+                class="slot"
+              >
+                <span>{{listItem.currencyName}}</span>
+                  <span>{{roundCurrency(listItem.amount)}}</span> 
               </span> 
               <span
                 v-if="listItem.spent"
                 class="spent"
               >
-                spent
+                <span  
+                  class="slot"
+                >
+                  <span>spent</span>
+                  <span>{{roundCurrency(listItem.spent)}}</span>  
+                </span> 
               </span>
               <span
                 v-if="listItem.bought"
@@ -94,6 +102,7 @@
           <Button
             v-if="key === 'history'"
             :onClick="getHistory"
+            :disabled="disabled"
             text="load more"
             class="d-flex
             ml-auto
@@ -107,7 +116,7 @@
 </template>
 
 <script>
-import { Vue } from 'nuxt-property-decorator'
+import { Vue, Inject } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import NeutralButton from '../components/NeutralButton.vue'
@@ -125,15 +134,17 @@ export default @Component({
   })
 
 class Tabs extends Vue{
+@Inject({default: null}) notificationsBar;
 
   tabs = {
     tab: null,
     items: {
         history: [],
         currencies: []
-    },
-    text: "lorem"
+    }
   }
+
+  disabled = false
 
   paramsHistory = {
       currency: 'ALL',
@@ -143,23 +154,37 @@ class Tabs extends Vue{
     }
 
   async mounted() {
-    this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/all?userId=61926bc6418dbb9a949cdeb1`)
+    this.getCurrency()
     this.getHistory()
+  }
+
+  async getCurrency() {
+    try {
+      this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/all`, {params: {userId: '61926bc6418dbb9a949cdeb1'}})
+    } catch (error) {
+      this.notificationsBar.consoleError(error.message);
+    }
   }
 
   async getHistory() {
     try {
+        this.disabled = true
         const data = await this.$axios.$get(`${serverUrl}/transaction-history`, {params: this.paramsHistory})
         const result = JSON.stringify(data)
         this.tabs.items.history = [...this.tabs.items.history, ...JSON.parse(result).data]
         this.paramsHistory.page = this.paramsHistory.page + 1
     } catch (error) {
-      
+      this.notificationsBar.consoleError(error.message);
+    } finally {
+      this.disabled = false
     }
 
   }
 
   roundCurrency(num) {
+    if(!num) {
+      return 
+    }
     return num.toFixed(2)
   }
 
@@ -175,7 +200,11 @@ class Tabs extends Vue{
 </script>
 
 <style scoped>
-
+  .slot {
+    display: flex;
+    justify-content: space-between;
+    width: 110px;
+  }
 
   .btn {
     margin-right: 0;

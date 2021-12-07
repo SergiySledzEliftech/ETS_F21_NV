@@ -2,7 +2,7 @@ import { serverUrl } from '../utils/config'
 
 export const state = () => ({
   details: {},
-  userJWT: String,
+  userJWT: '',
   isLoading: false
 })
 
@@ -14,7 +14,7 @@ export const actions = {
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      // console.log(error)
+      throw new Error(error)
     }
   },
 
@@ -23,12 +23,20 @@ export const actions = {
     try {
       const response = await this.$axios.$post(`${serverUrl}/auth/login`, body)
       this.$axios.setToken(response.access_token, 'Bearer') // пример
-      
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      // console.log(error)
+      throw new Error(error)
     }
+  },
+
+  refreshToken (ctx, token) {
+    this.$axios.setToken(token, 'Bearer')
+    ctx.commit('refreshToken', token)
+  },
+
+  addToken (ctx, token) {
+    ctx.commit('addToken', token)
   },
 
   logout (ctx) {
@@ -42,11 +50,12 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      const response = await this.$axios.$get(`${serverUrl}/users/${id}`)
+      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYWY4N2NhMjgwODYzYmVjOTJkMjliYSIsImlhdCI6MTYzODg5MzU1NywiZXhwIjoxNjM4OTc5OTU3fQ.ydNUZEDx6iJEarmcXW1DQsmMcrsTV0JElQcAf8DuDB8', 'Bearer')
+      const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
 
       ctx.commit('updateUser', response)
     } catch (error) {
-      // console.log(error)
+      throw new Error(error.message)
     }
   },
 
@@ -55,7 +64,7 @@ export const actions = {
       const response = await this.$axios.$put(`${serverUrl}/users/${id}`, body)
       ctx.commit('updateUser', response)
     } catch (error) {
-
+      throw new Error(error.message)
     }
   },
 
@@ -68,19 +77,27 @@ export const actions = {
       const response = await this.$axios.$put(`${serverUrl}/users/balance/${id}`, body)
       ctx.commit('updateBalance', response)
     } catch (error) {
-
+      throw new Error(error.message)
     }
   }
 }
 
 export const mutations = {
   updateUser (state, user) {
-    state.details = user
+    if (user?.user) {
+      state.details = user.user
+    } else {
+      state.details = user
+    }
     // console.log(state.details)
   },
 
   updateBalance (state, user) {
     state.details = user
+  },
+
+  refreshToken (state, token) {
+    state.userJWT = token
   },
 
   updateJWT (state, user) {

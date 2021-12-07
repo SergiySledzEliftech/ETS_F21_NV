@@ -6,7 +6,8 @@
       :logout-link="logoutLink" 
       :logo="logo" 
       :drawer="drawer"
-      :title-parts="titleParts"/>
+      :title-parts="titleParts"
+      :onLogoutClick="logout"/>
 
       <toolbar
       :title="title"
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { Vue } from 'nuxt-property-decorator'
+import { Vue, Watch } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import NavbarDrawer from '../components/NavbarDrawer.vue'
@@ -50,11 +51,14 @@ const {State, Action} = namespace('user')
 export default class DefautPage extends Vue {
   @State details;
   @Action getUser; 
+  @Action logout; 
+  @Action refreshToken; 
 
   drawer = false;
   logo = 'mainLogo.png';
   pageLoading = true;
-  name = 'Miracle Volkman';
+  name = '';
+
   titleParts = ['Train', 'der'];
   links = [{name: 'Personal Cabinet', link: '/personalCabinet', icon: 'mdi-file-cabinet'},
            {name: 'Dashboard', link: '/', icon: 'mdi-view-dashboard'},
@@ -70,14 +74,27 @@ export default class DefautPage extends Vue {
     if (process.browser) this.title = document.title;
     return {
       changed ({title}) {
-        self.title = title;
+        self.title = title.split('|')[0];
       }
     }
   };
 
+  async created() {
+    await this.getUser('61925a32af2b0cbcd9330f3f');
+  }
+
+  @Watch('details', {deep: true})
+  changeNickname() {
+    this.name = this.details.nickname;
+  }
+
   mounted() {
     this.pageLoading = false;
   }
+
+  // onLogoutClick() {
+  //   console.log('exit');
+  // }
   
 }
 </script>

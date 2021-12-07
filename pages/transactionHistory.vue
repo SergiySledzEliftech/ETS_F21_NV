@@ -9,7 +9,8 @@
         :stateDates="dateRange"
         :formattedStateDates="formatDates"
         :updateDates="updateDateRange"
-        :isDisabled="loading"/>
+        :isDisabled="loading"
+        :color="color"/>
         
         <selector
         class="my-6"
@@ -50,7 +51,8 @@
     :limitNumber="limitNumber"
     :pageNumber="pageNumber"
     @onPageChange="onPageChange"
-    @onLimitChange="changeLimit"/>
+    @onLimitChange="changeLimit"
+    :color="color"/>
   </div>
 </template>
 
@@ -105,6 +107,7 @@ export default class TransactionHistory extends Vue{
 
   loading = false;
   title = 'Transaction History';
+  color = 'rgba(190, 43, 141, 0.6)';
 
   headers = [{ text: 'Currency', value: 'currencyName' },
              { text: 'Amount', value: 'amount' },
@@ -127,7 +130,6 @@ export default class TransactionHistory extends Vue{
     const page = this.pageNumber;
     const currency = this.currency;
     const limit = this.limitNumber;
-    console.log(limit);
     try {
       const params = { currency, page, limit };
       params.dateRange = this.dateRange.map(date => DateTime.fromFormat(date, 'yyyy-M-dd').toISO()).join('#');

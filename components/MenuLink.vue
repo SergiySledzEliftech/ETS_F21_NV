@@ -57,6 +57,9 @@ export default class MenuLink extends Vue {
 
 .menu-link:hover {
   background-color: rgba(165, 165, 165, 0.2);
+}
+
+.menu-link {
   border-radius: 10px;
 }
 

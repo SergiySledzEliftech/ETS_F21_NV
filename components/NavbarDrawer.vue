@@ -8,8 +8,11 @@
   width="300" 
   app 
   :permanent="$vuetify.breakpoint.name != 'xs'">
-    <v-container>
-      <v-list flat>
+    <v-container
+    class="pt-2">
+      <v-list 
+      flat
+      class="pt-0">
 
         <logo-title 
         :logo="logo" 
@@ -34,7 +37,8 @@
           :icon="logoutLink.icon"
           :link="logoutLink.link"
           :name="logoutLink.name"
-          :halfCircleDisplayNone="true" />
+          :halfCircleDisplayNone="true" 
+          @onMenuLinkClick="onLogoutClick"/>
         </div>
       </v-list>
     </v-container>
@@ -60,6 +64,7 @@ export default class NavbarDrawer extends Vue {
   @Prop({type: Boolean, required: true}) drawer
   @Prop({type: Object, required: true}) logoutLink
   @Prop({type: Array, required: true}) titleParts
+  @Prop({type: Function}) onLogoutClick;
 
   miniScreen = true;
   halfCircleIconsDisplayNone = {};

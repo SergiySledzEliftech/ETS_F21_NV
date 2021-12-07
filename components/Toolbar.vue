@@ -2,7 +2,8 @@
   <v-app-bar 
   app 
   flat 
-  color="rgb(255, 255, 255)">
+  color="rgb(255, 255, 255)"
+  style="padding-top:4px">
     <v-app-bar-nav-icon 
     class="d-flex d-sm-none" 
     @click.stop="changeDrawer"/>
@@ -10,7 +11,7 @@
     <v-toolbar-title 
     class="font-weight-medium text-h4" 
     v-if="this.$vuetify.breakpoint.mdAndUp">
-      {{ titleStr }}
+      {{ title }}
     </v-toolbar-title>
 
     <v-spacer/>
@@ -21,7 +22,7 @@
     </div>
 
     <div 
-    :style="styleXSScreen" 
+    style="margin: 0 10px" 
     class="font-weight-light">{{ name }}</div>
   </v-app-bar>
 </template>
@@ -29,35 +30,18 @@
 <script>
 import { Prop, Vue } from 'nuxt-property-decorator'
 import Component from 'nuxt-class-component'
-import { Emit, Watch } from 'vue-property-decorator'
+import { Emit } from 'vue-property-decorator'
 import Avatar from './Avatar.vue'
-import GradientRoundedButton from './GradientRoundedButton.vue'
 
 @Component({
   components: {
-    Avatar,
-    GradientRoundedButton
+    Avatar
   }
 })
 
 export default class Toolbar extends Vue {
   @Prop({type: String, required: true}) title
   @Prop({type: String, required: true}) name
-
-  data() {
-    return {
-      titleStr: this.title.split('|')[0],
-    }
-  }
-
-  @Watch('title')
-  onTitleChange() {
-    this.titleStr = this.title.split('|')[0];
-  }
-
-  get styleXSScreen() {
-    return [this.$vuetify.breakpoint.xsOnly ? {'margin': '0'} : {'margin': '0 10px'}];
-  }
 
   @Emit('changeDrawer')
   changeDrawer() {}

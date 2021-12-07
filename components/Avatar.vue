@@ -10,7 +10,8 @@
     <div 
       v-else
       :class="size"
-      class="ava 
+      class="ava
+      ava-span 
       d-flex 
       justify-center 
       align-center 
@@ -50,13 +51,12 @@ export default class Avatar extends Vue{
     width: 35px;
     height: 35px;
     font-size: 24px;
+    /* min-width: 35px; */
   }
 
-  .big-size.box{
-    width: 180px;
-    height: 180px;
-    font-size: 90px;
-  }
+  /* .small-size.width {
+    min-width: 35px;
+  } */
 
   .ava {
     display: block;
@@ -66,10 +66,26 @@ export default class Avatar extends Vue{
     font-weight: bold;
   }
 
+  .ava-span.ava {
+    margin-right: auto;
+    margin-left: auto;
+    
+  }
+
+  .ava-span.ava.big-size {
+    width: 180px
+  }
+
   .width.big-size {
     width: 100%; 
-    min-width: 200px;
+    min-width: 180px;
     height: auto;
+  }
+
+    .big-size.box{
+    width: 180px;
+    height: 180px;
+    font-size: 90px;
   }
 
   /* @media (max-width: 959px) {
