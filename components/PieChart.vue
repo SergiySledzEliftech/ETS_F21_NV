@@ -15,7 +15,8 @@ export default class Chart extends Vue {
   // Объект настроек для графика. В данном случае график будет менять размер при изменении размеров окна с сохранением пропорций,
   // отключена легенда и добавлены надписи внутри баров со значениями.
   options = {
-    responsive: true,
+    // legend: false,
+    responsive: false,
     clip: 0,
     title: {
       display: false,

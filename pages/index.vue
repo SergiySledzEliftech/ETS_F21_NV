@@ -23,10 +23,11 @@
       <v-col xs="12" sm="12" md="5" lg="4" class="d-flex justify-center order-md-last order-lg-0">
           <PieChart
             v-if="fluctData.length"
-            :dataLabels="['USD', 'BTC', 'ETHER', 'UAH']" 
-            :dataArray="[154, 125, 95, 21]"
+            :dataLabels="['USD', 'BTC', 'ETHER', 'UAH', 'CAD', 'DIR']" 
+            :dataArray="[154, 125, 95, 21, 15, 10]"
             datalabel="Operations"
             :chartTitle="`Operations with currencies for period ${formatDates[0]} - ${formatDates[1]}`"
+            width="320px"
           />
       </v-col>
       <v-col xs="12" sm="12" md="7" lg="12">
