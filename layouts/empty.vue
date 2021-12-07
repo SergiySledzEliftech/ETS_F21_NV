@@ -1,15 +1,13 @@
 <template>
   <v-app light>
     <notifications-bar>
-      <v-main>
-        <div class="v-progress-holder">
-          <v-progress-circular
-          v-show="pageLoading"
-          :size="50"
-          color="primary"
-          indeterminate/>
-        </div>
-        <Nuxt v-if="!pageLoading"/>
+      <v-main :style="{'height':'100%'}"> 
+        <v-progress-linear
+        v-show="pageLoading"
+        :size="50"
+        color="primary"
+        indeterminate/>
+        <Nuxt />
       </v-main>
     </notifications-bar>
   </v-app>
