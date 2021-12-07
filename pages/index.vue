@@ -124,7 +124,7 @@ export default class DashboardPage extends Vue{
   async callAPI([start, end]) {
       this.loading = true
       try {
-        const dataSorted = await this.$axios(`${serverUrl}/gloalCurrencies/changes?`, {
+        const dataSorted = await this.$axios(`${serverUrl}/globalCurrencies/changes?`, {
           params: {
             start_date: start,
             end_date: end
