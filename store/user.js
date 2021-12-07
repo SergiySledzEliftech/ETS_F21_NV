@@ -14,7 +14,8 @@ export const actions = {
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      throw new Error(error)
+      error.message = 'User with this email already exists! Try again!'
+      throw new Error(error.message)
     }
   },
 
@@ -22,11 +23,12 @@ export const actions = {
     const body = b
     try {
       const response = await this.$axios.$post(`${serverUrl}/auth/login`, body)
-      this.$axios.setToken(response.access_token, 'Bearer') // пример
+      // this.$axios.setToken(response.access_token, 'Bearer') // пример
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      throw new Error(error)
+      error.message = 'Some data is incorrect! Try again!'
+      throw new Error(error.message)
     }
   },
 

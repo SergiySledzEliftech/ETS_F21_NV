@@ -1,11 +1,11 @@
 <template>
-  <!-- <div
-    :style="{ 'background-image': 'url(https://vuejs.org/images/logo.png)' }"
-  > -->
   <div
-    :style="{ 'background-image': 'url(https://i.ibb.co/6FyC0pp/background.jpg)',
-    'background-size': 'cover', 
-    'cover display': 'block'}"
+    :style="{
+      'background-image': 'url(https://i.ibb.co/6FyC0pp/background.jpg)',
+      'background-size': 'cover',
+      'cover display': 'block',
+      height: '100%',
+    }"
   >
     <v-container fill-height fluid fill-width>
       <v-row align="center" justify="center">
@@ -13,7 +13,6 @@
           <v-card class="mx-auto" max-width="520" color="rgb(255,242,245)">
             <v-row align="center" justify="center">
               <v-col cols="10">
-
                 <v-card-title class="text-h2 justify-center"
                   >Trainder</v-card-title
                 >
@@ -61,11 +60,8 @@
 
                 <v-card-actions class="mt-3 mb-3">
                   <v-row
-                    cols="10"
-                    md="4"
+                    :style="{ 'align-items': 'center' }"
                     justify="space-between"
-                    align-content="center"
-                    align-items="center"
                   >
                     <v-card-subtitle class="pa-0" align="center">
                       <router-link to="/login" exact
@@ -77,16 +73,9 @@
                       class="ma-2"
                       text="Sign up"
                       :onClick="sendUserRegData"
-                      
                     />
                   </v-row>
                 </v-card-actions>
-
-                <!-- <v-row justify="center">
-                <v-card-subtitle align="center" class="mb-3">
-                  <router-link to="/login" exact>sign in</router-link>
-                </v-card-subtitle>
-              </v-row> -->
               </v-col>
             </v-row>
           </v-card>
@@ -100,10 +89,8 @@
 
 <script>
 import rules from "../utils/form-validation-rules.js";
-import LogoTitle from "../components/LogoTitle.vue";
 import { Component, Inject, namespace, Vue } from "nuxt-property-decorator";
 import GradientRoundedButton from "../components/GradientRoundedButton.vue";
-//import GradientRoundedButton from "./GradientRoundedButton.vue";
 
 const { State, Action } = namespace("user");
 
@@ -112,11 +99,10 @@ const { State, Action } = namespace("user");
   components: { GradientRoundedButton },
   GradientRoundedButton,
 })
-
 export default class RegisterPage extends Vue {
   @State details;
   @Action saveUser;
-  @Inject({default: null}) notificationsBar;
+  @Inject({ default: null }) notificationsBar;
 
   data() {
     return {
@@ -138,15 +124,12 @@ export default class RegisterPage extends Vue {
   };
 
   async sendUserRegData() {
-    //console.log(this.userRegData);
     try {
       await this.saveUser(this.userRegData);
-      
     } catch (error) {
-      this.notificationsBar.consoleError(error.message)
+      this.notificationsBar.consoleError(error.message);
     }
-    //await this.$axios.$post("http://localhost:4000/auth/register", this.userRegData);
-
+    
     this.userRegData.nickname = "";
     this.userRegData.email = "";
     this.userRegData.password = "";

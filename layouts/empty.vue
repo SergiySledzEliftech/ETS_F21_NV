@@ -1,8 +1,8 @@
 <template>
   <v-app light>
     <notifications-bar>
-      <v-main>
-        <v-progress-circular
+      <v-main :style="{'height':'100%'}"> 
+        <v-progress-linear
         v-show="pageLoading"
         :size="50"
         color="primary"
