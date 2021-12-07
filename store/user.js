@@ -14,7 +14,8 @@ export const actions = {
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      // console.log(error)
+      error.message = 'User with this email already exists! Try again!'
+      throw new Error(error.message)
     }
   },
 
@@ -22,11 +23,12 @@ export const actions = {
     const body = b
     try {
       const response = await this.$axios.$post(`${serverUrl}/auth/login`, body)
-      this.$axios.setToken(response.access_token, 'Bearer') // пример
+      // this.$axios.setToken(response.access_token, 'Bearer') // пример
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      // console.log(error)
+      error.message = 'Some data is incorrect! Try again!'
+      throw new Error(error.message)
     }
   },
 
@@ -50,7 +52,7 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOTI1YTMyYWYyYjBjYmNkOTMzMGYzZiIsImlhdCI6MTYzODg3NTU3MiwiZXhwIjoxNjM4OTYxOTcyfQ.EtNV_fP75k3cx-B-6GKBkaNHix6GYAhmbv2m30_BCz8', 'Bearer')
+      this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
       const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
 
       ctx.commit('updateUser', response)
@@ -85,9 +87,10 @@ export const actions = {
 export const mutations = {
   updateUser (state, user) {
     if (user?.user) {
+      state.details = user.user
+    } else {
       state.details = user
     }
-    state.details = user
     // console.log(state.details)
   },
 
@@ -101,13 +104,16 @@ export const mutations = {
 
   updateJWT (state, user) {
     state.userJWT = user.access_token
-    localStorage.setItem('user', JSON.stringify(state.userJWT))
-    // console.log(state.userJWT)
+    this.$cookies.set('userToken', JSON.stringify(state.userJWT), {
+      secure: true,
+      sameSite: true
+    })
   },
 
   clearJwt (state) {
     state.userJWT = ''
-    localStorage.removeItem('user')
+    this.$cookies.removeAll()
+    this.$router.push('/login')
   }
 
 }
