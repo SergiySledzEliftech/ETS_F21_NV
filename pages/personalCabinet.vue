@@ -140,15 +140,23 @@ class AccountSettings extends Vue{
 
   value = 30
 
-  mounted() {
+  async mounted() {
+    this.timer()
+    // this.storeToken()
     this.refreshUser()
     this.checkBonusTime()
-    this.timer()
   }
+
+  // storeToken() {
+  //     console.log(localStorage.getItem('user'));
+  //     this.refreshToken(localStorage.getItem('user'))
+  // }
 
   async refreshUser(){
     try {
-      await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
+      if(process.client) {
+        await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
+      }
     } catch (error) {
       this.notificationsBar.consoleError(error.message);
     } finally {

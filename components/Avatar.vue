@@ -51,9 +51,12 @@ export default class Avatar extends Vue{
     width: 35px;
     height: 35px;
     font-size: 24px;
+    /* min-width: 35px; */
   }
 
-
+  /* .small-size.width {
+    min-width: 35px;
+  } */
 
   .ava {
     display: block;
@@ -66,6 +69,10 @@ export default class Avatar extends Vue{
   .ava-span.ava {
     margin-right: auto;
     margin-left: auto;
+    
+  }
+
+  .ava-span.ava.big-size {
     width: 180px
   }
 
