@@ -14,7 +14,7 @@ export const actions = {
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      // console.log(error)
+      throw new Error(error)
     }
   },
 
@@ -26,7 +26,7 @@ export const actions = {
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
-      // console.log(error)
+      throw new Error(error)
     }
   },
 
@@ -50,7 +50,7 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOTI1YTMyYWYyYjBjYmNkOTMzMGYzZiIsImlhdCI6MTYzODg3NTU3MiwiZXhwIjoxNjM4OTYxOTcyfQ.EtNV_fP75k3cx-B-6GKBkaNHix6GYAhmbv2m30_BCz8', 'Bearer')
+      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYWY4N2NhMjgwODYzYmVjOTJkMjliYSIsImlhdCI6MTYzODg5MzU1NywiZXhwIjoxNjM4OTc5OTU3fQ.ydNUZEDx6iJEarmcXW1DQsmMcrsTV0JElQcAf8DuDB8', 'Bearer')
       const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
 
       ctx.commit('updateUser', response)
