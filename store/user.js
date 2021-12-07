@@ -11,7 +11,8 @@ export const actions = {
   async getUser (ctx, id) {
     // console.log('in getUser')
     try {
-      const response = await this.$axios.$get(`${serverUrl}/users/${id}`)
+      this.$axios.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOTI1YTMyYWYyYjBjYmNkOTMzMGYzZiIsImlhdCI6MTYzODgzMDU2NiwiZXhwIjoxNjM4OTE2OTY2fQ.C2dkWR8TtCfBSc-Jv0f8aJCOanEtemkDsgxq7ZEhC04', 'Bearer')
+      const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
 
       ctx.commit('updateUser', response)
     } catch (error) {
@@ -43,7 +44,7 @@ export const actions = {
 }
 
 export const mutations = {
-  updateUser (state, user) {
+  updateUser (state, { user }) {
     state.details = user
   },
 
