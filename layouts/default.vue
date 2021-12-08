@@ -38,6 +38,8 @@ import NavbarDrawer from '../components/NavbarDrawer.vue'
 import Toolbar from '../components/Toolbar.vue'
 import NotificationsBar from '../components/NotificationBar.vue'
 
+import headLayoutMixin from '~/helpers/mixins/headLayoutMixin'
+
 const {State, Action} = namespace('user')
 
 @Component({
@@ -45,7 +47,8 @@ const {State, Action} = namespace('user')
     NavbarDrawer,
     Toolbar,
     NotificationsBar
-  }
+  },
+  mixins: [headLayoutMixin]
 })
 
 export default class DefautPage extends Vue {
@@ -55,7 +58,7 @@ export default class DefautPage extends Vue {
   @Action refreshToken; 
 
   drawer = false;
-  logo = 'mainLogo.png';
+  logo = '/mainLogo.png';
   pageLoading = true;
   name = '';
 
@@ -69,32 +72,15 @@ export default class DefautPage extends Vue {
   logoutLink = {name: 'Logout', link: '/login', icon: 'mdi-logout'}
   title = 'Trainder';
 
-  head () {
-    let self = this;
-    if (process.browser) this.title = document.title;
-    return {
-      changed ({title}) {
-        self.title = title.split('|')[0];
-      }
+  async mounted() {
+    try {
+      await this.getUser();
+      this.name = this.details.nickname;
+    } catch (err) {
+      this.NotificationsBar.consoleError(err.message);
     }
-  };
-
-  async created() {
-    await this.getUser('61925a32af2b0cbcd9330f3f');
+    this.pageLoading = false;    
   }
-
-  @Watch('details', {deep: true})
-  changeNickname() {
-    this.name = this.details.nickname;
-  }
-
-  mounted() {
-    this.pageLoading = false;
-  }
-
-  // onLogoutClick() {
-  //   console.log('exit');
-  // }
   
 }
 </script>

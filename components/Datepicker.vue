@@ -71,7 +71,7 @@ export default class DatePicker extends Vue {
 
   dates = []
   menu = false
-  today = DateTime.now().minus({ days: 1 }).toFormat('yyyy-MM-dd')
+  today = DateTime.now().plus({ days: 1 }).toFormat('yyyy-MM-dd')
 
   mounted() {
       this.dates = this.stateDates
