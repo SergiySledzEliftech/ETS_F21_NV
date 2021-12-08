@@ -49,12 +49,12 @@ export const actions = {
     }
   },
 
-  async getUser (ctx, id) {
+  async getUser (ctx) {
     // console.log('in getUser')
     try {
       this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
       const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
-
+      // console.log(response)
       ctx.commit('updateUser', response)
     } catch (error) {
       throw new Error(error.message)
@@ -63,6 +63,7 @@ export const actions = {
 
   async updateUser (ctx, { id, body }) {
     try {
+      this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
       const response = await this.$axios.$put(`${serverUrl}/users/${id}`, body)
       ctx.commit('updateUser', response)
     } catch (error) {
@@ -76,6 +77,7 @@ export const actions = {
       dollarBalance: 50
     }
     try {
+      this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
       const response = await this.$axios.$put(`${serverUrl}/users/balance/${id}`, body)
       ctx.commit('updateBalance', response)
     } catch (error) {
