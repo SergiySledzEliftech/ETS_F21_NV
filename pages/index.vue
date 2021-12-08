@@ -1,5 +1,11 @@
 <template>
-  <v-col>
+  <div v-if="error" width="100%" height="100%">
+    <ErrorPage />
+  </div>
+  <div v-else-if="!loading && !dataForTable.length" width="100%" height="100%">
+    <NoResults />
+  </div>
+  <v-col v-else>
     <DatePicker
       :isDisabled="loading"
       :stateDates="dateRange"
@@ -27,7 +33,7 @@
             :dataArray="[154, 125, 95, 21, 15, 10]"
             datalabel="Operations"
             :chartTitle="`Operations with currencies for period ${formatDates[0]} - ${formatDates[1]}`"
-            width="320px"
+            :width="320"
           />
       </v-col>
       <v-col xs="12" sm="12" md="7" lg="12">
@@ -56,7 +62,7 @@
 </template>
 
 <script>
-import { Vue } from 'vue-property-decorator'
+import { Vue, Inject } from 'vue-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import BarChart from '../components/HorizontalBarChart.vue'
@@ -64,6 +70,8 @@ import PieChart from '../components/PieChart.vue'
 import DataTable from '../components/DataTable.vue'
 import BuyBtn from '../components/BuyBtn.vue'
 import DatePicker from '../components/Datepicker.vue'
+import ErrorPage from '../components/Error.vue'
+import NoResults from '../components/NoResults.vue'
 
 import { serverUrl } from '../utils/config'
 import headMixin from '~/helpers/mixins/headMixin'
@@ -77,12 +85,16 @@ const {State, Mutation, Getter} = namespace('dashboardStore')
       PieChart,
       DataTable,
       BuyBtn,
-      DatePicker
+      DatePicker,
+      ErrorPage,
+      NoResults
   },
   mixins: [headMixin]
 })
 
 export default class DashboardPage extends Vue{
+  @Inject({default: null}) notificationsBar;
+
   @State dateRange
   @State isLoading
   @State fluctData
@@ -98,9 +110,13 @@ export default class DashboardPage extends Vue{
   @Mutation updateFluctData
 
   loading = true
-  title="Dashboard"
+  title = "Dashboard"
+  error = null
 
   async mounted() {
+    const token = this.$cookies.get('userToken')
+    token && this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
+    
     await this.callAPI(this.dateRange)
     this.unsubscribe = this.$store.watch(this.dates, () => this.callAPI(this.dateRange))
   }
@@ -115,15 +131,20 @@ export default class DashboardPage extends Vue{
 
   async callAPI([start, end]) {
       this.loading = true
-      const dataSorted = await this.$axios(`${serverUrl}/globalCurrencies/changes?`, {
-        params: {
-          start_date: start,
-          end_date: end
-        }
-      })
-      this.updateFluctData(dataSorted.data)
-
-      this.loading = false
+      try {
+        const dataSorted = await this.$axios(`${serverUrl}/globalCurrencies/changes?`, {
+          params: {
+            start_date: start,
+            end_date: end
+          }
+        })
+        this.updateFluctData(dataSorted.data)
+      } catch (error) {
+        this.error = error.message
+        this.notificationsBar.consoleError(error.message);
+      }finally{
+        this.loading = false
+      }
   }
 }
 </script>

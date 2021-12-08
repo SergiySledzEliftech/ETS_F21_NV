@@ -23,7 +23,6 @@ export const actions = {
     const body = b
     try {
       const response = await this.$axios.$post(`${serverUrl}/auth/login`, body)
-      // this.$axios.setToken(response.access_token, 'Bearer') // пример
       ctx.commit('updateUser', response)
       ctx.commit('updateJWT', response)
     } catch (error) {
@@ -45,12 +44,11 @@ export const actions = {
     try {
       ctx.commit('clearJwt')
     } catch (error) {
-      // console.log(error)
     }
   },
 
+
   async getUser (ctx) {
-    // console.log('in getUser')
     try {
       this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
       const response = await this.$axios.$get(`${serverUrl}/users/getOne`)
@@ -93,7 +91,6 @@ export const mutations = {
     } else {
       state.details = user
     }
-    // console.log(state.details)
   },
 
   updateBalance (state, user) {
