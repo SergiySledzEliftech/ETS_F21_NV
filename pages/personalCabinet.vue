@@ -111,6 +111,7 @@ import Copyright from '../components/Copyright.vue'
 import NeutralButton from '../components/NeutralButton.vue'
 import Slider from '../components/Slider.vue'
 
+import headMixin from '~/helpers/mixins/headMixin'
 
 const {State, Action} = namespace('user')
 
@@ -123,7 +124,8 @@ export default @Component({
     Copyright,
     Tabs,
     Slider
-  }
+  },
+  mixins: [headMixin]
 })
 
 class AccountSettings extends Vue{
@@ -139,6 +141,7 @@ class AccountSettings extends Vue{
   idInterval = ''
 
   value = 30
+  title = 'Personal Cabinet';
 
   async mounted() {
     this.timer()
