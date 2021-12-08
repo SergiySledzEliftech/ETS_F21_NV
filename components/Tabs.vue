@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { Vue, Inject } from 'nuxt-property-decorator'
+import { Vue, Inject, Prop, Watch } from 'nuxt-property-decorator'
 import Component, {namespace} from 'nuxt-class-component'
 
 import NeutralButton from '../components/NeutralButton.vue'
@@ -124,6 +124,8 @@ import BuyBtn from '../components/BuyBtn.vue'
 import Scroll from '../components/ScrollContainer.vue'
 
 import { serverUrl } from '../utils/config'
+
+const { State, Action } = namespace('user')
 
 export default @Component({
     components:{
@@ -135,6 +137,11 @@ export default @Component({
 
 class Tabs extends Vue{
 @Inject({default: null}) notificationsBar;
+@State details
+@Action getUser
+
+ 
+
 
   tabs = {
     tab: null,
@@ -150,26 +157,33 @@ class Tabs extends Vue{
       currency: 'ALL',
       page: 1,
       limit: 5,
-      userId: '61926bc6418dbb9a949cdeb1'
+      userId: ''
     }
 
-  async mounted() {
+  mounted() {
     this.getCurrency()
-    this.getHistory()
+    // this.getHistory()
   }
-
+  // params: {userId: '61926bc6418dbb9a949cdeb1'
+  @Watch('details', {deep: true})
   async getCurrency() {
     try {
-      this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/all`, {params: {userId: '61926bc6418dbb9a949cdeb1'}})
+      this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
+      this.tabs.items.currencies = await this.$axios.$get(`${serverUrl}/userCurrencies/all`, {params: {userId: this.details._id}})
     } catch (error) {
       this.notificationsBar.consoleError(error.message);
     }
   }
 
+  @Watch('details', {deep: true})
   async getHistory() {
     try {
+        this.paramsHistory.userId = this.details._id
+        console.log(this.paramsHistory);
         this.disabled = true
+        this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
         const data = await this.$axios.$get(`${serverUrl}/transaction-history`, {params: this.paramsHistory})
+        // console.log(data);
         const result = JSON.stringify(data)
         this.tabs.items.history = [...this.tabs.items.history, ...JSON.parse(result).data]
         this.paramsHistory.page = this.paramsHistory.page + 1
