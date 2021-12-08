@@ -179,7 +179,7 @@ class Tabs extends Vue{
   async getHistory() {
     try {
         this.paramsHistory.userId = this.details._id
-        console.log(this.paramsHistory);
+        
         this.disabled = true
         this.$axios.setToken(this.$cookies.get('userToken'), 'Bearer')
         const data = await this.$axios.$get(`${serverUrl}/transaction-history`, {params: this.paramsHistory})
