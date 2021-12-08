@@ -116,7 +116,6 @@ export default class LoginPage extends Vue {
 
   async logIn() {
     try {
-      console.log(this.logInData);
       await this.login(this.logInData);
     } catch (error) {
       this.notificationsBar.consoleError(error.message);

@@ -2,25 +2,19 @@
   <div style="height: 100%">
     <v-container
       fluid
-      style="position: relative"
+      style="position: relative; padding: 10px 30px;"
       v-if="currencies.length"
     >
-      <div class="finder">
-      </div>
-      <v-row>
-        <v-col
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-          class="d-flex justify-space-around"
+      <div
+        class="d-inline-flex justify-start flex-wrap"
+        style="margin: auto"
+      >
+        <div
+          class="card"
           v-for="currency in currencies"
           v-bind:key="currency.name"
         >
-          <v-card
-            class="card"
-          >
+          <v-card>
             <v-card-title>
               {{ currency.name }}
             </v-card-title>
@@ -38,8 +32,8 @@
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-col>
-      </v-row>
+        </div>
+      </div>
       <CurrencyPurchaseModal
         :userId="userId"
       />
@@ -112,8 +106,8 @@ export default class TradePage extends Vue {
 }
 
 .card {
-  min-width: 260px;
-  max-width: 290px;
+  width: 270px;
+  margin: 5px;
 }
 
 .card .actions {
