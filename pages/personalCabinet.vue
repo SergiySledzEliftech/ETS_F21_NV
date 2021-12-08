@@ -155,7 +155,7 @@ class AccountSettings extends Vue{
   async refreshUser(){
     try {
       if(process.client) {
-        await this.getUser('61925a32af2b0cbcd9330f3f') // details.id
+        await this.getUser() 
       }
     } catch (error) {
       this.notificationsBar.consoleError(error.message);
