@@ -10,7 +10,7 @@ export const state = () => ({
   pageNumber: 1,
   limitNumber: 10,
   currency: 'ALL',
-  dateRange: [DateTime.now().minus({ days: 30 }).toFormat('yyyy-M-dd'), DateTime.now().minus({ days: 1 }).toFormat('yyyy-M-dd')]
+  dateRange: [DateTime.now().minus({ days: 30 }).toFormat('yyyy-M-dd'), DateTime.now().plus({ days: 10 }).toFormat('yyyy-M-dd')]
 })
 
 export const getters = {
