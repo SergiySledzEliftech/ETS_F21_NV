@@ -91,6 +91,8 @@
 import rules from "../utils/form-validation-rules.js";
 import { Component, Inject, namespace, Vue, Watch } from "nuxt-property-decorator";
 import GradientRoundedButton from "../components/GradientRoundedButton.vue";
+//import GradientRoundedButton from "./GradientRoundedButton.vue";
+import headMixin from '~/helpers/mixins/headMixin'
 
 const { State, Action } = namespace("user");
 
@@ -98,12 +100,15 @@ const { State, Action } = namespace("user");
   layout: "empty",
   components: { GradientRoundedButton },
   GradientRoundedButton,
+  mixins: [headMixin]
 })
 export default class RegisterPage extends Vue {
   @State details;
   @State userJWT;
   @Action saveUser;
   @Inject({ default: null }) notificationsBar;
+
+  title = 'Registration';
 
   data() {
     return {

@@ -80,10 +80,12 @@
 import rules from "/utils/form-validation-rules.js";
 import { Component, Vue, namespace, Watch, Inject } from "nuxt-property-decorator";
 const { State, Action } = namespace("user");
+import headMixin from '~/helpers/mixins/headMixin';
 
 @Component({
   layout: 'empty',
   components: {},
+  mixins: [headMixin]
 })
 
 export default class LoginPage extends Vue {
@@ -92,6 +94,7 @@ export default class LoginPage extends Vue {
   @Inject({ default: null }) notificationsBar;
 
   loading = true;
+  title = 'Login';
 
   mounted() {
     this.loading = false;
