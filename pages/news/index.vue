@@ -85,7 +85,7 @@ export default  class NewsPage extends Vue{
 } 
 </script>
 
-<style >
+<style scoped>
 body {
   margin: 40px;
 }
