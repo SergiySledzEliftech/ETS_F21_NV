@@ -105,7 +105,7 @@ export default  class NewsPage extends Vue{
 } 
 </script>
 
-<style>
+<style scoped>
 
  .price-box {
     text-align: right !important;
